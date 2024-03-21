@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="key0" for="node" attr.name="blocking" attr.type="string" />
+  <key id="key1" for="node" attr.name="class" attr.type="string" />
+  <key id="key2" for="node" attr.name="ignoreFilterPassed" attr.type="string" />
+  <key id="key3" for="node" attr.name="invert" attr.type="string" />
+  <key id="key4" for="node" attr.name="modeOR" attr.type="string" />
+  <key id="key5" for="node" attr.name="node_id" attr.type="string" />
+  <key id="key6" for="node" attr.name="requireObjects" attr.type="string" />
+  <key id="key7" for="node" attr.name="sequential" attr.type="string" />
+  <key id="key8" for="node" attr.name="shortCircuit" attr.type="string" />
+  <key id="key9" for="node" attr.name="type" attr.type="string" />
+  <key id="key10" for="node" attr.name="vetoObjects" attr.type="string" />
+  <graph id="G" edgedefault="directed" parse.nodeids="free" parse.edgeids="canonical" parse.order="nodesfirst">
+    <node id="n0">
+      <data key="key0"></data>
+      <data key="key1">DecisionHub</data>
+      <data key="key2"></data>
+      <data key="key3"></data>
+      <data key="key4"></data>
+      <data key="key5">RootDecisionHub</data>
+      <data key="key6"></data>
+      <data key="key7"></data>
+      <data key="key8"></data>
+      <data key="key9"></data>
+      <data key="key10"></data>
+    </node>
+    <node id="n1">
+      <data key="key0">False</data>
+      <data key="key1">GaudiAlgorithm</data>
+      <data key="key2"></data>
+      <data key="key3"></data>
+      <data key="key4"></data>
+      <data key="key5">ProducerA</data>
+      <data key="key6"></data>
+      <data key="key7"></data>
+      <data key="key8"></data>
+      <data key="key9">MicroProducer</data>
+      <data key="key10"></data>
+    </node>
+    <node id="n2">
+      <data key="key0">False</data>
+      <data key="key1">GaudiAlgorithm</data>
+      <data key="key2"></data>
+      <data key="key3"></data>
+      <data key="key4"></data>
+      <data key="key5">TransformerB</data>
+      <data key="key6"></data>
+      <data key="key7"></data>
+      <data key="key8"></data>
+      <data key="key9">MicroTransformer</data>
+      <data key="key10"></data>
+    </node>
+    <node id="n3">
+      <data key="key0"></data>
+      <data key="key1">DecisionHub</data>
+      <data key="key2">False</data>
+      <data key="key3">False</data>
+      <data key="key4">False</data>
+      <data key="key5">Sequencer</data>
+      <data key="key6">[  ]</data>
+      <data key="key7">False</data>
+      <data key="key8">True</data>
+      <data key="key9">GaudiSequencer</data>
+      <data key="key10">[  ]</data>
+    </node>
+    <node id="n4">
+      <data key="key0">False</data>
+      <data key="key1">GaudiAlgorithm</data>
+      <data key="key2"></data>
+      <data key="key3"></data>
+      <data key="key4"></data>
+      <data key="key5">TransformerC</data>
+      <data key="key6"></data>
+      <data key="key7"></data>
+      <data key="key8"></data>
+      <data key="key9">MicroTransformer</data>
+      <data key="key10"></data>
+    </node>
+    <node id="n5">
+      <data key="key0">False</data>
+      <data key="key1">GaudiAlgorithm</data>
+      <data key="key2"></data>
+      <data key="key3"></data>
+      <data key="key4"></data>
+      <data key="key5">TransformerD</data>
+      <data key="key6"></data>
+      <data key="key7"></data>
+      <data key="key8"></data>
+      <data key="key9">MicroTransformer</data>
+      <data key="key10"></data>
+    </node>
+    <node id="n6">
+      <data key="key0"></data>
+      <data key="key1">DecisionHub</data>
+      <data key="key2">False</data>
+      <data key="key3">False</data>
+      <data key="key4">False</data>
+      <data key="key5">InnerSequencer</data>
+      <data key="key6">[  ]</data>
+      <data key="key7">False</data>
+      <data key="key8">True</data>
+      <data key="key9">GaudiSequencer</data>
+      <data key="key10">[  ]</data>
+    </node>
+    <node id="n7">
+      <data key="key0">False</data>
+      <data key="key1">GaudiAlgorithm</data>
+      <data key="key2"></data>
+      <data key="key3"></data>
+      <data key="key4"></data>
+      <data key="key5">TransformerE</data>
+      <data key="key6"></data>
+      <data key="key7"></data>
+      <data key="key8"></data>
+      <data key="key9">MicroTransformer</data>
+      <data key="key10"></data>
+    </node>
+    <node id="n8">
+      <data key="key0">False</data>
+      <data key="key1">GaudiAlgorithm</data>
+      <data key="key2"></data>
+      <data key="key3"></data>
+      <data key="key4"></data>
+      <data key="key5">TransformerF</data>
+      <data key="key6"></data>
+      <data key="key7"></data>
+      <data key="key8"></data>
+      <data key="key9">MicroTransformer</data>
+      <data key="key10"></data>
+    </node>
+    <node id="n9">
+      <data key="key0">False</data>
+      <data key="key1">GaudiAlgorithm</data>
+      <data key="key2"></data>
+      <data key="key3"></data>
+      <data key="key4"></data>
+      <data key="key5">TransformerG</data>
+      <data key="key6"></data>
+      <data key="key7"></data>
+      <data key="key8"></data>
+      <data key="key9">MicroTransformer</data>
+      <data key="key10"></data>
+    </node>
+    <edge id="e0" source="n0" target="n1">
+    </edge>
+    <edge id="e1" source="n0" target="n2">
+    </edge>
+    <edge id="e2" source="n0" target="n3">
+    </edge>
+    <edge id="e3" source="n0" target="n9">
+    </edge>
+    <edge id="e4" source="n3" target="n4">
+    </edge>
+    <edge id="e5" source="n3" target="n5">
+    </edge>
+    <edge id="e6" source="n3" target="n6">
+    </edge>
+    <edge id="e7" source="n6" target="n7">
+    </edge>
+    <edge id="e8" source="n6" target="n8">
+    </edge>
+  </graph>
+</graphml>
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="key0" for="node" attr.name="blocking" attr.type="string" />
+  <key id="key1" for="node" attr.name="class" attr.type="string" />
+  <key id="key2" for="node" attr.name="ignoreFilterPassed" attr.type="string" />
+  <key id="key3" for="node" attr.name="invert" attr.type="string" />
+  <key id="key4" for="node" attr.name="modeOR" attr.type="string" />
+  <key id="key5" for="node" attr.name="node_id" attr.type="string" />
+  <key id="key6" for="node" attr.name="requireObjects" attr.type="string" />
+  <key id="key7" for="node" attr.name="sequential" attr.type="string" />
+  <key id="key8" for="node" attr.name="shortCircuit" attr.type="string" />
+  <key id="key9" for="node" attr.name="type" attr.type="string" />
+  <key id="key10" for="node" attr.name="vetoObjects" attr.type="string" />
+  <graph id="G" edgedefault="directed" parse.nodeids="free" parse.edgeids="canonical" parse.order="nodesfirst">
+    <node id="n0">
+      <data key="key0"></data>
+      <data key="key1">DecisionHub</data>
+      <data key="key2"></data>
+      <data key="key3"></data>
+      <data key="key4"></data>
+      <data key="key5">RootDecisionHub</data>
+      <data key="key6"></data>
+      <data key="key7"></data>
+      <data key="key8"></data>
+      <data key="key9"></data>
+      <data key="key10"></data>
+    </node>
+    <node id="n1">
+      <data key="key0">False</data>
+      <data key="key1">GaudiAlgorithm</data>
+      <data key="key2"></data>
+      <data key="key3"></data>
+      <data key="key4"></data>
+      <data key="key5">ProducerA</data>
+      <data key="key6"></data>
+      <data key="key7"></data>
+      <data key="key8"></data>
+      <data key="key9">MicroProducer</data>
+      <data key="key10"></data>
+    </node>
+    <node id="n2">
+      <data key="key0">False</data>
+      <data key="key1">GaudiAlgorithm</data>
+      <data key="key2"></data>
+      <data key="key3"></data>
+      <data key="key4"></data>
+      <data key="key5">TransformerB</data>
+      <data key="key6"></data>
+      <data key="key7"></data>
+      <data key="key8"></data>
+      <data key="key9">MicroTransformer</data>
+      <data key="key10"></data>
+    </node>
+    <node id="n3">
+      <data key="key0"></data>
+      <data key="key1">DecisionHub</data>
+      <data key="key2">False</data>
+      <data key="key3">False</data>
+      <data key="key4">False</data>
+      <data key="key5">Sequencer</data>
+      <data key="key6">[  ]</data>
+      <data key="key7">False</data>
+      <data key="key8">True</data>
+      <data key="key9">GaudiSequencer</data>
+      <data key="key10">[  ]</data>
+    </node>
+    <node id="n4">
+      <data key="key0">False</data>
+      <data key="key1">GaudiAlgorithm</data>
+      <data key="key2"></data>
+      <data key="key3"></data>
+      <data key="key4"></data>
+      <data key="key5">TransformerC</data>
+      <data key="key6"></data>
+      <data key="key7"></data>
+      <data key="key8"></data>
+      <data key="key9">MicroTransformer</data>
+      <data key="key10"></data>
+    </node>
+    <node id="n5">
+      <data key="key0">False</data>
+      <data key="key1">GaudiAlgorithm</data>
+      <data key="key2"></data>
+      <data key="key3"></data>
+      <data key="key4"></data>
+      <data key="key5">TransformerD</data>
+      <data key="key6"></data>
+      <data key="key7"></data>
+      <data key="key8"></data>
+      <data key="key9">MicroTransformer</data>
+      <data key="key10"></data>
+    </node>
+    <node id="n6">
+      <data key="key0"></data>
+      <data key="key1">DecisionHub</data>
+      <data key="key2">False</data>
+      <data key="key3">False</data>
+      <data key="key4">False</data>
+      <data key="key5">InnerSequencer</data>
+      <data key="key6">[  ]</data>
+      <data key="key7">False</data>
+      <data key="key8">True</data>
+      <data key="key9">GaudiSequencer</data>
+      <data key="key10">[  ]</data>
+    </node>
+    <node id="n7">
+      <data key="key0">False</data>
+      <data key="key1">GaudiAlgorithm</data>
+      <data key="key2"></data>
+      <data key="key3"></data>
+      <data key="key4"></data>
+      <data key="key5">TransformerE</data>
+      <data key="key6"></data>
+      <data key="key7"></data>
+      <data key="key8"></data>
+      <data key="key9">MicroTransformer</data>
+      <data key="key10"></data>
+    </node>
+    <node id="n8">
+      <data key="key0">False</data>
+      <data key="key1">GaudiAlgorithm</data>
+      <data key="key2"></data>
+      <data key="key3"></data>
+      <data key="key4"></data>
+      <data key="key5">TransformerF</data>
+      <data key="key6"></data>
+      <data key="key7"></data>
+      <data key="key8"></data>
+      <data key="key9">MicroTransformer</data>
+      <data key="key10"></data>
+    </node>
+    <node id="n9">
+      <data key="key0">False</data>
+      <data key="key1">GaudiAlgorithm</data>
+      <data key="key2"></data>
+      <data key="key3"></data>
+      <data key="key4"></data>
+      <data key="key5">TransformerG</data>
+      <data key="key6"></data>
+      <data key="key7"></data>
+      <data key="key8"></data>
+      <data key="key9">MicroTransformer</data>
+      <data key="key10"></data>
+    </node>
+    <edge id="e0" source="n0" target="n1">
+    </edge>
+    <edge id="e1" source="n0" target="n2">
+    </edge>
+    <edge id="e2" source="n0" target="n3">
+    </edge>
+    <edge id="e3" source="n0" target="n9">
+    </edge>
+    <edge id="e4" source="n3" target="n4">
+    </edge>
+    <edge id="e5" source="n3" target="n5">
+    </edge>
+    <edge id="e6" source="n3" target="n6">
+    </edge>
+    <edge id="e7" source="n6" target="n7">
+    </edge>
+    <edge id="e8" source="n6" target="n8">
+    </edge>
+  </graph>
+</graphml>
