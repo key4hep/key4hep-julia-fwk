@@ -1,0 +1,29 @@
+digraph G {
+ProducerA [class=MicroProducer, type=GaudiAlgorithm];
+A [class="", type=DataObject];
+TransformerB [class=MicroTransformer, type=GaudiAlgorithm];
+B [class="", type=DataObject];
+TransformerC [class=MicroTransformer, type=GaudiAlgorithm];
+C [class="", type=DataObject];
+TransformerD [class=MicroTransformer, type=GaudiAlgorithm];
+D [class="", type=DataObject];
+TransformerE [class=MicroTransformer, type=GaudiAlgorithm];
+E [class="", type=DataObject];
+TransformerF [class=MicroTransformer, type=GaudiAlgorithm];
+F [class="", type=DataObject];
+TransformerG [class=MicroTransformer, type=GaudiAlgorithm];
+G [class="", type=DataObject];
+ProducerA->A ;
+A->TransformerB ;
+TransformerB->B ;
+B->TransformerC ;
+B->TransformerG ;
+TransformerC->C ;
+C->TransformerD ;
+TransformerD->D ;
+D->TransformerE ;
+TransformerE->E ;
+E->TransformerF ;
+TransformerF->F ;
+TransformerG->G ;
+}
