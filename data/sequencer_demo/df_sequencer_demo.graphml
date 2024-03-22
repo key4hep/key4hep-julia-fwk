@@ -101,12 +101,7 @@
     <edge id="e12" source="n12" target="n13">
     </edge>
   </graph>
-</graphml>
-<?xml version="1.0" encoding="UTF-8"?>
-<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
-  <key id="key0" for="node" attr.name="class" attr.type="string" />
-  <key id="key1" for="node" attr.name="node_id" attr.type="string" />
-  <key id="key2" for="node" attr.name="type" attr.type="string" />
+  
   <graph id="G" edgedefault="directed" parse.nodeids="free" parse.edgeids="canonical" parse.order="nodesfirst">
     <node id="n0">
       <data key="key0">MicroProducer</data>
