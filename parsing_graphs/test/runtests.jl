@@ -1,5 +1,5 @@
 using BenchmarkTools: haskey
-include("../src/GraphMLReader/GraphMLReader.jl")
+using GraphMLReader
 using LightGraphs
 using MetaGraphs
 using JSON
