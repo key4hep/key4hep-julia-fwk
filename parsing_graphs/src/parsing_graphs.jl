@@ -2,7 +2,7 @@ module parsing_graphs
 
 using EzXML
 using MetaGraphs
-using GraphMLReader
+include("../GraphMLReader.jl/src/GraphMLReader.jl")
 
 file_path = joinpath("../data/sequencer_demo/df_sequencer_demo.graphml")
 G = GraphMLReader.loadgraphml(file_path, "G")
