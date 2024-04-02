@@ -1,17 +1,31 @@
 module parsing_graphs
 
 using EzXML
+using Graphs
 using MetaGraphs
+using Dagger
 include("../GraphMLReader.jl/src/GraphMLReader.jl")
+include("./auxiliary_functions.jl")
 
-file_path = joinpath("../data/sequencer_demo/df_sequencer_demo.graphml")
-G = GraphMLReader.loadgraphml(file_path, "G")
+function test_schedule_by_graph(G::MetaDiGraph)
+    inc_e_src_map = get_ine_map(G)
 
-println(G)
-println(GraphMLReader.node_fields(G))
-println(get_prop(G, 1, :type))
-println(get_prop(G, 1, :class))
-println(get_prop(G, 1, :original_id))
-println(get_prop(G, 1, :node_id))
+    @sync for vertex_id in MetaGraphs.topological_sort(G)
+        incoming_data = get_deps_promises(vertex_id, inc_e_src_map, G)
+        set_prop!(G, vertex_id, :res_data, Dagger.@spawn wrapper(incoming_data, vertex_id))
+    end
+
+    for vertex_id in Graphs.vertices(G)
+        future = get_prop(G, vertex_id, :res_data)
+        result = fetch(future)
+        println("Final result for vertex $vertex_id: $result")
+    end
+end
+
+G = parse_graphml(["../data/sequencer_demo/df_sequencer_demo.graphml"])
+G_copy = deepcopy(G)
+
+test_schedule_by_graph(G_copy)
+show_graph(G_copy)
 
 end # module parsing_graphs
