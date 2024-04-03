@@ -1,0 +1,18 @@
+name = "parsing_graphs"
+uuid = "a1b331a3-c8b1-4c5f-a5cd-62f5fd87913f"
+authors = ["SmalRat <30555080+SmalRat@users.noreply.github.com>"]
+version = "0.1.0"
+
+[deps]
+BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
+Dagger = "d58978e5-989f-55fb-8d15-ea34adc7bf54"
+Distributed = "8ba89e20-285c-5b6f-9357-94700520ee1b"
+EzXML = "8f5d6c58-4d21-5cfd-889c-e3ad7ee6a615"
+GraphIO = "aa1b3936-2fda-51b9-ab35-c553d3a640a2"
+Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+LightGraphs = "093fc24a-ae57-5d10-9952-331d41423f4d"
+MetaGraphs = "626554b9-1ddb-594c-aa3c-2596fe9399a5"
+Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
+StaticGraphs = "4c8beaf5-199b-59a0-a7f2-21d17de635b6"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
