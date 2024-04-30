@@ -7,7 +7,7 @@
     <node id="n0">
       <data key="key0">MicroProducer</data>
       <data key="key1">ProducerA</data>
-      <data key="key2">GaudiAlgorithm</data>
+      <data key="key2">Algorithm</data>
     </node>
     <node id="n1">
       <data key="key0"></data>
@@ -17,7 +17,7 @@
     <node id="n2">
       <data key="key0">MicroTransformer</data>
       <data key="key1">TransformerB</data>
-      <data key="key2">GaudiAlgorithm</data>
+      <data key="key2">Algorithm</data>
     </node>
     <node id="n3">
       <data key="key0"></data>
@@ -27,7 +27,7 @@
     <node id="n4">
       <data key="key0">MicroTransformer</data>
       <data key="key1">TransformerD</data>
-      <data key="key2">GaudiAlgorithm</data>
+      <data key="key2">Algorithm</data>
     </node>
     <node id="n5">
       <data key="key0"></data>
@@ -37,7 +37,7 @@
     <node id="n6">
       <data key="key0">MicroTransformer</data>
       <data key="key1">TransformerF</data>
-      <data key="key2">GaudiAlgorithm</data>
+      <data key="key2">Algorithm</data>
     </node>
     <node id="n7">
       <data key="key0"></data>
@@ -47,7 +47,7 @@
     <node id="n8">
       <data key="key0">MicroTransformer</data>
       <data key="key1">TransformerH</data>
-      <data key="key2">GaudiAlgorithm</data>
+      <data key="key2">Algorithm</data>
     </node>
     <node id="n9">
       <data key="key0"></data>
@@ -57,7 +57,7 @@
     <node id="n10">
       <data key="key0">MicroTransformer</data>
       <data key="key1">TransformerJ</data>
-      <data key="key2">GaudiAlgorithm</data>
+      <data key="key2">Algorithm</data>
     </node>
     <node id="n11">
       <data key="key0"></data>
@@ -67,7 +67,7 @@
     <node id="n12">
       <data key="key0">MicroTransformer</data>
       <data key="key1">TransformerL</data>
-      <data key="key2">GaudiAlgorithm</data>
+      <data key="key2">Algorithm</data>
     </node>
     <node id="n13">
       <data key="key0"></data>
@@ -77,7 +77,7 @@
     <node id="n14">
       <data key="key0">MicroTransformer</data>
       <data key="key1">TransformerN</data>
-      <data key="key2">GaudiAlgorithm</data>
+      <data key="key2">Algorithm</data>
     </node>
     <node id="n15">
       <data key="key0"></data>
