@@ -1,0 +1,181 @@
+strict digraph {
+graph [layout=dot,rankdir=LR];
+n_49 [label="mock_Gaudi_algorithm
+1.027 s",color="#000000",shape="ellipse",penwidth=5];
+n_5 [label="mock_Gaudi_algorithm
+1.003 s",color="#000000",shape="ellipse",penwidth=5];
+n_19 [label="mock_Gaudi_algorithm
+1.008 s",color="#000000",shape="ellipse",penwidth=5];
+n_50 [label="dataobject_algorithm
+151.194 ms",color="#000000",shape="ellipse",penwidth=5];
+n_6 [label="dataobject_algorithm
+106.03 ms",color="#000000",shape="ellipse",penwidth=5];
+n_20 [label="dataobject_algorithm
+104.386 ms",color="#000000",shape="ellipse",penwidth=5];
+n_51 [label="mock_Gaudi_algorithm
+1.054 s",color="#000000",shape="ellipse",penwidth=5];
+n_7 [label="mock_Gaudi_algorithm
+1.015 s",color="#000000",shape="ellipse",penwidth=5];
+n_21 [label="mock_Gaudi_algorithm
+1.011 s",color="#000000",shape="ellipse",penwidth=5];
+n_52 [label="dataobject_algorithm
+108.05 ms",color="#000000",shape="ellipse",penwidth=5];
+n_8 [label="dataobject_algorithm
+109.371 ms",color="#000000",shape="ellipse",penwidth=5];
+n_22 [label="dataobject_algorithm
+107.926 ms",color="#000000",shape="ellipse",penwidth=5];
+n_53 [label="mock_Gaudi_algorithm
+1.011 s",color="#000000",shape="ellipse",penwidth=5];
+n_17 [label="mock_Gaudi_algorithm
+1.012 s",color="#000000",shape="ellipse",penwidth=5];
+n_23 [label="mock_Gaudi_algorithm
+1.015 s",color="#000000",shape="ellipse",penwidth=5];
+n_54 [label="dataobject_algorithm
+106.642 ms",color="#000000",shape="ellipse",penwidth=5];
+n_18 [label="dataobject_algorithm
+109.126 ms",color="#000000",shape="ellipse",penwidth=5];
+n_24 [label="dataobject_algorithm
+107.827 ms",color="#000000",shape="ellipse",penwidth=5];
+n_55 [label="mock_Gaudi_algorithm
+1.015 s",color="#000000",shape="ellipse",penwidth=5];
+n_31 [label="mock_Gaudi_algorithm
+1.014 s",color="#000000",shape="ellipse",penwidth=5];
+n_25 [label="mock_Gaudi_algorithm
+1.013 s",color="#000000",shape="ellipse",penwidth=5];
+n_56 [label="dataobject_algorithm
+107.6 ms",color="#000000",shape="ellipse",penwidth=5];
+n_32 [label="dataobject_algorithm
+108.326 ms",color="#000000",shape="ellipse",penwidth=5];
+n_26 [label="dataobject_algorithm
+110.496 ms",color="#000000",shape="ellipse",penwidth=5];
+n_57 [label="mock_Gaudi_algorithm
+1.003 s",color="#000000",shape="ellipse",penwidth=5];
+n_59 [label="mock_Gaudi_algorithm
+1.01 s",color="#000000",shape="ellipse",penwidth=5];
+n_27 [label="mock_Gaudi_algorithm
+1.017 s",color="#000000",shape="ellipse",penwidth=5];
+n_58 [label="dataobject_algorithm
+107.782 ms",color="#000000",shape="ellipse",penwidth=5];
+n_60 [label="dataobject_algorithm
+109.446 ms",color="#000000",shape="ellipse",penwidth=5];
+n_28 [label="dataobject_algorithm
+110.961 ms",color="#000000",shape="ellipse",penwidth=5];
+n_61 [label="mock_Gaudi_algorithm
+1.014 s",color="#000000",shape="ellipse",penwidth=5];
+n_63 [label="mock_Gaudi_algorithm
+1.009 s",color="#000000",shape="ellipse",penwidth=5];
+n_29 [label="mock_Gaudi_algorithm
+1.009 s",color="#000000",shape="ellipse",penwidth=5];
+n_62 [label="dataobject_algorithm
+108.793 ms",color="#000000",shape="ellipse",penwidth=5];
+n_64 [label="dataobject_algorithm
+109.249 ms",color="#000000",shape="ellipse",penwidth=5];
+n_30 [label="dataobject_algorithm
+109.295 ms",color="#000000",shape="ellipse",penwidth=5];
+n_9 [label="mock_Gaudi_algorithm
+1.01 s",color="#000000",shape="ellipse",penwidth=5];
+n_33 [label="mock_Gaudi_algorithm
+1.014 s",color="#000000",shape="ellipse",penwidth=5];
+n_10 [label="dataobject_algorithm
+108.617 ms",color="#000000",shape="ellipse",penwidth=5];
+n_34 [label="dataobject_algorithm
+108.44 ms",color="#000000",shape="ellipse",penwidth=5];
+n_11 [label="mock_Gaudi_algorithm
+1.018 s",color="#000000",shape="ellipse",penwidth=5];
+n_35 [label="mock_Gaudi_algorithm
+1.007 s",color="#000000",shape="ellipse",penwidth=5];
+n_12 [label="dataobject_algorithm
+107.967 ms",color="#000000",shape="ellipse",penwidth=5];
+n_36 [label="dataobject_algorithm
+107.845 ms",color="#000000",shape="ellipse",penwidth=5];
+n_13 [label="mock_Gaudi_algorithm
+1.015 s",color="#000000",shape="ellipse",penwidth=5];
+n_37 [label="mock_Gaudi_algorithm
+1.009 s",color="#000000",shape="ellipse",penwidth=5];
+n_14 [label="dataobject_algorithm
+107.834 ms",color="#000000",shape="ellipse",penwidth=5];
+n_38 [label="dataobject_algorithm
+107.375 ms",color="#000000",shape="ellipse",penwidth=5];
+n_15 [label="mock_Gaudi_algorithm
+1.015 s",color="#000000",shape="ellipse",penwidth=5];
+n_39 [label="mock_Gaudi_algorithm
+1.009 s",color="#000000",shape="ellipse",penwidth=5];
+n_16 [label="dataobject_algorithm
+108.024 ms",color="#000000",shape="ellipse",penwidth=5];
+n_40 [label="dataobject_algorithm
+108.107 ms",color="#000000",shape="ellipse",penwidth=5];
+n_45 [label="mock_Gaudi_algorithm
+1.014 s",color="#000000",shape="ellipse",penwidth=5];
+n_47 [label="mock_Gaudi_algorithm
+1.014 s",color="#000000",shape="ellipse",penwidth=5];
+n_41 [label="mock_Gaudi_algorithm
+1.01 s",color="#000000",shape="ellipse",penwidth=5];
+n_46 [label="dataobject_algorithm
+107.875 ms",color="#000000",shape="ellipse",penwidth=5];
+n_48 [label="dataobject_algorithm
+109.547 ms",color="#000000",shape="ellipse",penwidth=5];
+n_42 [label="dataobject_algorithm
+108.848 ms",color="#000000",shape="ellipse",penwidth=5];
+n_43 [label="mock_Gaudi_algorithm
+1.014 s",color="#000000",shape="ellipse",penwidth=5];
+n_44 [label="dataobject_algorithm
+108.455 ms",color="#000000",shape="ellipse",penwidth=5];
+n_65 [label="mock_func
+1.025 s",color="#000000",shape="ellipse",penwidth=5];
+n_49 -> n_50 [label="Move: 17.2 us",color="#000000;0.5:#000000",penwidth=2];
+n_5 -> n_6 [label="Move: 12.5 us",color="#000000;0.5:#000000",penwidth=2];
+n_19 -> n_20 [label="Move: 16.7 us",color="#000000;0.5:#000000",penwidth=2];
+n_50 -> n_51 [label="Move: 9.797 ms",color="#000000;0.5:#000000",penwidth=2];
+n_6 -> n_7 [label="Move: 13.6 us",color="#000000;0.5:#000000",penwidth=2];
+n_20 -> n_21 [label="Move: 9.7 us",color="#000000;0.5:#000000",penwidth=2];
+n_51 -> n_52 [label="Move: 18.1 us",color="#000000;0.5:#000000",penwidth=2];
+n_7 -> n_8 [label="Move: 15.1 us",color="#000000;0.5:#000000",penwidth=2];
+n_21 -> n_22 [label="Move: 4.5 us",color="#000000;0.5:#000000",penwidth=2];
+n_52 -> n_53 [label="Move: 19.2 us",color="#000000;0.5:#000000",penwidth=2];
+n_8 -> n_17 [label="Move: 11.8 us",color="#000000;0.5:#000000",penwidth=2];
+n_22 -> n_23 [label="Move: 33.1 us",color="#000000;0.5:#000000",penwidth=2];
+n_53 -> n_54 [label="Move: 16.2 us",color="#000000;0.5:#000000",penwidth=2];
+n_17 -> n_18 [label="Move: 16.5 us",color="#000000;0.5:#000000",penwidth=2];
+n_23 -> n_24 [label="Move: 15.9 us",color="#000000;0.5:#000000",penwidth=2];
+n_54 -> n_55 [label="Move: 16.9 us",color="#000000;0.5:#000000",penwidth=2];
+n_22 -> n_31 [label="Move: 14.9 us",color="#000000;0.5:#000000",penwidth=2];
+n_24 -> n_25 [label="Move: 16.2 us",color="#000000;0.5:#000000",penwidth=2];
+n_55 -> n_56 [label="Move: 9.3 us",color="#000000;0.5:#000000",penwidth=2];
+n_31 -> n_32 [label="Move: 13.8 us",color="#000000;0.5:#000000",penwidth=2];
+n_25 -> n_26 [label="Move: 16.6 us",color="#000000;0.5:#000000",penwidth=2];
+n_56 -> n_57 [label="Move: 17.8 us",color="#000000;0.5:#000000",penwidth=2];
+n_56 -> n_59 [label="Move: 15.9 us",color="#000000;0.5:#000000",penwidth=2];
+n_26 -> n_27 [label="Move: 9.9 us",color="#000000;0.5:#000000",penwidth=2];
+n_57 -> n_58 [label="Move: 15.2 us",color="#000000;0.5:#000000",penwidth=2];
+n_59 -> n_60 [label="Move: 16.4 us",color="#000000;0.5:#000000",penwidth=2];
+n_27 -> n_28 [label="Move: 15.1 us",color="#000000;0.5:#000000",penwidth=2];
+n_56 -> n_61 [label="Move: 27.9 us",color="#000000;0.5:#000000",penwidth=2];
+n_56 -> n_63 [label="Move: 11.1 us",color="#000000;0.5:#000000",penwidth=2];
+n_28 -> n_29 [label="Move: 11.0 us",color="#000000;0.5:#000000",penwidth=2];
+n_61 -> n_62 [label="Move: 10.2 us",color="#000000;0.5:#000000",penwidth=2];
+n_63 -> n_64 [label="Move: 16.3 us",color="#000000;0.5:#000000",penwidth=2];
+n_29 -> n_30 [label="Move: 14.8 us",color="#000000;0.5:#000000",penwidth=2];
+n_8 -> n_9 [label="Move: 13.9 us",color="#000000;0.5:#000000",penwidth=2];
+n_9 -> n_10 [label="Move: 16.7 us",color="#000000;0.5:#000000",penwidth=2];
+n_33 -> n_34 [label="Move: 8.8 us",color="#000000;0.5:#000000",penwidth=2];
+n_10 -> n_11 [label="Move: 18.5 us",color="#000000;0.5:#000000",penwidth=2];
+n_34 -> n_35 [label="Move: 5.1 us",color="#000000;0.5:#000000",penwidth=2];
+n_11 -> n_12 [label="Move: 10.3 us",color="#000000;0.5:#000000",penwidth=2];
+n_35 -> n_36 [label="Move: 9.2 us",color="#000000;0.5:#000000",penwidth=2];
+n_12 -> n_13 [label="Move: 23.6 us",color="#000000;0.5:#000000",penwidth=2];
+n_36 -> n_37 [label="Move: 5.4 us",color="#000000;0.5:#000000",penwidth=2];
+n_13 -> n_14 [label="Move: 10.8 us",color="#000000;0.5:#000000",penwidth=2];
+n_37 -> n_38 [label="Move: 8.5 us",color="#000000;0.5:#000000",penwidth=2];
+n_14 -> n_15 [label="Move: 11.3 us",color="#000000;0.5:#000000",penwidth=2];
+n_38 -> n_39 [label="Move: 9.6 us",color="#000000;0.5:#000000",penwidth=2];
+n_15 -> n_16 [label="Move: 11.0 us",color="#000000;0.5:#000000",penwidth=2];
+n_39 -> n_40 [label="Move: 7.9 us",color="#000000;0.5:#000000",penwidth=2];
+n_40 -> n_45 [label="Move: 6.3 us",color="#000000;0.5:#000000",penwidth=2];
+n_40 -> n_47 [label="Move: 14.1 us",color="#000000;0.5:#000000",penwidth=2];
+n_40 -> n_41 [label="Move: 12.6 us",color="#000000;0.5:#000000",penwidth=2];
+n_45 -> n_46 [label="Move: 5.3 us",color="#000000;0.5:#000000",penwidth=2];
+n_47 -> n_48 [label="Move: 11.2 us",color="#000000;0.5:#000000",penwidth=2];
+n_41 -> n_42 [label="Move: 14.8 us",color="#000000;0.5:#000000",penwidth=2];
+n_40 -> n_43 [label="Move: 6.8 us",color="#000000;0.5:#000000",penwidth=2];
+n_43 -> n_44 [label="Move: 9.3 us",color="#000000;0.5:#000000",penwidth=2];
+}
