@@ -45,3 +45,11 @@ graphs_scheduling/results/parsed_graphs_images/graph3 *
 graphs_scheduling/results/parsed_graphs_images/graph4 *
 graphs_scheduling/results/parsed_graphs_images/parsed_graph *
 graphs_scheduling/results/scheduler_images/DAG *
+
+examples/examples_results/parsed_graphs/graph* *.dot
+examples/examples_results/parsed_graphs_images/graph* *.png
+examples/examples_results/logs/out *.dot
+
+*API_*eventlog*.dot
+
+DAG *.png

@@ -8,7 +8,7 @@ function dot_to_png(in, out)
     graph = GraphViz.load(IOBuffer(dot_code))
     GraphViz.layout!(graph)
 
-    surface = Cairo.CairoSVGSurface(IOBuffer(), 5000, 2000)
+    surface = Cairo.CairoSVGSurface(IOBuffer(), 7000, 2000)
     context = Cairo.CairoContext(surface)
 
     GraphViz.render(context, graph)
