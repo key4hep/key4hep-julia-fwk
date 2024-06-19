@@ -12,3 +12,6 @@ Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
 LightGraphs = "093fc24a-ae57-5d10-9952-331d41423f4d"
 MetaGraphs = "626554b9-1ddb-594c-aa3c-2596fe9399a5"
 TimespanLogging = "a526e669-04d3-4846-9525-c66122c55f63"
+
+[compat]
+Dagger = "=0.18.8"
