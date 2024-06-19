@@ -26,25 +26,28 @@ Manifest.toml
 # IDE files 
 .vscode
 
+# External dependencies
+ext/
+
 # Test scripts
-# graphs_scheduling/test/test_scripts/
+# scheduling/test/test_scripts/
 
 # Data/results/output files
 
 backup
 
-graphs_scheduling/results/logs/out *
-graphs_scheduling/results/parsed_graphs/graph1 *
-graphs_scheduling/results/parsed_graphs/graph2 *
-graphs_scheduling/results/parsed_graphs/graph3 *
-graphs_scheduling/results/parsed_graphs/graph4 *
-graphs_scheduling/results/parsed_graphs/parsed_graph *
-graphs_scheduling/results/parsed_graphs_images/graph1 *
-graphs_scheduling/results/parsed_graphs_images/graph2 *
-graphs_scheduling/results/parsed_graphs_images/graph3 *
-graphs_scheduling/results/parsed_graphs_images/graph4 *
-graphs_scheduling/results/parsed_graphs_images/parsed_graph *
-graphs_scheduling/results/scheduler_images/DAG *
+scheduling/results/logs/out *
+scheduling/results/parsed_graphs/graph1 *
+scheduling/results/parsed_graphs/graph2 *
+scheduling/results/parsed_graphs/graph3 *
+scheduling/results/parsed_graphs/graph4 *
+scheduling/results/parsed_graphs/parsed_graph *
+scheduling/results/parsed_graphs_images/graph1 *
+scheduling/results/parsed_graphs_images/graph2 *
+scheduling/results/parsed_graphs_images/graph3 *
+scheduling/results/parsed_graphs_images/graph4 *
+scheduling/results/parsed_graphs_images/parsed_graph *
+scheduling/results/scheduler_images/DAG *
 
 examples/examples_results/parsed_graphs/graph* *.dot
 examples/examples_results/parsed_graphs_images/graph* *.png

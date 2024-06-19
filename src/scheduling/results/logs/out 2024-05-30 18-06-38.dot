@@ -1,0 +1,181 @@
+strict digraph {
+graph [layout=dot,rankdir=LR];
+n_19 [label="mock_Gaudi_algorithm
+1.02 s",color="#000000",shape="ellipse",penwidth=5];
+n_20 [label="dataobject_algorithm
+133.059 ms",color="#000000",shape="ellipse",penwidth=5];
+n_21 [label="mock_Gaudi_algorithm
+1.027 s",color="#000000",shape="ellipse",penwidth=5];
+n_22 [label="dataobject_algorithm
+101.883 ms",color="#000000",shape="ellipse",penwidth=5];
+n_31 [label="mock_Gaudi_algorithm
+1.004 s",color="#000000",shape="ellipse",penwidth=5];
+n_32 [label="dataobject_algorithm
+101.45 ms",color="#000000",shape="ellipse",penwidth=5];
+n_61 [label="mock_Gaudi_algorithm
+1.03 s",color="#000000",shape="ellipse",penwidth=5];
+n_62 [label="dataobject_algorithm
+101.333 ms",color="#000000",shape="ellipse",penwidth=5];
+n_47 [label="mock_Gaudi_algorithm
+1.034 s",color="#FFFF74",shape="ellipse",penwidth=5];
+n_48 [label="dataobject_algorithm
+287.972 ms",color="#FFFF74",shape="ellipse",penwidth=5];
+n_59 [label="mock_Gaudi_algorithm
+1.035 s",color="#FF9BFF",shape="ellipse",penwidth=5];
+n_60 [label="dataobject_algorithm
+130.469 ms",color="#FF9BFF",shape="ellipse",penwidth=5];
+n_23 [label="mock_Gaudi_algorithm
+1.037 s",color="#00D3FF",shape="ellipse",penwidth=5];
+n_24 [label="dataobject_algorithm
+178.076 ms",color="#00D3FF",shape="ellipse",penwidth=5];
+n_25 [label="mock_Gaudi_algorithm
+1.003 s",color="#00D3FF",shape="ellipse",penwidth=5];
+n_26 [label="dataobject_algorithm
+101.236 ms",color="#00D3FF",shape="ellipse",penwidth=5];
+n_27 [label="mock_Gaudi_algorithm
+1.001 s",color="#00D3FF",shape="ellipse",penwidth=5];
+n_28 [label="dataobject_algorithm
+101.343 ms",color="#00D3FF",shape="ellipse",penwidth=5];
+n_29 [label="mock_Gaudi_algorithm
+1.002 s",color="#00D3FF",shape="ellipse",penwidth=5];
+n_30 [label="dataobject_algorithm
+101.422 ms",color="#00D3FF",shape="ellipse",penwidth=5];
+n_17 [label="mock_Gaudi_algorithm
+1.035 s",color="#E2630D",shape="ellipse",penwidth=5];
+n_18 [label="dataobject_algorithm
+132.228 ms",color="#E2630D",shape="ellipse",penwidth=5];
+n_57 [label="mock_Gaudi_algorithm
+1.036 s",color="#007E00",shape="ellipse",penwidth=5];
+n_58 [label="dataobject_algorithm
+130.271 ms",color="#007E00",shape="ellipse",penwidth=5];
+n_41 [label="mock_Gaudi_algorithm
+1.034 s",color="#0050E6",shape="ellipse",penwidth=5];
+n_42 [label="dataobject_algorithm
+130.839 ms",color="#0050E6",shape="ellipse",penwidth=5];
+n_43 [label="mock_Gaudi_algorithm
+1.065 s",color="#AC0047",shape="ellipse",penwidth=5];
+n_44 [label="dataobject_algorithm
+137.564 ms",color="#AC0047",shape="ellipse",penwidth=5];
+n_65 [label="mock_func
+1.012 s",color="#AC0047",shape="ellipse",penwidth=5];
+n_49 [label="mock_Gaudi_algorithm
+1.02 s",color="#00FFC8",shape="ellipse",penwidth=5];
+n_50 [label="dataobject_algorithm
+133.061 ms",color="#00FFC8",shape="ellipse",penwidth=5];
+n_51 [label="mock_Gaudi_algorithm
+1.036 s",color="#00FFC8",shape="ellipse",penwidth=5];
+n_52 [label="dataobject_algorithm
+101.873 ms",color="#00FFC8",shape="ellipse",penwidth=5];
+n_53 [label="mock_Gaudi_algorithm
+1.002 s",color="#00FFC8",shape="ellipse",penwidth=5];
+n_54 [label="dataobject_algorithm
+100.85 ms",color="#00FFC8",shape="ellipse",penwidth=5];
+n_55 [label="mock_Gaudi_algorithm
+1.002 s",color="#00FFC8",shape="ellipse",penwidth=5];
+n_56 [label="dataobject_algorithm
+101.531 ms",color="#00FFC8",shape="ellipse",penwidth=5];
+n_63 [label="mock_Gaudi_algorithm
+1.103 s",color="#00FFC8",shape="ellipse",penwidth=5];
+n_64 [label="dataobject_algorithm
+101.097 ms",color="#00FFC8",shape="ellipse",penwidth=5];
+n_33 [label="mock_Gaudi_algorithm
+1.02 s",color="#006468",shape="ellipse",penwidth=5];
+n_34 [label="dataobject_algorithm
+133.242 ms",color="#006468",shape="ellipse",penwidth=5];
+n_35 [label="mock_Gaudi_algorithm
+1.027 s",color="#006468",shape="ellipse",penwidth=5];
+n_36 [label="dataobject_algorithm
+101.292 ms",color="#006468",shape="ellipse",penwidth=5];
+n_37 [label="mock_Gaudi_algorithm
+1.001 s",color="#006468",shape="ellipse",penwidth=5];
+n_38 [label="dataobject_algorithm
+101.467 ms",color="#006468",shape="ellipse",penwidth=5];
+n_39 [label="mock_Gaudi_algorithm
+1.002 s",color="#006468",shape="ellipse",penwidth=5];
+n_40 [label="dataobject_algorithm
+101.307 ms",color="#006468",shape="ellipse",penwidth=5];
+n_45 [label="mock_Gaudi_algorithm
+1.002 s",color="#006468",shape="ellipse",penwidth=5];
+n_46 [label="dataobject_algorithm
+101.78 ms",color="#006468",shape="ellipse",penwidth=5];
+n_5 [label="mock_Gaudi_algorithm
+1.02 s",color="#FFD5C4",shape="ellipse",penwidth=5];
+n_6 [label="dataobject_algorithm
+130.9 ms",color="#FFD5C4",shape="ellipse",penwidth=5];
+n_7 [label="mock_Gaudi_algorithm
+1.027 s",color="#FFD5C4",shape="ellipse",penwidth=5];
+n_8 [label="dataobject_algorithm
+101.435 ms",color="#FFD5C4",shape="ellipse",penwidth=5];
+n_9 [label="mock_Gaudi_algorithm
+1.001 s",color="#FFD5C4",shape="ellipse",penwidth=5];
+n_10 [label="dataobject_algorithm
+100.878 ms",color="#FFD5C4",shape="ellipse",penwidth=5];
+n_11 [label="mock_Gaudi_algorithm
+1.003 s",color="#FFD5C4",shape="ellipse",penwidth=5];
+n_12 [label="dataobject_algorithm
+101.372 ms",color="#FFD5C4",shape="ellipse",penwidth=5];
+n_13 [label="mock_Gaudi_algorithm
+1.002 s",color="#FFD5C4",shape="ellipse",penwidth=5];
+n_14 [label="dataobject_algorithm
+101.306 ms",color="#FFD5C4",shape="ellipse",penwidth=5];
+n_15 [label="mock_Gaudi_algorithm
+1.002 s",color="#FFD5C4",shape="ellipse",penwidth=5];
+n_16 [label="dataobject_algorithm
+101.627 ms",color="#FFD5C4",shape="ellipse",penwidth=5];
+n_19 -> n_20 [label="Move: 27.587 us",color="#000000;0.5:#000000",penwidth=2];
+n_20 -> n_21 [label="Move: 5.283 ms",color="#000000;0.5:#000000",penwidth=2];
+n_21 -> n_22 [label="Move: 12.781 us",color="#000000;0.5:#000000",penwidth=2];
+n_22 -> n_31 [label="Move: 17.739 us",color="#000000;0.5:#000000",penwidth=2];
+n_31 -> n_32 [label="Move: 10.895 us",color="#000000;0.5:#000000",penwidth=2];
+n_56 -> n_61 [label="Move: 1.024 s",color="#00FFC8;0.5:#000000",penwidth=2];
+n_61 -> n_62 [label="Move: 15.784 us",color="#000000;0.5:#000000",penwidth=2];
+n_40 -> n_47 [label="Move: 322.31 ms",color="#006468;0.5:#FFFF74",penwidth=2];
+n_47 -> n_48 [label="Move: 20.534 us",color="#FFFF74;0.5:#FFFF74",penwidth=2];
+n_56 -> n_59 [label="Move: 871.766 ms",color="#00FFC8;0.5:#FF9BFF",penwidth=2];
+n_59 -> n_60 [label="Move: 22.419 us",color="#FF9BFF;0.5:#FF9BFF",penwidth=2];
+n_22 -> n_23 [label="Move: 282.357 ms",color="#000000;0.5:#00D3FF",penwidth=2];
+n_23 -> n_24 [label="Move: 20.044 us",color="#00D3FF;0.5:#00D3FF",penwidth=2];
+n_24 -> n_25 [label="Move: 17.041 us",color="#00D3FF;0.5:#00D3FF",penwidth=2];
+n_25 -> n_26 [label="Move: 10.616 us",color="#00D3FF;0.5:#00D3FF",penwidth=2];
+n_26 -> n_27 [label="Move: 10.896 us",color="#00D3FF;0.5:#00D3FF",penwidth=2];
+n_27 -> n_28 [label="Move: 8.52 us",color="#00D3FF;0.5:#00D3FF",penwidth=2];
+n_28 -> n_29 [label="Move: 13.2 us",color="#00D3FF;0.5:#00D3FF",penwidth=2];
+n_29 -> n_30 [label="Move: 16.762 us",color="#00D3FF;0.5:#00D3FF",penwidth=2];
+n_8 -> n_17 [label="Move: 153.299 ms",color="#FFD5C4;0.5:#E2630D",penwidth=2];
+n_17 -> n_18 [label="Move: 26.26 us",color="#E2630D;0.5:#E2630D",penwidth=2];
+n_56 -> n_57 [label="Move: 885.91 ms",color="#00FFC8;0.5:#007E00",penwidth=2];
+n_57 -> n_58 [label="Move: 19.067 us",color="#007E00;0.5:#007E00",penwidth=2];
+n_40 -> n_41 [label="Move: 228.179 ms",color="#006468;0.5:#0050E6",penwidth=2];
+n_41 -> n_42 [label="Move: 21.162 us",color="#0050E6;0.5:#0050E6",penwidth=2];
+n_40 -> n_43 [label="Move: 215.132 ms",color="#006468;0.5:#AC0047",penwidth=2];
+n_43 -> n_44 [label="Move: 19.067 us",color="#AC0047;0.5:#AC0047",penwidth=2];
+n_49 -> n_50 [label="Move: 32.266 us",color="#00FFC8;0.5:#00FFC8",penwidth=2];
+n_50 -> n_51 [label="Move: 5.891 ms",color="#00FFC8;0.5:#00FFC8",penwidth=2];
+n_51 -> n_52 [label="Move: 9.917 us",color="#00FFC8;0.5:#00FFC8",penwidth=2];
+n_52 -> n_53 [label="Move: 17.111 us",color="#00FFC8;0.5:#00FFC8",penwidth=2];
+n_53 -> n_54 [label="Move: 14.318 us",color="#00FFC8;0.5:#00FFC8",penwidth=2];
+n_54 -> n_55 [label="Move: 11.034 us",color="#00FFC8;0.5:#00FFC8",penwidth=2];
+n_55 -> n_56 [label="Move: 6.774 us",color="#00FFC8;0.5:#00FFC8",penwidth=2];
+n_56 -> n_63 [label="Move: 21.301 us",color="#00FFC8;0.5:#00FFC8",penwidth=2];
+n_63 -> n_64 [label="Move: 12.781 us",color="#00FFC8;0.5:#00FFC8",penwidth=2];
+n_33 -> n_34 [label="Move: 28.705 us",color="#006468;0.5:#006468",penwidth=2];
+n_34 -> n_35 [label="Move: 5.191 ms",color="#006468;0.5:#006468",penwidth=2];
+n_35 -> n_36 [label="Move: 11.314 us",color="#006468;0.5:#006468",penwidth=2];
+n_36 -> n_37 [label="Move: 16.832 us",color="#006468;0.5:#006468",penwidth=2];
+n_37 -> n_38 [label="Move: 9.499 us",color="#006468;0.5:#006468",penwidth=2];
+n_38 -> n_39 [label="Move: 13.829 us",color="#006468;0.5:#006468",penwidth=2];
+n_39 -> n_40 [label="Move: 9.009 us",color="#006468;0.5:#006468",penwidth=2];
+n_40 -> n_45 [label="Move: 14.248 us",color="#006468;0.5:#006468",penwidth=2];
+n_45 -> n_46 [label="Move: 13.829 us",color="#006468;0.5:#006468",penwidth=2];
+n_5 -> n_6 [label="Move: 32.476 us",color="#FFD5C4;0.5:#FFD5C4",penwidth=2];
+n_6 -> n_7 [label="Move: 5.315 ms",color="#FFD5C4;0.5:#FFD5C4",penwidth=2];
+n_7 -> n_8 [label="Move: 9.498 us",color="#FFD5C4;0.5:#FFD5C4",penwidth=2];
+n_8 -> n_9 [label="Move: 18.228 us",color="#FFD5C4;0.5:#FFD5C4",penwidth=2];
+n_9 -> n_10 [label="Move: 10.127 us",color="#FFD5C4;0.5:#FFD5C4",penwidth=2];
+n_10 -> n_11 [label="Move: 12.292 us",color="#FFD5C4;0.5:#FFD5C4",penwidth=2];
+n_11 -> n_12 [label="Move: 8.171 us",color="#FFD5C4;0.5:#FFD5C4",penwidth=2];
+n_12 -> n_13 [label="Move: 15.225 us",color="#FFD5C4;0.5:#FFD5C4",penwidth=2];
+n_13 -> n_14 [label="Move: 9.498 us",color="#FFD5C4;0.5:#FFD5C4",penwidth=2];
+n_14 -> n_15 [label="Move: 16.203 us",color="#FFD5C4;0.5:#FFD5C4",penwidth=2];
+n_15 -> n_16 [label="Move: 7.053 us",color="#FFD5C4;0.5:#FFD5C4",penwidth=2];
+}
