@@ -2,7 +2,6 @@ using GraphViz
 using FileIO
 using Cairo
 
-
 function dot_to_png(in, out)
     dot_code = read(in, String)
     graph = GraphViz.load(IOBuffer(dot_code))

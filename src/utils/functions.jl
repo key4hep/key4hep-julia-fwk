@@ -46,21 +46,6 @@ function parse_graphs(graphs_map::Dict, output_graph_path::String, output_graph_
     return graphs
 end
 
-function show_graph(G)
-    for (_, v) in enumerate(Graphs.vertices(G))
-        println("Node: ")
-        print("Node type: ")
-        println(get_prop(G, v, :type))
-        print("Node class (only for algorithms): ")
-        println(get_prop(G, v, :class))
-        print("Original name: ")
-        println(get_prop(G, v, :original_id))
-        print("Node name: ")
-        println(get_prop(G, v, :node_id))
-        println()
-    end
-end
-
 # Function to get the map of incoming edges to a vertex (i.e. the sources of the incoming edges)
 function get_ine_map(G)
     incoming_edges_sources_map = Dict{eltype(G), Vector{eltype(G)}}()
