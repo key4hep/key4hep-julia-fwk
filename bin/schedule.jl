@@ -1,21 +1,14 @@
-#module scheduling
+#!/usr/bin/env julia
 
 using Colors
 using DaggerWebDash
 using Distributed
 using MetaGraphs
+using Graphs
 using GraphViz
 using Dates
-include("../../utilities/GraphMLReader.jl/src/GraphMLReader.jl")
-
-# Set the number of workers
-new_procs = addprocs(12)
-
-# Including neccessary functions
-include("../../utilities/functions.jl")
-include("../../utilities/auxiliary_functions.jl")
-include("../../utilities/visualization_functions.jl")
-
+using key4hep_julia_fwk
+@everywhere using Distributed, Dagger
 # if isdefined(Main, :Dagger) # The Dagger scheduler is already running (?)
 #     ctx = Dagger.Sch.eager_context()
 #     addprocs!(ctx, new_procs)
@@ -25,18 +18,18 @@ include("../../utilities/visualization_functions.jl")
 graph1_path = "./data/sequencer_demo/df_sequencer_demo.graphml"
 graph2_path = "./data/sequencer_demo/another_test_graph.graphml"
 
-LOGS_FILE = timestamp_string("./scheduling/results/logs/out") * ".dot"
-GRAPH_IMAGE_PATH = timestamp_string("./scheduling/results/scheduler_images/DAG") * ".png"
+LOGS_FILE = key4hep_julia_fwk.timestamp_string("results/") * ".dot"
+GRAPH_IMAGE_PATH = key4hep_julia_fwk.timestamp_string("results/") * ".png"
 
-OUTPUT_GRAPH_PATH = "./scheduling/results/parsed_graphs/"
-OUTPUT_GRAPH_IMAGE_PATH = "./scheduling/results/parsed_graphs_images/"
+OUTPUT_GRAPH_PATH = "results/"
+OUTPUT_GRAPH_IMAGE_PATH = "results/"
 
 MAX_GRAPHS_RUN = 3
 
 function execution(graphs_map)
     graphs_being_run = Set{Int}()
 
-    graphs = parse_graphs(graphs_map, OUTPUT_GRAPH_PATH, OUTPUT_GRAPH_IMAGE_PATH)
+    graphs = key4hep_julia_fwk.parse_graphs(graphs_map, OUTPUT_GRAPH_PATH, OUTPUT_GRAPH_IMAGE_PATH)
 
     notifications = RemoteChannel(()->Channel{Int}(32))
 
@@ -48,7 +41,7 @@ function execution(graphs_map)
             println("Dispatcher: graph finished - $finished_graph_id")
         end
 
-        schedule_graph_with_notify(g, notifications, i)
+        key4hep_julia_fwk.schedule_graph_with_notify(g, notifications, i)
         push!(graphs_being_run, i)
         println("Dispatcher: scheduled graph $i")
     end
@@ -71,8 +64,8 @@ function execution(graphs_map)
 end
 
 function main(graphs_map)
-    configure_LocalEventLog()
-    set_log_file(LOGS_FILE)
+    key4hep_julia_fwk.configure_LocalEventLog()
+    key4hep_julia_fwk.set_log_file(LOGS_FILE)
     #
     # OR 
     #
@@ -80,11 +73,11 @@ function main(graphs_map)
 
     @time execution(graphs_map)
 
-    flush_logs_to_file()
+    key4hep_julia_fwk.flush_logs_to_file()
 
     # println(fetch_LocalEventLog())
 
-    dot_to_png(LOGS_FILE, GRAPH_IMAGE_PATH)
+    key4hep_julia_fwk.dot_to_png(LOGS_FILE, GRAPH_IMAGE_PATH)
     
 end
 
@@ -95,7 +88,9 @@ graphs_map = Dict{String, String}(
 "graph4" => graph2_path
 )
 
-main(graphs_map)
-rmprocs(workers()) # TODO: there is some issue here, as it throws errors, and restarting the file in the REPL ignores adding the procs
+if abspath(PROGRAM_FILE) == @__FILE__
+    #new_procs = addprocs(1) # Set the number of workers
+    main(graphs_map)
+    rmprocs(workers()) # TODO: there is some issue here, as it throws errors, and restarting the file in the REPL ignores adding the procs
 
-#end # module scheduling
+end
