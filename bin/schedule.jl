@@ -1,14 +1,17 @@
 #!/usr/bin/env julia
 
-using Colors
-using DaggerWebDash
 using Distributed
+new_procs = addprocs(12) # processes must be added before importing Dagger
+
+using Colors
+using Dagger
+using DaggerWebDash
 using MetaGraphs
 using Graphs
 using GraphViz
 using Dates
 using key4hep_julia_fwk
-@everywhere using Distributed, Dagger
+
 # if isdefined(Main, :Dagger) # The Dagger scheduler is already running (?)
 #     ctx = Dagger.Sch.eager_context()
 #     addprocs!(ctx, new_procs)
@@ -91,7 +94,6 @@ graphs_map = Dict{String, String}(
 
 if abspath(PROGRAM_FILE) == @__FILE__
     mkpath(output_dir)
-    #new_procs = addprocs(1) # Set the number of workers
     main(graphs_map)
     rmprocs(workers()) # TODO: there is some issue here, as it throws errors, and restarting the file in the REPL ignores adding the procs
 
