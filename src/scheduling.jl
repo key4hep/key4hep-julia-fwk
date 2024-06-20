@@ -144,4 +144,4 @@ function flush_logs_to_file()
 end
 
 
-AVAILABLE_TRANSFORMS = Dict{String,Function}("GaudiAlgorithm" => mock_Gaudi_algorithm, "DataObject" => dataobject_algorithm)
+AVAILABLE_TRANSFORMS = Dict{String,Function}("Algorithm" => mock_Gaudi_algorithm, "DataObject" => dataobject_algorithm)
