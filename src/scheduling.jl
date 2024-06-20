@@ -1,33 +1,34 @@
-@everywhere begin
-    using DaggerWebDash
-    using Dagger
-    # Algorithms
-    function mock_Gaudi_algorithm(id, data...)
-        println("Gaudi algorithm for vertex $id !")
-        sleep(1)
-        # println("Previous vertices: $data")
-        
-        return id
-    end
+using Distributed
 
-    function dataobject_algorithm(id, data...)
-        sleep(0.1)
-        return "dataobject"
-    end
+using DaggerWebDash
+using Dagger
+# Algorithms
+function mock_Gaudi_algorithm(id, data...)
+    println("Gaudi algorithm for vertex $id !")
+    sleep(1)
+    # println("Previous vertices: $data")
 
-    function notify_graph_finalization(notifications::RemoteChannel, graph_id::Int, final_vertices_promises)
-        # println("Entered notify $graph_id")
-        for promise in final_vertices_promises
-            wait(promise) # Actually, all the promises should be fulfilled at the moment of calling this function
-        end
-        put!(notifications, graph_id)
-    end
-
-    function mock_func()
-        sleep(1)
-        return
-    end
+    return id
 end
+
+function dataobject_algorithm(id, data...)
+    sleep(0.1)
+    return "dataobject"
+end
+
+function notify_graph_finalization(notifications::RemoteChannel, graph_id::Int, final_vertices_promises)
+    # println("Entered notify $graph_id")
+    for promise in final_vertices_promises
+        wait(promise) # Actually, all the promises should be fulfilled at the moment of calling this function
+    end
+    put!(notifications, graph_id)
+end
+
+function mock_func()
+    sleep(1)
+    return
+end
+
 
 
 function parse_graphs(graphs_map::Dict, output_graph_path::String, output_graph_image_path::String)
@@ -36,7 +37,7 @@ function parse_graphs(graphs_map::Dict, output_graph_path::String, output_graph_
         parsed_graph_dot = timestamp_string("$output_graph_path$graph_name") * ".dot"
         parsed_graph_image = timestamp_string("$output_graph_image_path$graph_name") * ".png"
         G = parse_graphml([graph_path])
-        
+
         open(parsed_graph_dot, "w") do f
             MetaGraphs.savedot(f, G)
         end
@@ -48,12 +49,12 @@ end
 
 # Function to get the map of incoming edges to a vertex (i.e. the sources of the incoming edges)
 function get_ine_map(G)
-    incoming_edges_sources_map = Dict{eltype(G), Vector{eltype(G)}}()
+    incoming_edges_sources_map = Dict{eltype(G),Vector{eltype(G)}}()
 
     for edge in Graphs.edges(G)
         src_vertex = src(edge)
         dest_vertex = dst(edge)
-        
+
         if haskey(incoming_edges_sources_map, dest_vertex)
             push!(incoming_edges_sources_map[dest_vertex], src_vertex)
         else
@@ -66,19 +67,19 @@ end
 
 # Function to get the map of outgoing edges from a vertex (i.e. the destinations of the outgoing edges)
 function get_oute_map(G)
-    outgoing_edges_destinations_map = Dict{eltype(G), Vector{eltype(G)}}()
+    outgoing_edges_destinations_map = Dict{eltype(G),Vector{eltype(G)}}()
 
     for edge in Graphs.edges(G)
         src_vertex = src(edge)
         dest_vertex = dst(edge)
-        
+
         if haskey(outgoing_edges_destinations_map, src_vertex)
             push!(outgoing_edges_destinations_map[src_vertex], dest_vertex)
         else
             outgoing_edges_destinations_map[src_vertex] = [dest_vertex]
         end
     end
-    
+
     return outgoing_edges_destinations_map
 end
 
@@ -143,4 +144,4 @@ function flush_logs_to_file()
 end
 
 
-AVAILABLE_TRANSFORMS = Dict{String, Function}("GaudiAlgorithm" => mock_Gaudi_algorithm, "DataObject" => dataobject_algorithm)
+AVAILABLE_TRANSFORMS = Dict{String,Function}("GaudiAlgorithm" => mock_Gaudi_algorithm, "DataObject" => dataobject_algorithm)
