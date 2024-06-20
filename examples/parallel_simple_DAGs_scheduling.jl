@@ -1,8 +1,8 @@
 using Distributed
 
-# addprocs(4) # 4 is the arbitrary number
+addprocs(4) # 4 is the arbitrary number
 
-include("./auxiliary/oldAPI_example_tasks.jl")
+include("./example_tasks.jl")
 
 
 # Example function to launch multiple DAGs execution
@@ -36,7 +36,7 @@ function do_DAGs_task(graphs_number, nodes_in_graph=3)
     end
 end
 
-do_DAGs_task(4, 3)
+do_DAGs_task(2, 3)
 
 alive_workers = workers()
 println("Workers list: ", alive_workers)

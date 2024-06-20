@@ -9,7 +9,7 @@ using Dates
 include("../../utilities/GraphMLReader.jl/src/GraphMLReader.jl")
 
 # Set the number of workers
-new_procs = addprocs(12)
+# new_procs = addprocs(12)
 
 # Including neccessary functions
 include("../../utilities/functions.jl")
@@ -72,7 +72,6 @@ end
 
 function main(graphs_map)
     configure_LocalEventLog()
-    set_log_file(LOGS_FILE)
     #
     # OR 
     #
@@ -80,7 +79,8 @@ function main(graphs_map)
 
     @time execution(graphs_map)
 
-    flush_logs_to_file()
+    # To be fixed
+    flush_logs_to_file(LOGS_FILE)
 
     # println(fetch_LocalEventLog())
 

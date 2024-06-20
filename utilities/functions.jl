@@ -1,26 +1,38 @@
+import Dagger
+# import Colors
+using Distributed
+using MetaGraphs
+
+# include("../dagger_exts/GraphVizSimpleExt.jl")
+
 @everywhere begin
     using DaggerWebDash
     using Dagger
     # Algorithms
-    function mock_Gaudi_algorithm(id, data...)
-        println("Gaudi algorithm for vertex $id !")
+    function mock_Gaudi_algorithm(graph_name, graph_id, vertex_id, data...)
+        println("Graph: $graph_name, Gaudi algorithm for vertex $vertex_id !")
         sleep(1)
         # println("Previous vertices: $data")
         
-        return id
+        return vertex_id
     end
 
-    function dataobject_algorithm(id, data...)
+    function dataobject_algorithm(graph_name, graph_id, vertex_id, data...)
+        println("Graph: $graph_name, Dataobject algorithm for vertex $vertex_id !")
         sleep(0.1)
-        return "dataobject"
+
+        return vertex_id
     end
 
-    function notify_graph_finalization(notifications::RemoteChannel, graph_id::Int, final_vertices_promises)
-        # println("Entered notify $graph_id")
-        for promise in final_vertices_promises
-            wait(promise) # Actually, all the promises should be fulfilled at the moment of calling this function
-        end
+    function notify_graph_finalization(notifications::RemoteChannel, graph_name::String, graph_id::Int, final_vertices_promises...)
+        println("Graph: $graph_name, entered notify, graph_id: $graph_id !")
+        # for promise in final_vertices_promises
+        #     println(typeof(promise))
+        #     wait(promise) # Actually, all the promises should have been fulfilled at the moment of calling this function
+        # end
+        println("Graph: $graph_name, all tasks in the graph finished, graph_id: $graph_id !")
         put!(notifications, graph_id)
+        println("Graph: $graph_name, notified, graph_id: $graph_id !")
     end
 
     function mock_func()
@@ -41,7 +53,7 @@ function parse_graphs(graphs_map::Dict, output_graph_path::String, output_graph_
             MetaGraphs.savedot(f, G)
         end
         dot_to_png(parsed_graph_dot, parsed_graph_image)
-        push!(graphs, G)
+        push!(graphs, (graph_name, G))
     end
     return graphs
 end
@@ -130,17 +142,17 @@ function schedule_graph(G::MetaDiGraph)
 
     for vertex_id in MetaGraphs.topological_sort(G)
         incoming_data = get_deps_promises(vertex_id, inc_e_src_map, G)
-        set_prop!(G, vertex_id, :res_data, Dagger.@spawn AVAILABLE_TRANSFORMS[get_prop(G, vertex_id, :type)](vertex_id, incoming_data...))
+        set_prop!(G, vertex_id, :res_data, Dagger.@spawn AVAILABLE_TRANSFORMS[get_prop(G, vertex_id, :type)](name, graph_id, vertex_id, incoming_data...))
     end
 end
 
-function schedule_graph_with_notify(G::MetaDiGraph, notifications::RemoteChannel, graph_id::Int)
+function schedule_graph_with_notify(G::MetaDiGraph, notifications::RemoteChannel, graph_name::String, graph_id::Int)
     final_vertices = []
     inc_e_src_map = get_ine_map(G)
 
     for vertex_id in MetaGraphs.topological_sort(G)
         incoming_data = get_deps_promises(vertex_id, inc_e_src_map, G)
-        set_prop!(G, vertex_id, :res_data, Dagger.@spawn AVAILABLE_TRANSFORMS[get_prop(G, vertex_id, :type)](vertex_id, incoming_data...))
+        set_prop!(G, vertex_id, :res_data, Dagger.@spawn AVAILABLE_TRANSFORMS[get_prop(G, vertex_id, :type)](graph_name, graph_id, vertex_id, incoming_data...))
     end
 
     out_e_src_map = get_oute_map(G)
@@ -156,16 +168,32 @@ function schedule_graph_with_notify(G::MetaDiGraph, notifications::RemoteChannel
         end
     end
 
-    Dagger.@spawn notify_graph_finalization(notifications, graph_id, get_vertices_promises(final_vertices, G))
+    Dagger.@spawn notify_graph_finalization(notifications, graph_name, graph_id, get_vertices_promises(final_vertices, G)...)
 end
 
-function flush_logs_to_file()
-    ctx = Dagger.Sch.eager_context()
-    logs = Dagger.TimespanLogging.get_logs!(ctx)
-    open(ctx.log_file, "w") do io
-        Dagger.show_plan(io, logs) # Writes graph to a file
+function my_show_plan(io::IO, logs::Vector{Dagger.TimespanLogging.Timespan}, t=nothing)
+    println(io, """strict digraph {
+    graph [layout=dot,rankdir=LR];""")
+    GraphVizSimpleExt.write_dag(io, t, logs)
+    println(io, "}")
+end
+
+function flush_logs_to_file(log_file)
+    open(log_file, "w") do io
+        my_show_plan(io, Dagger.fetch_logs!(), nothing) # Writes graph to a file
     end
 end
 
+function flush_logs_to_file(log_file, t::Thunk)
+    open(log_file, "w") do io
+        Dagger.show_logs(io, t, Dagger.fetch_logs!(), :graphviz_simple) # Writes graph to a file
+    end
+end
+
+function save_logs(log_file, logs)
+    open(log_file, "w") do io
+        write(io, logs)
+    end
+end
 
 AVAILABLE_TRANSFORMS = Dict{String, Function}("Algorithm" => mock_Gaudi_algorithm, "DataObject" => dataobject_algorithm)
