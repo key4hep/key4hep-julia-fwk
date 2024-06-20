@@ -1,6 +1,6 @@
 using Graphs
 using MetaGraphs
-include("../ext/GraphMLReader/src/GraphMLReader.jl")
+include("../deps/GraphMLReader.jl/src/GraphMLReader.jl")
 
 function parse_graphml(path)
     file_path = joinpath(path...)

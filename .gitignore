@@ -27,7 +27,7 @@ Manifest.toml
 .vscode
 
 # External dependencies
-ext/
+deps/
 
 # Test scripts
 # scheduling/test/test_scripts/
