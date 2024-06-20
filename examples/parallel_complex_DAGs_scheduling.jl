@@ -1,3 +1,5 @@
+#module graphs_scheduling
+
 using Colors
 using DaggerWebDash
 using Distributed
@@ -7,7 +9,7 @@ using Dates
 include("../utilities/GraphMLReader.jl/src/GraphMLReader.jl")
 
 # Set the number of workers
-# addprocs(12)
+addprocs(12)
 
 # Including neccessary functions
 include("../utilities/functions.jl")
@@ -18,15 +20,15 @@ include("../utilities/visualization_functions.jl")
 graph1_path = "./data/sequencer_demo/df_sequencer_demo.graphml"
 graph2_path = "./data/sequencer_demo/another_test_graph.graphml"
 
-LOGS_FILE = timestamp_string("./examples/examples_results/logs/out") * ".dot"
-GRAPH_IMAGE_PATH = timestamp_string("./examples/examples_results/scheduler_images/DAG") * ".png"
+LOGS_FILE = timestamp_string("./graphs_scheduling/results/logs/out") * ".dot"
+GRAPH_IMAGE_PATH = timestamp_string("./graphs_scheduling/results/scheduler_images/DAG") * ".png"
 
 
 function parse_graphs(graphs_map::Dict)
     graphs = []
     for (graph_name, graph_path) in graphs_map
-        parsed_graph_dot = timestamp_string("./examples/examples_results/parsed_graphs/$graph_name") * ".dot"
-        parsed_graph_image = timestamp_string("./examples/examples_results/parsed_graphs_images/$graph_name") * ".png"
+        parsed_graph_dot = timestamp_string("./graphs_scheduling/results/parsed_graphs/$graph_name") * ".dot"
+        parsed_graph_image = timestamp_string("./graphs_scheduling/results/parsed_graphs_images/$graph_name") * ".png"
         G = parse_graphml([graph_path])
         # G_copy = deepcopy(G)
         # show_graph(G_copy)
@@ -73,6 +75,7 @@ function main(graphs_map)
 
     @time execution(graphs_map)
 
+    # To be fixed
     flush_logs_to_file()
 
     # println(fetch_LocalEventLog())
@@ -89,3 +92,5 @@ graphs_map = Dict{String, String}(
 )
 
 main(graphs_map)
+
+#end # module graphs_scheduling
