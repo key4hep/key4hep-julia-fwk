@@ -16,7 +16,7 @@
 <text text-anchor="middle" x="278.19" y="-230.3" font-family="Times-Roman" font-size="14.00">RootDecisionHub</text>
 </g>
 <!-- ProducerA -->
-<g id="node2" class="node GaudiAlgorithm">
+<g id="node2" class="node Algorithm">
 <title>ProducerA</title>
 <ellipse fill="none" stroke="black" cx="57.19" cy="-162" rx="57.39" ry="18"/>
 <text text-anchor="middle" x="57.19" y="-158.3" font-family="Times-Roman" font-size="14.00">ProducerA</text>
@@ -28,7 +28,7 @@
 <polygon fill="black" stroke="black" points="106.61,-174.98 96.02,-175.3 104.49,-181.65 106.61,-174.98"/>
 </g>
 <!-- TransformerB -->
-<g id="node3" class="node GaudiAlgorithm">
+<g id="node3" class="node Algorithm">
 <title>TransformerB</title>
 <ellipse fill="none" stroke="black" cx="204.19" cy="-162" rx="71.49" ry="18"/>
 <text text-anchor="middle" x="204.19" y="-158.3" font-family="Times-Roman" font-size="14.00">TransformerB</text>
@@ -52,7 +52,7 @@
 <polygon fill="black" stroke="black" points="330.8,-188.69 335.72,-179.31 326.02,-183.57 330.8,-188.69"/>
 </g>
 <!-- TransformerG -->
-<g id="node10" class="node GaudiAlgorithm">
+<g id="node10" class="node Algorithm">
 <title>TransformerG</title>
 <ellipse fill="none" stroke="black" cx="502.19" cy="-162" rx="72.29" ry="18"/>
 <text text-anchor="middle" x="502.19" y="-158.3" font-family="Times-Roman" font-size="14.00">TransformerG</text>
@@ -64,7 +64,7 @@
 <polygon fill="black" stroke="black" points="450.55,-182.81 459.05,-176.48 448.46,-176.13 450.55,-182.81"/>
 </g>
 <!-- TransformerC -->
-<g id="node5" class="node GaudiAlgorithm">
+<g id="node5" class="node Algorithm">
 <title>TransformerC</title>
 <ellipse fill="none" stroke="black" cx="191.19" cy="-90" rx="71.49" ry="18"/>
 <text text-anchor="middle" x="191.19" y="-86.3" font-family="Times-Roman" font-size="14.00">TransformerC</text>
@@ -76,7 +76,7 @@
 <polygon fill="black" stroke="black" points="236.17,-106.62 225.61,-105.87 233.4,-113.05 236.17,-106.62"/>
 </g>
 <!-- TransformerD -->
-<g id="node6" class="node GaudiAlgorithm">
+<g id="node6" class="node Algorithm">
 <title>TransformerD</title>
 <ellipse fill="none" stroke="black" cx="353.19" cy="-90" rx="72.29" ry="18"/>
 <text text-anchor="middle" x="353.19" y="-86.3" font-family="Times-Roman" font-size="14.00">TransformerD</text>
@@ -100,7 +100,7 @@
 <polygon fill="black" stroke="black" points="480.83,-113.13 488.79,-106.14 478.21,-106.64 480.83,-113.13"/>
 </g>
 <!-- TransformerE -->
-<g id="node8" class="node GaudiAlgorithm">
+<g id="node8" class="node Algorithm">
 <title>TransformerE</title>
 <ellipse fill="none" stroke="black" cx="446.19" cy="-18" rx="71.49" ry="18"/>
 <text text-anchor="middle" x="446.19" y="-14.3" font-family="Times-Roman" font-size="14.00">TransformerE</text>
@@ -112,7 +112,7 @@
 <polygon fill="black" stroke="black" points="474.85,-39.42 465.02,-35.47 470.24,-44.69 474.85,-39.42"/>
 </g>
 <!-- TransformerF -->
-<g id="node9" class="node GaudiAlgorithm">
+<g id="node9" class="node Algorithm">
 <title>TransformerF</title>
 <ellipse fill="none" stroke="black" cx="606.19" cy="-18" rx="70.69" ry="18"/>
 <text text-anchor="middle" x="606.19" y="-14.3" font-family="Times-Roman" font-size="14.00">TransformerF</text>
