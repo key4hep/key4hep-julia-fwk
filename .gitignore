@@ -52,12 +52,16 @@ examples/examples_results/logs/out *.dot
 
 examples/examples_results/log_sink/viz_oldAPI_multieventlog *
 examples/examples_results/log_sink/viz_modernAPI_multieventlog *
-
+examples/examples_results/log_sink/viz_oldAPI_localeventlog *
 examples/examples_results/log_sink/viz_modernAPI_localeventlog *
 
 examples/examples_results/enable_logging/viz_enable_logging_modernAPI *
 examples/examples_results/enable_logging/viz_enable_logging_oldAPI *
 examples/examples_results/enable_logging/viz_raw_enable_logging_oldAPI *
+
+examples/examples_results/render_logs/render_graphviz_complex *
+examples/examples_results/render_logs/render_graphviz_simple *
+
 
 *API_*eventlog *.dot
 

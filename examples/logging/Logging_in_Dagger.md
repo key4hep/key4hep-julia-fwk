@@ -86,3 +86,14 @@ Webdash does not seem to work as of Dagger 0.18.11.
 
 ### Render Logs
 
+The corresponding folder contains examples of the `render_logs()` function use.
+
+`:graphviz` does not seem to generate graphs properly for now. Also sometimes throws `KeyError`.
+
+`:plots_gantt_ps` displays the following result:
+
+![gantt_ps](../../docs_images/plot_gantt_ps.png)
+
+`:plots_gantt`:
+
+![gantt](../../docs_images/plot_gantt.png)
