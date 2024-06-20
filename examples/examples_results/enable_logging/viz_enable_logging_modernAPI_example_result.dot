@@ -1,0 +1,51 @@
+strict digraph {
+graph [layout=dot,rankdir=LR];
+n_5 [label="taskA
+1.051 s",color="#000000",shape="ellipse",penwidth=5];
+n_9 [label="taskE
+1.02 s",color="#000000",shape="ellipse",penwidth=5];
+n_6 [label="taskB
+1.018 s",color="#000000",shape="ellipse",penwidth=5];
+n_7 [label="taskC
+1.03 s",color="#000000",shape="ellipse",penwidth=5];
+n_8 [label="taskD
+1.042 s",color="#000000",shape="ellipse",penwidth=5];
+n_10 [label="taskF
+1.035 s",color="#000000",shape="ellipse",penwidth=5];
+n_arg_1_to_5 [label="1",color="black",shape="ellipse",penwidth=5];
+n_arg_1_to_5 -> n_5 [label="Move: 6.992 ms",color="black;0.5:#000000",penwidth=2];
+n_arg_2_to_5 [label="1",color="black",shape="ellipse",penwidth=5];
+n_arg_2_to_5 -> n_5 [label="Move: 37.0 us",color="black;0.5:#000000",penwidth=2];
+n_arg_1_to_9 [label="1",color="black",shape="ellipse",penwidth=5];
+n_arg_1_to_9 -> n_9 [label="Move: 6.989 ms",color="black;0.5:#000000",penwidth=2];
+n_arg_2_to_9 [label="5",color="black",shape="ellipse",penwidth=5];
+n_arg_2_to_9 -> n_9 [label="Move: 30.2 us",color="black;0.5:#000000",penwidth=2];
+n_arg_1_to_6 [label="1",color="black",shape="ellipse",penwidth=5];
+n_arg_1_to_6 -> n_6 [label="Move: 9.011 ms",color="black;0.5:#000000",penwidth=2];
+n_arg_2_to_6 [label="2",color="black",shape="ellipse",penwidth=5];
+n_arg_2_to_6 -> n_6 [label="Move: 39.7 us",color="black;0.5:#000000",penwidth=2];
+n_arg_1_to_7 [label="1",color="black",shape="ellipse",penwidth=5];
+n_arg_1_to_7 -> n_7 [label="Move: 8.619 ms",color="black;0.5:#000000",penwidth=2];
+n_arg_2_to_7 [label="3",color="black",shape="ellipse",penwidth=5];
+n_arg_2_to_7 -> n_7 [label="Move: 31.6 us",color="black;0.5:#000000",penwidth=2];
+n_arg_1_to_8 [label="1",color="black",shape="ellipse",penwidth=5];
+n_arg_1_to_8 -> n_8 [label="Move: 7.278 ms",color="black;0.5:#000000",penwidth=2];
+n_arg_2_to_8 [label="4",color="black",shape="ellipse",penwidth=5];
+n_arg_2_to_8 -> n_8 [label="Move: 37.8 us",color="black;0.5:#000000",penwidth=2];
+n_arg_1_to_10 [label="1",color="black",shape="ellipse",penwidth=5];
+n_arg_1_to_10 -> n_10 [label="Move: 7.985 ms",color="black;0.5:#000000",penwidth=2];
+n_arg_2_to_10 [label="6",color="black",shape="ellipse",penwidth=5];
+n_arg_2_to_10 -> n_10 [label="Move: 30.0 us",color="black;0.5:#000000",penwidth=2];
+n_5 -> n_9 [label="Move: 44.072 ms",color="#000000;0.5:#000000",penwidth=2];
+n_5 -> n_6 [label="Move: 7.083 ms",color="#000000;0.5:#000000",penwidth=2];
+n_5 -> n_7 [label="Move: 6.017 ms",color="#000000;0.5:#000000",penwidth=2];
+n_6 -> n_7 [label="Move: 94.8 us",color="#000000;0.5:#000000",penwidth=2];
+n_5 -> n_8 [label="Move: 6.215 ms",color="#000000;0.5:#000000",penwidth=2];
+n_6 -> n_8 [label="Move: 165.2 us",color="#000000;0.5:#000000",penwidth=2];
+n_7 -> n_8 [label="Move: 54.7 us",color="#000000;0.5:#000000",penwidth=2];
+n_5 -> n_10 [label="Move: 5.649 ms",color="#000000;0.5:#000000",penwidth=2];
+n_6 -> n_10 [label="Move: 110.6 us",color="#000000;0.5:#000000",penwidth=2];
+n_7 -> n_10 [label="Move: 24.2 us",color="#000000;0.5:#000000",penwidth=2];
+n_8 -> n_10 [label="Move: 19.8 us",color="#000000;0.5:#000000",penwidth=2];
+n_9 -> n_10 [label="Move: 19.6 us",color="#000000;0.5:#000000",penwidth=2];
+}

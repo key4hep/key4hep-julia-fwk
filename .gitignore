@@ -59,6 +59,6 @@ examples/examples_results/enable_logging/viz_enable_logging_modernAPI *
 examples/examples_results/enable_logging/viz_enable_logging_oldAPI *
 examples/examples_results/enable_logging/viz_raw_enable_logging_oldAPI *
 
-*API_*eventlog*.dot
+*API_*eventlog *.dot
 
 DAG *.png
