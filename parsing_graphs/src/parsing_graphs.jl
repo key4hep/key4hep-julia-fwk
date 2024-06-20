@@ -6,7 +6,7 @@ using MetaGraphs
 using Dagger
 using DaggerWebDash
 include("../../utilities/GraphMLReader.jl/src/GraphMLReader.jl")
-include("../../utilities/auxiliary_functions.jl")
+include("auxiliary_functions.jl")
 
 
 function main()
