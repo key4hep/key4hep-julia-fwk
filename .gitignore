@@ -29,6 +29,9 @@ Manifest.toml
 # External dependencies
 deps/
 
+# Output files
+results/
+
 # Test scripts
 # scheduling/test/test_scripts/
 

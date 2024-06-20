@@ -18,11 +18,12 @@ using key4hep_julia_fwk
 graph1_path = "./data/sequencer_demo/df_sequencer_demo.graphml"
 graph2_path = "./data/sequencer_demo/another_test_graph.graphml"
 
-LOGS_FILE = key4hep_julia_fwk.timestamp_string("results/") * ".dot"
-GRAPH_IMAGE_PATH = key4hep_julia_fwk.timestamp_string("results/") * ".png"
+output_dir = "results/"
+LOGS_FILE = key4hep_julia_fwk.timestamp_string(output_dir) * ".dot"
+GRAPH_IMAGE_PATH = key4hep_julia_fwk.timestamp_string(output_dir) * ".png"
 
-OUTPUT_GRAPH_PATH = "results/"
-OUTPUT_GRAPH_IMAGE_PATH = "results/"
+OUTPUT_GRAPH_PATH = output_dir
+OUTPUT_GRAPH_IMAGE_PATH = output_dir
 
 MAX_GRAPHS_RUN = 3
 
@@ -89,6 +90,7 @@ graphs_map = Dict{String, String}(
 )
 
 if abspath(PROGRAM_FILE) == @__FILE__
+    mkpath(output_dir)
     #new_procs = addprocs(1) # Set the number of workers
     main(graphs_map)
     rmprocs(workers()) # TODO: there is some issue here, as it throws errors, and restarting the file in the REPL ignores adding the procs
