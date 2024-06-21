@@ -1,3 +1,5 @@
+using Distributed
+
 @everywhere begin
     using Dagger
     using TimespanLogging

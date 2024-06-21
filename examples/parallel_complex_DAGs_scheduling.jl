@@ -1,40 +1,39 @@
 using Colors
 using DaggerWebDash
 using Distributed
+using Graphs
 using MetaGraphs
 using GraphViz
 using Dates
-include("../utilities/GraphMLReader.jl/src/GraphMLReader.jl")
+using key4hep_julia_fwk
 
 # Set the number of workers
 # addprocs(12)
-
-# Including neccessary functions
-include("../utilities/functions.jl")
-include("../utilities/auxiliary_functions.jl")
-include("../utilities/visualization_functions.jl")
 
 # Defining constants
 graph1_path = "./data/sequencer_demo/df_sequencer_demo.graphml"
 graph2_path = "./data/sequencer_demo/another_test_graph.graphml"
 
-LOGS_FILE = timestamp_string("./examples/examples_results/logs/out") * ".dot"
-GRAPH_IMAGE_PATH = timestamp_string("./examples/examples_results/scheduler_images/DAG") * ".png"
+output_dir = "examples/results/"
+mkpath(output_dir)
+
+LOGS_FILE = key4hep_julia_fwk.timestamp_string(output_dir) * ".dot"
+GRAPH_IMAGE_PATH = key4hep_julia_fwk.timestamp_string(output_dir) * ".png"
 
 
 function parse_graphs(graphs_map::Dict)
     graphs = []
     for (graph_name, graph_path) in graphs_map
-        parsed_graph_dot = timestamp_string("./examples/examples_results/parsed_graphs/$graph_name") * ".dot"
-        parsed_graph_image = timestamp_string("./examples/examples_results/parsed_graphs_images/$graph_name") * ".png"
-        G = parse_graphml([graph_path])
+        parsed_graph_dot = key4hep_julia_fwk.timestamp_string("$output_dir/$graph_name") * ".dot"
+        parsed_graph_image = key4hep_julia_fwk.timestamp_string("$output_dir/$graph_name") * ".png"
+        G = key4hep_julia_fwk.parse_graphml([graph_path])
         # G_copy = deepcopy(G)
         # show_graph(G_copy)
         
         open(parsed_graph_dot, "w") do f
             MetaGraphs.savedot(f, G)
         end
-        dot_to_png(parsed_graph_dot, parsed_graph_image)
+        key4hep_julia_fwk.dot_to_png(parsed_graph_dot, parsed_graph_image)
         push!(graphs, G)
     end
     return graphs
@@ -43,7 +42,7 @@ end
 function execution(graphs_map)
     graphs = parse_graphs(graphs_map)
     for g in graphs
-        schedule_graph(g)
+        key4hep_julia_fwk.schedule_graph(g)
     end
 
     results = []
@@ -64,8 +63,8 @@ function execution(graphs_map)
 end
 
 function main(graphs_map)
-    configure_LocalEventLog()
-    set_log_file(LOGS_FILE)
+    key4hep_julia_fwk.configure_LocalEventLog()
+    key4hep_julia_fwk.set_log_file(LOGS_FILE)
     #
     # OR 
     #
@@ -73,11 +72,11 @@ function main(graphs_map)
 
     @time execution(graphs_map)
 
-    flush_logs_to_file()
+    key4hep_julia_fwk.flush_logs_to_file()
 
     # println(fetch_LocalEventLog())
 
-    dot_to_png(LOGS_FILE, GRAPH_IMAGE_PATH)
+    key4hep_julia_fwk.dot_to_png(LOGS_FILE, GRAPH_IMAGE_PATH)
     
 end
 

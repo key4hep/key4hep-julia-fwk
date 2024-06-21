@@ -2,7 +2,7 @@ using Distributed
 
 # addprocs(4) # 4 is the arbitrary number
 
-include("./auxiliary/oldAPI_example_tasks.jl")
+include("tasks/oldAPI_example_tasks.jl")
 
 
 # Example function to launch multiple DAGs execution

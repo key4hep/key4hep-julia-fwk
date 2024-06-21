@@ -1,8 +1,8 @@
 using Distributed
 
 ps1 = addprocs(2)
-@everywhere include("./example_tasks.jl")
 
+using Dagger
 
 # Old Dagger API - rmprocs works normally
 
