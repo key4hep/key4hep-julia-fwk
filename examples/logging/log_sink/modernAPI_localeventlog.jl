@@ -1,9 +1,11 @@
 import Colors # Writing logs into a file would fail without this import 
+using key4hep_julia_fwk
 
-include("../../auxiliary/modernAPI_tasks.jl")
-include("../../../utilities/auxiliary_functions.jl")
+include("../../tasks/modernAPI_tasks.jl")
 
-LOG_FILE = timestamp_string("./examples/logging/log_sink/results/modernAPI_localeventlog") * ".dot"
+output_dir = "examples/results/"
+mkpath(output_dir)
+LOG_FILE = key4hep_julia_fwk.timestamp_string("$output_dir/modernAPI_localeventlog") * ".dot"
 
 ctx = Dagger.Sch.eager_context()
 

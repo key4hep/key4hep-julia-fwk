@@ -99,7 +99,7 @@ ml.aggregators[:d3r] = d3r
 ctx.log_sink = ml
 # ... use `ctx`
 
-include("../auxiliary/oldAPI_tasks.jl")
+include("../tasks/oldAPI_tasks.jl")
 
 t = task_setup(10)
 println(collect(ctx, t))
