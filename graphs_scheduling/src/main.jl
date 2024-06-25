@@ -50,9 +50,11 @@ function execution(graphs_map::Dict{String, String})
     dags = Dict{String, TrackedTaskDAG}()
     running_dags = Set{String}()
     done_dags = Set{String}()
+    waiting_notifiers = Dict{String, Task}()
+    lk = ReentrantLock() 
 
-    schedule_graphs(notifications, graphs_map, dags, running_dags, done_dags)
-    wait_dags_to_finish(notifications, dags, running_dags, done_dags)
+    schedule_graphs(notifications, graphs_map, dags, running_dags, done_dags, waiting_notifiers, lk)
+    wait_dags_to_finish(notifications, dags, running_dags, done_dags, waiting_notifiers, lk)
 end
 
 function parse_graph(graph_name::String, graph_path::String, output_graph_path::String, output_graph_image_path::String)
@@ -68,7 +70,8 @@ function parse_graph(graph_name::String, graph_path::String, output_graph_path::
 end
 
 function schedule_graphs(notifications::Channel{String}, graphs_map::Dict{String, String},
-    dags::Dict{String, TrackedTaskDAG}, running_dags::Set{String}, done_dags::Set{String})
+    dags::Dict{String, TrackedTaskDAG}, running_dags::Set{String}, done_dags::Set{String},
+    waiting_notifiers::Dict{String, Task}, lk::ReentrantLock)
 
     for (g_name, g_path) in graphs_map
         g = parse_graph(g_name, g_path, OUTPUT_GRAPH_PATH, OUTPUT_GRAPH_IMAGE_PATH)
@@ -76,29 +79,34 @@ function schedule_graphs(notifications::Channel{String}, graphs_map::Dict{String
         dags[get_uuid(tracked_task_dag)] = tracked_task_dag
 
         while length(running_dags) >= MAX_GRAPHS_RUN
-            wait_dags_to_finish(notifications, dags, running_dags, done_dags, length(running_dags) - MAX_GRAPHS_RUN + 1)
+            wait_dags_to_finish(notifications, dags, running_dags, done_dags,
+             waiting_notifiers, lk, length(running_dags) - MAX_GRAPHS_RUN + 1)
         end
-        schedule_DAG(tracked_task_dag, notifications, running_dags)
+        schedule_DAG(tracked_task_dag, notifications, running_dags, waiting_notifiers)
     end    
 end
 
-function schedule_DAG(tracked_task_dag::TrackedTaskDAG, notifications::Channel{String}, running_dags::Set{String})
+function schedule_DAG(tracked_task_dag::TrackedTaskDAG, notifications::Channel{String}, running_dags::Set{String}, waiting_notifiers::Dict{String, Task})
     uuid = get_uuid(tracked_task_dag)
     start_DAG(tracked_task_dag)
     push!(running_dags, uuid)
     println("Dispatcher: graph scheduled - $uuid: $(get_name(tracked_task_dag))")
-    Threads.@spawn begin
+    notifier = Threads.@spawn begin
         wait(tracked_task_dag)
         put!(notifications, string(get_uuid(tracked_task_dag)))
     end
+    waiting_notifiers[uuid] = notifier
 end
 
 function wait_dags_to_finish(notifications::Channel{String}, dags::Dict{String, TrackedTaskDAG}, running_dags::Set{String},
-     done_dags::Set{String}, num=length(waiting_notifiers))
+     done_dags::Set{String}, waiting_notifiers::Dict{String, Task}, lk::ReentrantLock, num=length(waiting_notifiers))
     for i in 1:num
         uuid = take!(notifications)
+        lock(lk)
+        delete!(waiting_notifiers, uuid)
         delete!(running_dags, uuid)
         push!(done_dags, uuid)
+        unlock(lk)
         println("Dispatcher: graph finished - $uuid: $(get_name(dags[uuid]))")
     end
 end
