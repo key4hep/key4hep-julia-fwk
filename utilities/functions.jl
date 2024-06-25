@@ -58,31 +58,6 @@ function parse_graphs(graphs_map::Dict, output_graph_path::String, output_graph_
     return graphs
 end
 
-function show_graph(G)
-    for (_, v) in enumerate(Graphs.vertices(G))
-        println("Node: ")
-        print("Node type: ")
-        println(get_prop(G, v, :type))
-        if has_prop(G, v, :class)
-            print("Node class: ")
-            println(get_prop(G, v, :class))
-        end
-        if has_prop(G, v, :runtime_average_s)
-            print("Average runtime [s]: ")
-            println(get_prop(G, v, :runtime_average_s))
-        end
-        if has_prop(G, v, :size_average_B)
-            print("Average size [B]: ")
-            println(get_prop(G, v, :size_average_B))
-        end
-        print("Original name: ")
-        println(get_prop(G, v, :original_id))
-        print("Node name: ")
-        println(get_prop(G, v, :node_id))
-        println()
-    end
-end
-
 # Function to get the map of incoming edges to a vertex (i.e. the sources of the incoming edges)
 function get_ine_map(G)
     incoming_edges_sources_map = Dict{eltype(G), Vector{eltype(G)}}()

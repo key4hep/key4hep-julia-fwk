@@ -14,11 +14,6 @@ function wrapper(data::Vector, vertex_id)
     return resulting_data
 end
 
-function parse_graphml(path)
-    file_path = joinpath(path...)
-    G = GraphMLReader.loadgraphml(file_path, "G")
-end
-
 function configure_webdash_multievent()
     ctx = Dagger.Sch.eager_context()
     ml = Dagger.TimespanLogging.MultiEventLog()
