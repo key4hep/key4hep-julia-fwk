@@ -1,6 +1,5 @@
 #module graphs_scheduling
 
-import Base.wait
 using Colors
 using DaggerWebDash
 using Distributed
@@ -15,13 +14,7 @@ using .ModGraphVizSimpleExt
 
 
 # Set the number of workers
-new_procs = addprocs(12, lazy=false)
-
-@everywhere begin
-    include("MetaTask.jl")
-    include("TaskDAG.jl")
-    include("TrackedTaskDAG.jl")
-end
+new_procs = addprocs(12)
 
 # Including neccessary functions
 include("../../utilities/functions.jl")
@@ -45,74 +38,51 @@ OUTPUT_GRAPH_IMAGE_PATH = "./graphs_scheduling/results/parsed_graphs_images/"
 
 MAX_GRAPHS_RUN = 3
 
-function execution(graphs_map::Dict{String, String})
-    notifications = Channel{String}(32)
-    dags = Dict{String, TrackedTaskDAG}()
-    running_dags = Set{String}()
-    done_dags = Set{String}()
-    waiting_notifiers = Dict{String, Task}()
-    lk = ReentrantLock() 
+function execution(graphs_map)
+    graphs_being_run = Set{Int}()
+    graphs_dict = Dict{Int, String}()
 
-    schedule_graphs(notifications, graphs_map, dags, running_dags, done_dags, waiting_notifiers, lk)
-    wait_dags_to_finish(notifications, dags, running_dags, done_dags, waiting_notifiers, lk)
-end
+    graphs = parse_graphs(graphs_map, OUTPUT_GRAPH_PATH, OUTPUT_GRAPH_IMAGE_PATH)
 
-function parse_graph(graph_name::String, graph_path::String, output_graph_path::String, output_graph_image_path::String)
-    parsed_graph_dot = timestamp_string("$output_graph_path$graph_name") * ".dot"
-    parsed_graph_image = timestamp_string("$output_graph_image_path$graph_name") * ".png"
-    G = parse_graphml([graph_path])
-    
-    open(parsed_graph_dot, "w") do f
-        MetaGraphs.savedot(f, G)
-    end
-    dot_to_png(parsed_graph_dot, parsed_graph_image)
-    return G
-end
+    notifications = RemoteChannel(()->Channel{Int}(32))
+    # notifications = Channel{Int}(32)
 
-function schedule_graphs(notifications::Channel{String}, graphs_map::Dict{String, String},
-    dags::Dict{String, TrackedTaskDAG}, running_dags::Set{String}, done_dags::Set{String},
-    waiting_notifiers::Dict{String, Task}, lk::ReentrantLock)
-
-    for (g_name, g_path) in graphs_map
-        g = parse_graph(g_name, g_path, OUTPUT_GRAPH_PATH, OUTPUT_GRAPH_IMAGE_PATH)
-        tracked_task_dag = TrackedTaskDAG(g_name, g)
-        dags[get_uuid(tracked_task_dag)] = tracked_task_dag
-
-        while length(running_dags) >= MAX_GRAPHS_RUN
-            wait_dags_to_finish(notifications, dags, running_dags, done_dags,
-             waiting_notifiers, lk, length(running_dags) - MAX_GRAPHS_RUN + 1)
+    for (i, (g_name, g)) in enumerate(graphs)
+        graphs_dict[i] = g_name
+        while !(length(graphs_being_run) < MAX_GRAPHS_RUN)
+            finished_graph_id = take!(notifications)
+            delete!(graphs_being_run, finished_graph_id)
+            println("Dispatcher: graph finished - $finished_graph_id: $(graphs_dict[finished_graph_id])")
         end
-        schedule_DAG(tracked_task_dag, notifications, running_dags, waiting_notifiers)
-    end    
-end
 
-function schedule_DAG(tracked_task_dag::TrackedTaskDAG, notifications::Channel{String}, running_dags::Set{String}, waiting_notifiers::Dict{String, Task})
-    uuid = get_uuid(tracked_task_dag)
-    start_DAG(tracked_task_dag)
-    push!(running_dags, uuid)
-    println("Dispatcher: graph scheduled - $uuid: $(get_name(tracked_task_dag))")
-    notifier = Threads.@spawn begin
-        wait(tracked_task_dag)
-        put!(notifications, string(get_uuid(tracked_task_dag)))
+        schedule_graph_with_notify(g, notifications, g_name, i)
+        push!(graphs_being_run, i)
+        println("Dispatcher: scheduled graph $i: $g_name")
     end
-    waiting_notifiers[uuid] = notifier
-end
 
-function wait_dags_to_finish(notifications::Channel{String}, dags::Dict{String, TrackedTaskDAG}, running_dags::Set{String},
-     done_dags::Set{String}, waiting_notifiers::Dict{String, Task}, lk::ReentrantLock, num=length(waiting_notifiers))
-    for i in 1:num
-        uuid = take!(notifications)
-        lock(lk)
-        delete!(waiting_notifiers, uuid)
-        delete!(running_dags, uuid)
-        push!(done_dags, uuid)
-        unlock(lk)
-        println("Dispatcher: graph finished - $uuid: $(get_name(dags[uuid]))")
+    results = []
+    for (g_name, g) in graphs
+        g_map = Dict{Int, Any}()
+        for vertex_id in Graphs.vertices(g)
+            future = get_prop(g, vertex_id, :res_data)
+            g_map[vertex_id] = fetch(future)
+        end
+        push!(results, (g_name, g_map))
+    end
+
+    for (g_name, res) in results
+        for (id, value) in res
+            println("Graph: $g_name, Final result for vertex $id: $value")
+        end
     end
 end
 
 function main(graphs_map)
     configure_LocalEventLog()
+    #
+    # OR 
+    #
+    # configure_webdash_multievent()
 
     @time execution(graphs_map)
 
