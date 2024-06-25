@@ -41,10 +41,10 @@ Due to a known issues, currently (as of Dagger 0.18.11) `show_logs()` function c
 The `show_logs` function may be used to return the DAG representation in a `.dot` format with some metadata.
 
 `show_logs` function is essentially defined only if `Colors` package is imported/used - you will get a "Not implemented" error else. That is the code implementing it:
-![show_logs implementation](../../docs_images/show_logs_impl.png)
+![show_logs implementation](../../docs/show_logs_impl.png)
 
 If `Colors` package is defined, the following definitions of `show_logs` are added:
-![additional show logs implementation](../../docs_images/add_show_logs_impl.png)
+![additional show logs implementation](../../docs/add_show_logs_impl.png)
 
 #### viz_oldAPI_localeventlog.jl
 
@@ -92,8 +92,8 @@ The corresponding folder contains examples of the `render_logs()` function use.
 
 `:plots_gantt_ps` displays the following result:
 
-![gantt_ps](../../docs_images/plot_gantt_ps.png)
+![gantt_ps](../../docs/plot_gantt_ps.png)
 
 `:plots_gantt`:
 
-![gantt](../../docs_images/plot_gantt.png)
+![gantt](../../docs/plot_gantt.png)
