@@ -8,6 +8,7 @@ using MetaGraphs
 @everywhere begin
     using DaggerWebDash
     using Dagger
+    
     # Algorithms
     function mock_Gaudi_algorithm(graph_name, graph_id, vertex_id, data...)
         println("Graph: $graph_name, Gaudi algorithm for vertex $vertex_id !")
