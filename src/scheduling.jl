@@ -1,46 +1,26 @@
 import Dagger
-# import Colors
 using Distributed
 using MetaGraphs
 
-# include("../dagger_exts/GraphVizSimpleExt.jl")
-
-@everywhere begin
-    using DaggerWebDash
-    using Dagger
-    # Algorithms
-    function mock_Gaudi_algorithm(graph_name, graph_id, vertex_id, data...)
-        println("Graph: $graph_name, Gaudi algorithm for vertex $vertex_id !")
-        sleep(1)
-        # println("Previous vertices: $data")
-        
-        return vertex_id
-    end
-
-    function dataobject_algorithm(graph_name, graph_id, vertex_id, data...)
-        println("Graph: $graph_name, Dataobject algorithm for vertex $vertex_id !")
-        sleep(0.1)
-
-        return vertex_id
-    end
-
-    function notify_graph_finalization(notifications::RemoteChannel, graph_name::String, graph_id::Int, final_vertices_promises...)
-        println("Graph: $graph_name, entered notify, graph_id: $graph_id !")
-        # for promise in final_vertices_promises
-        #     println(typeof(promise))
-        #     wait(promise) # Actually, all the promises should have been fulfilled at the moment of calling this function
-        # end
-        println("Graph: $graph_name, all tasks in the graph finished, graph_id: $graph_id !")
-        put!(notifications, graph_id)
-        println("Graph: $graph_name, notified, graph_id: $graph_id !")
-    end
-
-    function mock_func()
-        sleep(1)
-        return
-    end
+# Algorithms
+function mock_Gaudi_algorithm(graph_name, graph_id, vertex_id, data...)
+    println("Graph: $graph_name, Gaudi algorithm for vertex $vertex_id !")
+    sleep(1)
+    return vertex_id
 end
 
+function dataobject_algorithm(graph_name, graph_id, vertex_id, data...)
+    println("Graph: $graph_name, Dataobject algorithm for vertex $vertex_id !")
+    sleep(0.1)
+    return vertex_id
+end
+
+function notify_graph_finalization(notifications::RemoteChannel, graph_name::String, graph_id::Int, final_vertices_promises...)
+    println("Graph: $graph_name, entered notify, graph_id: $graph_id !")
+    println("Graph: $graph_name, all tasks in the graph finished, graph_id: $graph_id !")
+    put!(notifications, graph_id)
+    println("Graph: $graph_name, notified, graph_id: $graph_id !")
+end
 
 function parse_graphs(graphs_map::Dict, output_graph_path::String, output_graph_image_path::String)
     graphs = []

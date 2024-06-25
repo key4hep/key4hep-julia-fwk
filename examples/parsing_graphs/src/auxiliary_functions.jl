@@ -12,33 +12,3 @@ function wrapper(data::Vector, vertex_id)
     # println("Vertex $vertex_id processed with resulting_data: $resulting_data")
     return resulting_data
 end
-
-function get_ine_map(G)
-    incoming_edges_sources_map = Dict{eltype(G), Vector{eltype(G)}}()
-
-    for edge in Graphs.edges(G)
-        src_vertex = src(edge)
-        dest_vertex = dst(edge)
-        
-        if haskey(incoming_edges_sources_map, dest_vertex)
-            push!(incoming_edges_sources_map[dest_vertex], src_vertex)
-        else
-            incoming_edges_sources_map[dest_vertex] = [src_vertex]
-        end
-    end
-
-    return incoming_edges_sources_map
-end
-
-function get_deps_promises(vertex_id, map, G)
-    incoming_data = []
-    if haskey(map, vertex_id)
-        for src in map[vertex_id]
-            push!(incoming_data, get_prop(G, src, :res_data))
-        end
-    end
-    return incoming_data
-end
-
-
-
