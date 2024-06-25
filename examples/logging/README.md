@@ -14,13 +14,13 @@ Currently there are essentially two ways to get logs: low-level usage of log_sin
 
 ### log_sink
 
-Log_sink is a mechanism used to determine, how the logs are collected and proccessed. There are two types of log_sinks (there are also other ones, but this are most widely used): straightforward LocalEventLog, which saves logs directly into the arrays contained in each worker, and the more modern MultiEventLog, which documentation recommends to use, and which comprises of consumers processing events (consumer may be responsible for some specific type of info) and aggregators.
+Log_sink is a mechanism used to determine, how the logs are collected and processed. There are two types of log_sinks (there are also other ones, but this are most widely used): straightforward LocalEventLog, which saves logs directly into the arrays contained in each worker, and the more modern MultiEventLog, which documentation recommends to use, and which comprises of consumers processing events (consumer may be responsible for some specific type of info) and aggregators.
 
 Importantly, `LocalEventLog` stores raw events (`Dagger.TimespanLogging.Event`), whereas `MultiEventLog` processes them with consumers functions first, putting their results to the corresponding to this consumer array.
 
 The folder "getting_logs/log_sink" contains the examples of directly getting logs using the log_sink parameter of the Dagger.Context. 
 
-On `get_logs!()` both the `LocalEventLog` and `MultiEventLog` gather what they have stored on all workers so far and return that as a result of this function (by default, `LocalEventLog` additionaly transforms events into timespans combining start_events and finish_events). Note that all the returned logs are cleaned up, so, for example, immediately calling `get_logs()` second time after the first one will return nothing.
+On `get_logs!()` both the `LocalEventLog` and `MultiEventLog` gather what they have stored on all workers so far and return that as a result of this function (by default, `LocalEventLog` additionally transforms events into timespans combining start_events and finish_events). Note that all the returned logs are cleaned up, so, for example, immediately calling `get_logs()` second time after the first one will return nothing.
 
 Another function, which can be used to get logs is `fetch_logs!()` (currently it is just alias for the `TimespanLogging.get_logs!(Dagger.Sch.eager_context())`)
 

@@ -1,4 +1,4 @@
-include("../../auxiliary/example_tasks.jl") # here Dagger is imported as well
+include("../../dummy_tasks.jl") # here Dagger is imported as well
 
 Dagger.enable_logging!(tasknames=true, # Here we can choose the consumers to use. Check source code for more.
 taskdeps=true,

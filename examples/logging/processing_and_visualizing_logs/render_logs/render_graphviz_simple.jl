@@ -1,11 +1,14 @@
 using Distributed
+new_procs = addprocs(4) # Set the number of workers
 using Colors
 using GraphViz
 using Cairo
 using Dagger
+using FrameworkDemo
+include("../../../dummy_tasks.jl")
 
-include("../../../auxiliary/example_tasks.jl")
-include("../../../../utilities/auxiliary_functions.jl")
+output_dir = "examples/results"
+mkpath(output_dir)
 
 Dagger.enable_logging!(tasknames=true,
 taskdeps=true,
@@ -24,5 +27,5 @@ surface = Cairo.CairoSVGSurface(IOBuffer(), 7000, 2000)
 context = Cairo.CairoContext(surface)
 
 GraphViz.render(context, graph)
-img_name = timestamp_string("./examples/examples_results/render_logs/render_graphviz_simple") * ".png"
-write_to_png(surface, img_name)
+img_name = FrameworkDemo.timestamp_string("$output_dir/render_graphviz_simple") * ".png"
+FrameworkDemo.write_to_png(surface, img_name)

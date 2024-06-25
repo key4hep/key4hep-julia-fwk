@@ -1,40 +1,26 @@
-#module graphs_scheduling
-
-using Colors
-using DaggerWebDash
 using Distributed
+
+if abspath(PROGRAM_FILE) == @__FILE__
+    new_procs = addprocs(12) # Set the number of workers
+end
+
+using Dagger
+using Graphs
 using MetaGraphs
-using GraphViz
-using Dates
-include("../../utilities/GraphMLReader.jl/src/GraphMLReader.jl")
+using FrameworkDemo
+using FrameworkDemo.ModGraphVizSimple # This is a workaround to make visualization work until the bugs are fixed in the package.
 
-# This is a workaround to make visualization work until the bugs are fixed in the package.
-include("../../dagger_exts/GraphVizSimpleExt.jl")
-using .ModGraphVizSimpleExt
-
-
-# Set the number of workers
-new_procs = addprocs(12)
-
-# Including neccessary functions
-include("../../utilities/functions.jl")
-include("../../utilities/auxiliary_functions.jl")
-include("../../utilities/visualization_functions.jl")
-
-# if isdefined(Main, :Dagger) # The Dagger scheduler is already running (?)
-#     ctx = Dagger.Sch.eager_context()
-#     addprocs!(ctx, new_procs)
-# end
 
 # Defining constants
+output_dir = "results"
 graph1_path = "./data/sequencer_demo/df_sequencer_demo.graphml"
 graph2_path = "./data/sequencer_demo/another_test_graph.graphml"
 
-LOGS_FILE = timestamp_string("./graphs_scheduling/results/logs/out") * ".dot"
-GRAPH_IMAGE_PATH = timestamp_string("./graphs_scheduling/results/scheduler_images/DAG") * ".png"
+LOGS_FILE = FrameworkDemo.timestamp_string("$output_dir/out") * ".dot"
+GRAPH_IMAGE_PATH = FrameworkDemo.timestamp_string("$output_dir/DAG") * ".png"
 
-OUTPUT_GRAPH_PATH = "./graphs_scheduling/results/parsed_graphs/"
-OUTPUT_GRAPH_IMAGE_PATH = "./graphs_scheduling/results/parsed_graphs_images/"
+OUTPUT_GRAPH_PATH = "$output_dir/"
+OUTPUT_GRAPH_IMAGE_PATH = "$output_dir/"
 
 MAX_GRAPHS_RUN = 3
 
@@ -42,7 +28,7 @@ function execution(graphs_map)
     graphs_being_run = Set{Int}()
     graphs_dict = Dict{Int, String}()
     graphs_tasks = Dict{Int,Dagger.DTask}()
-    graphs = parse_graphs(graphs_map, OUTPUT_GRAPH_PATH, OUTPUT_GRAPH_IMAGE_PATH)
+    graphs = FrameworkDemo.parse_graphs(graphs_map, OUTPUT_GRAPH_PATH, OUTPUT_GRAPH_IMAGE_PATH)
     notifications = RemoteChannel(()->Channel{Int}(32))
     # notifications = Channel{Int}(32)
     for (i, (g_name, g)) in enumerate(graphs)
@@ -53,7 +39,7 @@ function execution(graphs_map)
             delete!(graphs_tasks, i)
             println("Dispatcher: graph finished - $finished_graph_id: $(graphs_dict[finished_graph_id])")
         end
-        graphs_tasks[i] = schedule_graph_with_notify(g, notifications, g_name, i)
+        graphs_tasks[i] = FrameworkDemo.schedule_graph_with_notify(g, notifications, g_name, i)
         push!(graphs_being_run, i)
         println("Dispatcher: scheduled graph $i: $g_name")
     end
@@ -77,7 +63,7 @@ function execution(graphs_map)
 end
 
 function main(graphs_map)
-    configure_LocalEventLog()
+    FrameworkDemo.configure_LocalEventLog()
     #
     # OR 
     #
@@ -88,10 +74,9 @@ function main(graphs_map)
     ctx = Dagger.Sch.eager_context()
     logs = Dagger.TimespanLogging.get_logs!(ctx)
     open(LOGS_FILE, "w") do io
-        ModGraphVizSimpleExt.show_logs(io, logs, :graphviz_simple)
+        FrameworkDemo.ModGraphVizSimple.show_logs(io, logs, :graphviz_simple)
     end
-
-    dot_to_png(LOGS_FILE, GRAPH_IMAGE_PATH, 7000, 8000) # adjust picture size, if needed (optional param)
+    FrameworkDemo.dot_to_png(LOGS_FILE, GRAPH_IMAGE_PATH, 7000, 8000) # adjust picture size, if needed (optional param)
     
 end
 
@@ -102,8 +87,9 @@ graphs_map = Dict{String, String}(
 "graph4" => graph2_path
 )
 
-main(graphs_map)
-rmprocs!(Dagger.Sch.eager_context(), workers())
-rmprocs(workers())
-
-#end # module graphs_scheduling
+if abspath(PROGRAM_FILE) == @__FILE__
+    mkpath(output_dir)
+    main(graphs_map)
+    rmprocs!(Dagger.Sch.eager_context(), workers())
+    rmprocs(workers())
+end

@@ -1,4 +1,4 @@
-include("../../../auxiliary/example_tasks.jl") # here Dagger is imported as well
+include("../../../dummy_tasks.jl") # here Dagger is imported as well
 
 ctx = Dagger.Sch.eager_context()
 ctx.log_sink = Dagger.TimespanLogging.LocalEventLog() # By default, NoOpLog, which does nothing, is set

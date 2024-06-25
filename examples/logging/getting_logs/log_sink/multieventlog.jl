@@ -1,4 +1,4 @@
-include("../../../auxiliary/example_tasks.jl") # here Dagger is imported as well
+include("../../../dummy_tasks.jl") # here Dagger is imported as well
 
 TimespanLogging = Dagger.TimespanLogging
 ctx = Dagger.Sch.eager_context()
