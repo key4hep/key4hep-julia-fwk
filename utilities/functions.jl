@@ -146,29 +146,4 @@ function schedule_graph_with_notify(G::MetaDiGraph, notifications::RemoteChannel
     Dagger.@spawn notify_graph_finalization(notifications, graph_name, graph_id, get_vertices_promises(final_vertices, G)...)
 end
 
-function my_show_plan(io::IO, logs::Vector{Dagger.TimespanLogging.Timespan}, t=nothing)
-    println(io, """strict digraph {
-    graph [layout=dot,rankdir=LR];""")
-    GraphVizSimpleExt.write_dag(io, t, logs)
-    println(io, "}")
-end
-
-function flush_logs_to_file(log_file)
-    open(log_file, "w") do io
-        my_show_plan(io, Dagger.fetch_logs!(), nothing) # Writes graph to a file
-    end
-end
-
-function flush_logs_to_file(log_file, t::Thunk)
-    open(log_file, "w") do io
-        Dagger.show_logs(io, t, Dagger.fetch_logs!(), :graphviz_simple) # Writes graph to a file
-    end
-end
-
-function save_logs(log_file, logs)
-    open(log_file, "w") do io
-        write(io, logs)
-    end
-end
-
 AVAILABLE_TRANSFORMS = Dict{String, Function}("Algorithm" => mock_Gaudi_algorithm, "DataObject" => dataobject_algorithm)
