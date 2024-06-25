@@ -76,7 +76,7 @@ end
 function my_show_plan(io::IO, logs::Vector{Dagger.TimespanLogging.Timespan}, t=nothing)
     println(io, """strict digraph {
     graph [layout=dot,rankdir=LR];""")
-    GraphVizSimpleExt.write_dag(io, t, logs)
+    ModGraphVizSimple.write_dag(io, t, logs)
     println(io, "}")
 end
 

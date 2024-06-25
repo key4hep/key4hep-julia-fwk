@@ -1,4 +1,8 @@
-module ModGraphVizSimpleExt
+# file taken from Dagger and modified to fix bugs with graphviz displays
+# To be droped once https://github.com/JuliaParallel/Dagger.jl/pull/531
+# is in the upstream Dagger
+
+module ModGraphVizSimple
 
 if isdefined(Base, :get_extension)
     using Colors
