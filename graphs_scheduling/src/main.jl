@@ -134,7 +134,6 @@ graphs_map = Dict{String, String}(
 )
 
 main(graphs_map)
-rmprocs!(Dagger.Sch.eager_context(), workers())
-rmprocs(workers())
+rmprocs(workers()) # TODO: there is some issue here, as it throws errors, and restarting the file in the REPL ignores adding the procs
 
 #end # module graphs_scheduling
