@@ -111,9 +111,9 @@
     </edge>
     <edge id="e12" source="n10" target="n11">
     </edge>
-    <edge id="e12" source="n12" target="n13">
+    <edge id="e13" source="n12" target="n13">
     </edge>
-    <edge id="e12" source="n14" target="n15">
+    <edge id="e14" source="n14" target="n15">
     </edge>
   </graph>
 </graphml>

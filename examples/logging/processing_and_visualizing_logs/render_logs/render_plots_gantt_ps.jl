@@ -1,30 +1,21 @@
-#module graphs_scheduling
-
 using Colors
+using GraphViz
+using Cairo
+using DataFrames
+using Plots
 using DaggerWebDash
 using Distributed
 using MetaGraphs
-using GraphViz
 using Dates
-include("../../utilities/GraphMLReader.jl/src/GraphMLReader.jl")
-
-# This is a workaround to make visualization work until the bugs are fixed in the package.
-include("../../dagger_exts/GraphVizSimpleExt.jl")
-using .ModGraphVizSimpleExt
-
+include("../../../../utilities/GraphMLReader.jl/src/GraphMLReader.jl")
 
 # Set the number of workers
-new_procs = addprocs(12)
+new_procs = addprocs(4)
 
 # Including neccessary functions
-include("../../utilities/functions.jl")
-include("../../utilities/auxiliary_functions.jl")
-include("../../utilities/visualization_functions.jl")
-
-# if isdefined(Main, :Dagger) # The Dagger scheduler is already running (?)
-#     ctx = Dagger.Sch.eager_context()
-#     addprocs!(ctx, new_procs)
-# end
+include("../../../../utilities/functions.jl")
+include("../../../../utilities/auxiliary_functions.jl")
+include("../../../../utilities/visualization_functions.jl")
 
 # Defining constants
 graph1_path = "./data/sequencer_demo/df_sequencer_demo.graphml"
@@ -41,22 +32,25 @@ MAX_GRAPHS_RUN = 3
 function execution(graphs_map)
     graphs_being_run = Set{Int}()
     graphs_dict = Dict{Int, String}()
-    graphs_tasks = Dict{Int,Dagger.DTask}()
+
     graphs = parse_graphs(graphs_map, OUTPUT_GRAPH_PATH, OUTPUT_GRAPH_IMAGE_PATH)
+
     notifications = RemoteChannel(()->Channel{Int}(32))
     # notifications = Channel{Int}(32)
+
     for (i, (g_name, g)) in enumerate(graphs)
         graphs_dict[i] = g_name
         while !(length(graphs_being_run) < MAX_GRAPHS_RUN)
             finished_graph_id = take!(notifications)
             delete!(graphs_being_run, finished_graph_id)
-            delete!(graphs_tasks, i)
             println("Dispatcher: graph finished - $finished_graph_id: $(graphs_dict[finished_graph_id])")
         end
-        graphs_tasks[i] = schedule_graph_with_notify(g, notifications, g_name, i)
+
+        schedule_graph_with_notify(g, notifications, g_name, i)
         push!(graphs_being_run, i)
         println("Dispatcher: scheduled graph $i: $g_name")
     end
+
     results = []
     for (g_name, g) in graphs
         g_map = Dict{Int, Any}()
@@ -66,33 +60,25 @@ function execution(graphs_map)
         end
         push!(results, (g_name, g_map))
     end
+
     for (g_name, res) in results
         for (id, value) in res
             println("Graph: $g_name, Final result for vertex $id: $value")
         end
     end
-    for (_, task) in graphs_tasks
-        wait(task)
-    end
 end
 
 function main(graphs_map)
-    configure_LocalEventLog()
-    #
-    # OR 
-    #
-    # configure_webdash_multievent()
+    Dagger.enable_logging!(tasknames=true,
+    taskdeps=true,
+    taskargs=true, 
+    taskargmoves=true,
+    )
 
     @time execution(graphs_map)
 
-    ctx = Dagger.Sch.eager_context()
-    logs = Dagger.TimespanLogging.get_logs!(ctx)
-    open(LOGS_FILE, "w") do io
-        ModGraphVizSimpleExt.show_logs(io, logs, :graphviz_simple)
-    end
-
-    dot_to_png(LOGS_FILE, GRAPH_IMAGE_PATH, 7000, 8000) # adjust picture size, if needed (optional param)
-    
+    plot = Dagger.render_logs(Dagger.fetch_logs!(), :plots_gantt_ps)
+    display(plot)
 end
 
 graphs_map = Dict{String, String}(
@@ -103,7 +89,4 @@ graphs_map = Dict{String, String}(
 )
 
 main(graphs_map)
-rmprocs!(Dagger.Sch.eager_context(), workers())
-rmprocs(workers())
-
-#end # module graphs_scheduling
+rmprocs(workers()) # TODO: there is some issue here, as it throws errors, and adding restarting the file in the REPL ignores adding the procs

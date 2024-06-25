@@ -77,11 +77,6 @@ function configure_LocalEventLog()
     ctx.log_sink = log
 end
 
-function set_log_file(file_path)
-    ctx = Dagger.Sch.eager_context()
-    ctx.log_file = file_path
-end
-
 function timestamp_string(str)
     dt = Dates.now()
     timestamp = Dates.format(dt, "yyyy-mm-dd HH-MM-SS")
