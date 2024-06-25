@@ -94,7 +94,7 @@ function schedule_DAG(tracked_task_dag::TrackedTaskDAG, notifications::Channel{S
 end
 
 function wait_dags_to_finish(notifications::Channel{String}, dags::Dict{String, TrackedTaskDAG}, running_dags::Set{String},
-     done_dags::Set{String}, num=length(running_dags))
+     done_dags::Set{String}, num=length(waiting_notifiers))
     for i in 1:num
         uuid = take!(notifications)
         delete!(running_dags, uuid)
