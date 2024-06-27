@@ -1,18 +1,13 @@
 import Colors
-using Distributed
 using Dagger
 using TimespanLogging
 using DaggerWebDash
+using FrameworkDemo
+include("../../../dummy_tasks.jl")
 
-# This is a workaround to make visualization work until the bugs are fixed in the package.
-include("../../../../dagger_exts/GraphVizSimpleExt.jl")
-using .ModGraphVizSimpleExt
-
-include("../../../auxiliary/example_tasks.jl")
-include("../../../../utilities/auxiliary_functions.jl")
-include("../../../../utilities/visualization_functions.jl")
-
-FILENAME_TEMPLATE = "./examples/examples_results/enable_logging/viz_enable_logging_modernAPI"
+output_dir = "examples/results"
+mkpath(output_dir)
+FILENAME_TEMPLATE = "$output_dir/viz_enable_logging_modernAPI"
 
 function workaround()
     logs = Dagger.fetch_logs!() # Fetch all the logs
@@ -48,10 +43,10 @@ logs = workaround()
 # Or use a Local Event Log sink:
 # logs = Dagger.TimespanLogging.get_logs!(Dagger.Sch.eager_context())
 
-log_file_name = timestamp_string(FILENAME_TEMPLATE) * ".dot"
+log_file_name = FrameworkDemo.timestamp_string(FILENAME_TEMPLATE) * ".dot"
 open(log_file_name, "w") do io
-    ModGraphVizSimpleExt.show_logs(io, graph_thunk, logs, :graphviz_simple) # Dagger.show_logs(io, graph_thunk, logs, :graphviz_simple) after the bug fix & update in the package
-    # Dagger.show_logs(graph_thunk, logs, :graphviz_simple) # Returns the string representation of the graph 
+    FrameworkDemo.ModGraphVizSimple.show_logs(io, graph_thunk, logs, :graphviz_simple) # Dagger.show_logs(io, graph_thunk, logs, :graphviz_simple) after the bug fix & update in the package
+    # FrameworkDemo.Dagger.show_logs(graph_thunk, logs, :graphviz_simple) # Returns the string representation of the graph 
 end
 
-dot_to_png(log_file_name, timestamp_string(FILENAME_TEMPLATE) * ".png", 2000, 2000)
+FrameworkDemo.dot_to_png(log_file_name, FrameworkDemo.timestamp_string(FILENAME_TEMPLATE) * ".png", 2000, 2000)

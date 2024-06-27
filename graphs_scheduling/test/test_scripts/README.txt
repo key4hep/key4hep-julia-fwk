@@ -1,1 +1,0 @@
-This folder was included just for the completeness. Here are some files, where different approaches to using Dagger scheduler were tested. 

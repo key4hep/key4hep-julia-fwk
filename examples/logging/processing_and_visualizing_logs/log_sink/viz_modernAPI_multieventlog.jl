@@ -1,15 +1,11 @@
 import Colors # Writing logs into a file would fail without this import 
+using FrameworkDemo
+include("../../../dummy_tasks.jl")
 
-# This is a workaround to make visualization work until the bugs are fixed in the package.
-include("../../../../dagger_exts/GraphVizSimpleExt.jl")
-using .ModGraphVizSimpleExt
+output_dir = "examples/results"
+mkpath(output_dir)
 
-
-include("../../../auxiliary/example_tasks.jl")
-include("../../../../utilities/auxiliary_functions.jl")
-include("../../../auxiliary/example_auxiliaries.jl")
-
-FILENAME_TEMPLATE = "./examples/examples_results/log_sink/viz_modernAPI_multieventlog"
+FILENAME_TEMPLATE = "$output_dir/viz_modernAPI_multieventlog"
 
 ctx = Dagger.Sch.eager_context()
 
@@ -42,11 +38,11 @@ for (key, value) in logs
 end
 spans = Dagger.TimespanLogging.build_timespans(vcat(values(events_logs)...)).completed # Form the timespans
 timespan_logs = convert(Vector{Dagger.TimespanLogging.Timespan}, spans)
-log_file_name = timestamp_string(FILENAME_TEMPLATE) * ".dot"
+log_file_name = FrameworkDemo.timestamp_string(FILENAME_TEMPLATE) * ".dot"
 open(log_file_name, "w") do io
-    ModGraphVizSimpleExt.show_logs(io, graph_thunk, timespan_logs, :graphviz_simple) # Dagger.show_logs(io, graph_thunk, timespan_logs, :graphviz_simple) after the bug fix in the package
-    # or ModGraphVizSimpleExt.show_logs(io, timespan_logs, :graphviz_simple) # Dagger.show_logs(io, timespan_logs, :graphviz_simple) after the bug fix in the package
-    # or ModGraphVizSimpleExt.show_logs(io, graph_thunk, :graphviz_simple) # Dagger.show_logs(io, graph_thunk, :graphviz_simple) after the bug fix in the package
+    FrameworkDemo.ModGraphVizSimple.show_logs(io, graph_thunk, timespan_logs, :graphviz_simple) # Dagger.show_logs(io, graph_thunk, timespan_logs, :graphviz_simple) after the bug fix in the package
+    # or FrameworkDemo.ModGraphVizSimpleExt.show_logs(io, timespan_logs, :graphviz_simple) # Dagger.show_logs(io, timespan_logs, :graphviz_simple) after the bug fix in the package
+    # or FrameworkDemo.ModGraphVizSimpleExt.show_logs(io, graph_thunk, :graphviz_simple) # Dagger.show_logs(io, graph_thunk, :graphviz_simple) after the bug fix in the package
 end
 
-dot_to_png(log_file_name, timestamp_string(FILENAME_TEMPLATE) * ".png", 2000, 2000)
+FrameworkDemo.dot_to_png(log_file_name, FrameworkDemo.timestamp_string(FILENAME_TEMPLATE) * ".png", 2000, 2000)

@@ -14,13 +14,13 @@ Currently there are essentially two ways to get logs: low-level usage of log_sin
 
 ### log_sink
 
-Log_sink is a mechanism used to determine, how the logs are collected and proccessed. There are two types of log_sinks (there are also other ones, but this are most widely used): straightforward LocalEventLog, which saves logs directly into the arrays contained in each worker, and the more modern MultiEventLog, which documentation recommends to use, and which comprises of consumers processing events (consumer may be responsible for some specific type of info) and aggregators.
+Log_sink is a mechanism used to determine, how the logs are collected and processed. There are two types of log_sinks (there are also other ones, but this are most widely used): straightforward LocalEventLog, which saves logs directly into the arrays contained in each worker, and the more modern MultiEventLog, which documentation recommends to use, and which comprises of consumers processing events (consumer may be responsible for some specific type of info) and aggregators.
 
 Importantly, `LocalEventLog` stores raw events (`Dagger.TimespanLogging.Event`), whereas `MultiEventLog` processes them with consumers functions first, putting their results to the corresponding to this consumer array.
 
 The folder "getting_logs/log_sink" contains the examples of directly getting logs using the log_sink parameter of the Dagger.Context. 
 
-On `get_logs!()` both the `LocalEventLog` and `MultiEventLog` gather what they have stored on all workers so far and return that as a result of this function (by default, `LocalEventLog` additionaly transforms events into timespans combining start_events and finish_events). Note that all the returned logs are cleaned up, so, for example, immediately calling `get_logs()` second time after the first one will return nothing.
+On `get_logs!()` both the `LocalEventLog` and `MultiEventLog` gather what they have stored on all workers so far and return that as a result of this function (by default, `LocalEventLog` additionally transforms events into timespans combining start_events and finish_events). Note that all the returned logs are cleaned up, so, for example, immediately calling `get_logs()` second time after the first one will return nothing.
 
 Another function, which can be used to get logs is `fetch_logs!()` (currently it is just alias for the `TimespanLogging.get_logs!(Dagger.Sch.eager_context())`)
 
@@ -41,10 +41,10 @@ Due to a known issues, currently (as of Dagger 0.18.11) `show_logs()` function c
 The `show_logs` function may be used to return the DAG representation in a `.dot` format with some metadata.
 
 `show_logs` function is essentially defined only if `Colors` package is imported/used - you will get a "Not implemented" error else. That is the code implementing it:
-![show_logs implementation](../../docs_images/show_logs_impl.png)
+![show_logs implementation](../../docs/show_logs_impl.png)
 
 If `Colors` package is defined, the following definitions of `show_logs` are added:
-![additional show logs implementation](../../docs_images/add_show_logs_impl.png)
+![additional show logs implementation](../../docs/add_show_logs_impl.png)
 
 #### viz_oldAPI_localeventlog.jl
 
@@ -92,8 +92,8 @@ The corresponding folder contains examples of the `render_logs()` function use.
 
 `:plots_gantt_ps` displays the following result:
 
-![gantt_ps](../../docs_images/plot_gantt_ps.png)
+![gantt_ps](../../docs/plot_gantt_ps.png)
 
 `:plots_gantt`:
 
-![gantt](../../docs_images/plot_gantt.png)
+![gantt](../../docs/plot_gantt.png)

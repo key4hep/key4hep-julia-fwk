@@ -49,7 +49,7 @@ ml.aggregators[:d3r] = d3r
 ctx.log_sink = ml
 # ... use `ctx`
 
-include("../../auxiliary/example_tasks.jl")
+include("../../dummy_tasks.jl")
 
 t = modernAPI_graph_setup(50)
 println(fetch(t))
