@@ -1,15 +1,16 @@
 using Distributed
 
-if abspath(PROGRAM_FILE) == @__FILE__
-    new_procs = addprocs(12) # Set the number of workers
-end
+## doesn't work with datadeps!
+# if abspath(PROGRAM_FILE) == @__FILE__
+#     new_procs = addprocs(12) # Set the number of workers
+# end
+##
 
 using Dagger
 using Graphs
 using MetaGraphs
 using FrameworkDemo
 using FrameworkDemo.ModGraphVizSimple # This is a workaround to make visualization work until the bugs are fixed in the package.
-
 
 # Defining constants
 output_dir = "results"
@@ -46,7 +47,8 @@ function execution(graphs_map)
     results = []
     for (g_name, g) in graphs
         g_map = Dict{Int, Any}()
-        for vertex_id in Graphs.vertices(g)
+        data_vertices = MetaGraphs.filter_vertices(g, :type, "DataObject")
+        for vertex_id in data_vertices
             future = get_prop(g, vertex_id, :res_data)
             g_map[vertex_id] = fetch(future)
         end

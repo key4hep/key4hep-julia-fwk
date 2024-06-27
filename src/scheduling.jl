@@ -1,18 +1,50 @@
 import Dagger
 using Distributed
+using Graphs
 using MetaGraphs
 
-# Algorithms
-function mock_Gaudi_algorithm(graph_name, graph_id, vertex_id, data...)
-    println("Graph: $graph_name, Gaudi algorithm for vertex $vertex_id !")
-    sleep(1)
-    return vertex_id
+mutable struct DataObject
+    data
+    size::Float64
 end
 
-function dataobject_algorithm(graph_name, graph_id, vertex_id, data...)
-    println("Graph: $graph_name, Dataobject algorithm for vertex $vertex_id !")
-    sleep(0.1)
-    return vertex_id
+function populate_data_object!(object::DataObject, data)
+    proc = Dagger.thunk_processor()
+    scope = Dagger.scope(worker=myid())
+
+    chunk = Dagger.tochunk(data, proc, scope)
+
+    object.data = chunk
+end
+
+# Algorithms
+function _algorithm(graph::MetaDiGraph, vertex_id::Int)
+    function algorithm(inputs, outputs)
+        println("Gaudi algorithm for vertex $vertex_id !")
+
+        for output in outputs
+            populate_data_object!(output, rand(16))
+        end
+    end
+
+    return algorithm
+end
+
+AVAILABLE_TRANSFORMS = Dict{String, Function}(
+    "Algorithm" => _algorithm,
+)
+
+function get_transform(graph::MetaDiGraph, vertex_id::Int)
+    type = get_prop(graph, vertex_id, :type)
+
+    function f(data...; N_inputs)
+        inputs = data[1:N_inputs]
+        outputs = data[N_inputs+1:end]
+        transform = AVAILABLE_TRANSFORMS[type](graph, vertex_id)
+        return transform(inputs, outputs)
+    end
+
+    return f
 end
 
 function notify_graph_finalization(notifications::RemoteChannel, graph_name::String, graph_id::Int, final_vertices_promises...)
@@ -82,33 +114,40 @@ function get_vertices_promises(vertices::Vector, G::MetaDiGraph)
     return promises
 end
 
-function get_deps_promises(vertex_id, map, G)
-    incoming_data = []
-    if haskey(map, vertex_id)
-        for src in map[vertex_id]
-            push!(incoming_data, get_prop(G, src, :res_data))
-        end
-    end
-    return incoming_data
+function get_in_promises(G, vertex_id)
+    return [get_prop(G, src, :res_data) for src in inneighbors(G, vertex_id)]
+end
+
+function get_out_promises(G, vertex_id)
+    return [get_prop(G, src, :res_data) for src in outneighbors(G, vertex_id)]
 end
 
 function schedule_graph(G::MetaDiGraph)
-    inc_e_src_map = get_ine_map(G)
+    data_vertices = MetaGraphs.filter_vertices(G, :type, "DataObject")
+    sorted_vertices = MetaGraphs.topological_sort(G)
 
-    for vertex_id in MetaGraphs.topological_sort(G)
-        incoming_data = get_deps_promises(vertex_id, inc_e_src_map, G)
-        set_prop!(G, vertex_id, :res_data, Dagger.@spawn AVAILABLE_TRANSFORMS[get_prop(G, vertex_id, :type)](name, graph_id, vertex_id, incoming_data...))
+    for data_id in data_vertices
+        # not yet defined in example graphs
+        # size = get_prop(G, data_id, :size)
+        size = 0
+        set_prop!(G, data_id, :res_data, DataObject(nothing, size))
+    end
+
+    Dagger.spawn_datadeps() do
+        for vertex_id in setdiff(sorted_vertices, data_vertices) 
+            incoming_data = get_in_promises(G, vertex_id)
+            outgoing_data = get_out_promises(G, vertex_id)
+            transform = get_transform(G, vertex_id)
+            N_inputs = length(incoming_data)
+            Dagger.@spawn transform(In.(incoming_data)..., Out.(outgoing_data)...; N_inputs)
+        end
     end
 end
 
 function schedule_graph_with_notify(G::MetaDiGraph, notifications::RemoteChannel, graph_name::String, graph_id::Int)
     final_vertices = []
-    inc_e_src_map = get_ine_map(G)
 
-    for vertex_id in MetaGraphs.topological_sort(G)
-        incoming_data = get_deps_promises(vertex_id, inc_e_src_map, G)
-        set_prop!(G, vertex_id, :res_data, Dagger.@spawn AVAILABLE_TRANSFORMS[get_prop(G, vertex_id, :type)](graph_name, graph_id, vertex_id, incoming_data...))
-    end
+    schedule_graph(G)
 
     out_e_src_map = get_oute_map(G)
     for vertex_id in MetaGraphs.vertices(G)
@@ -125,5 +164,3 @@ function schedule_graph_with_notify(G::MetaDiGraph, notifications::RemoteChannel
 
     Dagger.@spawn notify_graph_finalization(notifications, graph_name, graph_id, get_vertices_promises(final_vertices, G)...)
 end
-
-AVAILABLE_TRANSFORMS = Dict{String, Function}("Algorithm" => mock_Gaudi_algorithm, "DataObject" => dataobject_algorithm)
