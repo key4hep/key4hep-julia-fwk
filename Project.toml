@@ -24,3 +24,9 @@ TimespanLogging = "a526e669-04d3-4846-9525-c66122c55f63"
 
 [compat]
 Dagger = "0.18.11"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
