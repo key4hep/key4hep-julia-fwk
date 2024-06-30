@@ -92,24 +92,19 @@ function get_deps_promises(vertex_id, map, G)
     return incoming_data
 end
 
-function schedule_graph(G::MetaDiGraph)
-    inc_e_src_map = get_ine_map(G)
-
-    for vertex_id in MetaGraphs.topological_sort(G)
-        incoming_data = get_deps_promises(vertex_id, inc_e_src_map, G)
-        set_prop!(G, vertex_id, :res_data, Dagger.@spawn AVAILABLE_TRANSFORMS[get_prop(G, vertex_id, :type)](name, graph_id, vertex_id, incoming_data...))
-    end
-end
-
-function schedule_graph_with_notify(G::MetaDiGraph, notifications::RemoteChannel, graph_name::String, graph_id::Int)
-    final_vertices = []
+function schedule_graph!(G::MetaDiGraph, graph_name::String="", graph_id::Int=0)
     inc_e_src_map = get_ine_map(G)
 
     for vertex_id in MetaGraphs.topological_sort(G)
         incoming_data = get_deps_promises(vertex_id, inc_e_src_map, G)
         set_prop!(G, vertex_id, :res_data, Dagger.@spawn AVAILABLE_TRANSFORMS[get_prop(G, vertex_id, :type)](graph_name, graph_id, vertex_id, incoming_data...))
     end
+end
 
+function schedule_graph_with_notify!(G::MetaDiGraph, notifications::RemoteChannel, graph_name::String, graph_id::Int)
+    schedule_graph!(G, graph_name, graph_id)
+
+    final_vertices = []
     out_e_src_map = get_oute_map(G)
     for vertex_id in MetaGraphs.vertices(G)
         if !haskey(out_e_src_map, vertex_id)
