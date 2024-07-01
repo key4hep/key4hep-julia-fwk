@@ -1,6 +1,6 @@
 using Distributed
 
-## doesn't work with datadeps!
+## doesn't work with datadeps! threads work though
 # if abspath(PROGRAM_FILE) == @__FILE__
 #     new_procs = addprocs(12) # Set the number of workers
 # end
@@ -69,7 +69,7 @@ function main(graphs_map)
     #
     # OR 
     #
-    # configure_webdash_multievent()
+    # FrameworkDemo.configure_webdash_multievent()
 
     @time execution(graphs_map)
 

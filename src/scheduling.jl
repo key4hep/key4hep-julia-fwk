@@ -5,7 +5,7 @@ using MetaGraphs
 
 mutable struct DataObject
     data
-    size::Float64
+    size::Int
 end
 
 function populate_data_object!(object::DataObject, data)
@@ -19,12 +19,16 @@ end
 
 # Algorithms
 function _algorithm(graph::MetaDiGraph, vertex_id::Int)
+    runtime = get_prop(graph, vertex_id, :runtime_average_s)
+
     function algorithm(inputs, outputs)
         println("Gaudi algorithm for vertex $vertex_id !")
 
         for output in outputs
-            populate_data_object!(output, rand(16))
+            populate_data_object!(output, ' '^output.size)
         end
+
+        sleep(runtime)
     end
 
     return algorithm
@@ -60,7 +64,7 @@ function parse_graphs(graphs_map::Dict, output_graph_path::String, output_graph_
         parsed_graph_dot = timestamp_string("$output_graph_path$graph_name") * ".dot"
         parsed_graph_image = timestamp_string("$output_graph_image_path$graph_name") * ".png"
         G = parse_graphml([graph_path])
-        
+
         open(parsed_graph_dot, "w") do f
             MetaGraphs.savedot(f, G)
         end
@@ -77,7 +81,7 @@ function get_ine_map(G)
     for edge in Graphs.edges(G)
         src_vertex = src(edge)
         dest_vertex = dst(edge)
-        
+
         if haskey(incoming_edges_sources_map, dest_vertex)
             push!(incoming_edges_sources_map[dest_vertex], src_vertex)
         else
@@ -127,9 +131,7 @@ function schedule_graph(G::MetaDiGraph)
     sorted_vertices = MetaGraphs.topological_sort(G)
 
     for data_id in data_vertices
-        # not yet defined in example graphs
-        # size = get_prop(G, data_id, :size)
-        size = 0
+        size = get_prop(G, data_id, :size)
         set_prop!(G, data_id, :res_data, DataObject(nothing, size))
     end
 
@@ -139,7 +141,8 @@ function schedule_graph(G::MetaDiGraph)
             outgoing_data = get_out_promises(G, vertex_id)
             transform = get_transform(G, vertex_id)
             N_inputs = length(incoming_data)
-            Dagger.@spawn transform(In.(incoming_data)..., Out.(outgoing_data)...; N_inputs)
+            res = Dagger.@spawn transform(In.(incoming_data)..., Out.(outgoing_data)...; N_inputs)
+            set_prop!(G, vertex_id, :res_data, res)
         end
     end
 end
