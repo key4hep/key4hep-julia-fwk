@@ -17,6 +17,24 @@ function get_alg_timeline(logs::Dict)
     return timeline
 end
 
+function get_alg_deps(logs::Dict)
+    task_deps = Dict{Int,Set{Int}}()
+    for w in keys(logs)
+        for idx in 1:length(logs[w][:core])
+            category = logs[w][:core][idx].category
+            kind = logs[w][:core][idx].kind
+            if category == :add_thunk && kind == :start
+                (tid, deps) = logs[w][:taskdeps][idx]
+                if isa(deps, Vector{Int}) && !isempty(deps)
+                    task_deps[tid] = Set{Int}(deps)
+                end
+            end
+        end
+    end
+    return task_deps
+end
+
+
 @testset verbose = true "Scheduling" begin
     graph = FrameworkDemo.parse_graphml(["../data/datadeps_demo/df.graphml"])
     algorithms_count = 7
@@ -41,15 +59,17 @@ end
         return deepcopy(id_map)
     end
 
+    function get_tid(node_id::String)::Int
+        task = get_prop(graph, graph[node_id, :node_id], :res_data)
+        return task_to_tid[task.uid]
+    end
+
     @testset "Timeline" begin
         timeline = get_alg_timeline(logs)
+        # This is broken as currenlty the dataobjects are also scheduled as tasks
         @test count(timeline) == algorithms_count broken = true
 
-        function get_time(node_id)
-            task = get_prop(graph, graph[node_id, :node_id], :res_data)
-            tid = task_to_tid[task.uid]
-            return timeline[tid]
-        end
+        get_time = (node_id) -> timeline[get_tid(node_id)]
 
         @test get_time("ProducerA").stop < get_time("TransformerAB").start
         @test get_time("ProducerBC").stop < get_time("TransformerAB").start
@@ -58,5 +78,20 @@ end
         @test get_time("ProducerBC").stop < get_time("ConsumerCD").start
         @test get_time("TransformerAB").stop < get_time("ConsumerE").start
         @test get_time("TransformerAB").stop < get_time("ConsumerCD").start
+    end
+
+    @testset "Dependencies" begin
+        deps = get_alg_deps(logs)
+        get_deps = node_id -> deps[get_tid(node_id)]
+
+        # This is broken as currenlty the dataobjects are also scheduled as tasks
+        # which hides the dependencies betweeen algortihms
+        @test get_tid("ProducerA") ∈ get_deps("TransformerAB") broken = true
+        @test get_tid("ProducerBC") ∈ get_deps("TransformerAB") broken = true
+        @test get_tid("ProducerBC") ∈ get_deps("ConsumerBC") broken = true
+        @test get_tid("ProducerBC") ∈ get_deps("TransformerC") broken = true
+        @test get_tid("ProducerBC") ∈ get_deps("ConsumerCD") broken = true
+        @test get_tid("TransformerAB") ∈ get_deps("ConsumerE") broken = true
+        @test get_tid("TransformerAB") ∈ get_deps("ConsumerCD") broken = true
     end
 end
