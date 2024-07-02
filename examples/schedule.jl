@@ -1,14 +1,14 @@
-using Distributed
+import Distributed
 
 if abspath(PROGRAM_FILE) == @__FILE__
-    new_procs = addprocs(12) # Set the number of workers
+    new_procs = Distributed.addprocs(12, lazy=false) # Set the number of workers
 end
 
-using Dagger
-using Graphs
-using MetaGraphs
-using FrameworkDemo
-using FrameworkDemo.ModGraphVizSimple # This is a workaround to make visualization work until the bugs are fixed in the package.
+import Dagger
+import Graphs
+import MetaGraphs
+import FrameworkDemo
+import FrameworkDemo.ModGraphVizSimple # This is a workaround to make visualization work until the bugs are fixed in the package.
 
 
 # Defining constants
@@ -24,41 +24,61 @@ OUTPUT_GRAPH_IMAGE_PATH = "$output_dir/"
 
 MAX_GRAPHS_RUN = 3
 
-function execution(graphs_map)
-    graphs_being_run = Set{Int}()
-    graphs_dict = Dict{Int, String}()
-    graphs_tasks = Dict{Int,Dagger.DTask}()
-    graphs = FrameworkDemo.parse_graphs(graphs_map, OUTPUT_GRAPH_PATH, OUTPUT_GRAPH_IMAGE_PATH)
-    notifications = RemoteChannel(()->Channel{Int}(32))
-    # notifications = Channel{Int}(32)
-    for (i, (g_name, g)) in enumerate(graphs)
-        graphs_dict[i] = g_name
-        while !(length(graphs_being_run) < MAX_GRAPHS_RUN)
-            finished_graph_id = take!(notifications)
-            delete!(graphs_being_run, finished_graph_id)
-            delete!(graphs_tasks, i)
-            println("Dispatcher: graph finished - $finished_graph_id: $(graphs_dict[finished_graph_id])")
-        end
-        graphs_tasks[i] = FrameworkDemo.schedule_graph_with_notify(g, notifications, g_name, i)
-        push!(graphs_being_run, i)
-        println("Dispatcher: scheduled graph $i: $g_name")
+function execution(graphs_map::Dict{String, String})
+    notifications = Channel{String}(32)
+    dags = Dict{String, FrameworkDemo.TrackedTaskDAG}()
+    running_dags = Set{String}()
+    completed_dags = Set{String}()
+
+    schedule_graphs(notifications, graphs_map, dags, running_dags, completed_dags)
+    wait_dags_to_finish(notifications, dags, running_dags, completed_dags)
+end
+
+function parse_graph(graph_name::String, graph_path::String, output_graph_path::String, output_graph_image_path::String)
+    parsed_graph_dot = FrameworkDemo.timestamp_string("$output_graph_path$graph_name") * ".dot"
+    parsed_graph_image = FrameworkDemo.timestamp_string("$output_graph_image_path$graph_name") * ".png"
+    G = FrameworkDemo.parse_graphml([graph_path])
+    
+    open(parsed_graph_dot, "w") do f
+        MetaGraphs.savedot(f, G)
     end
-    results = []
-    for (g_name, g) in graphs
-        g_map = Dict{Int, Any}()
-        for vertex_id in Graphs.vertices(g)
-            future = get_prop(g, vertex_id, :res_data)
-            g_map[vertex_id] = fetch(future)
+    FrameworkDemo.dot_to_png(parsed_graph_dot, parsed_graph_image)
+    return G
+end
+
+function schedule_graphs(notifications::Channel{String}, graphs_map::Dict{String, String},
+    dags::Dict{String, FrameworkDemo.TrackedTaskDAG}, running_dags::Set{String}, completed_dags::Set{String})
+
+    for (g_name, g_path) in graphs_map
+        g = parse_graph(g_name, g_path, OUTPUT_GRAPH_PATH, OUTPUT_GRAPH_IMAGE_PATH)
+        tracked_task_dag = FrameworkDemo.TrackedTaskDAG(g_name, g)
+        dags[FrameworkDemo.get_uuid(tracked_task_dag)] = tracked_task_dag
+
+        while length(running_dags) >= MAX_GRAPHS_RUN
+            wait_dags_to_finish(notifications, dags, running_dags, completed_dags, length(running_dags) - MAX_GRAPHS_RUN + 1)
         end
-        push!(results, (g_name, g_map))
+        schedule_DAG(tracked_task_dag, notifications, running_dags)
+    end    
+end
+
+function schedule_DAG(tracked_task_dag::FrameworkDemo.TrackedTaskDAG, notifications::Channel{String}, running_dags::Set{String})
+    uuid = FrameworkDemo.get_uuid(tracked_task_dag)
+    FrameworkDemo.start_DAG(tracked_task_dag)
+    push!(running_dags, uuid)
+    println("Dispatcher: graph scheduled - $uuid: $(FrameworkDemo.get_name(tracked_task_dag))")
+    Threads.@spawn begin
+        wait(tracked_task_dag)
+        put!(notifications, string(FrameworkDemo.get_uuid(tracked_task_dag)))
     end
-    for (g_name, res) in results
-        for (id, value) in res
-            println("Graph: $g_name, Final result for vertex $id: $value")
-        end
-    end
-    for (_, task) in graphs_tasks
-        wait(task)
+end
+
+function wait_dags_to_finish(notifications::Channel{String}, dags::Dict{String, FrameworkDemo.TrackedTaskDAG}, running_dags::Set{String},
+    completed_dags::Set{String}, num=length(running_dags))
+    for i in 1:num
+        uuid = take!(notifications)
+        delete!(running_dags, uuid)
+        push!(completed_dags, uuid)
+        println("Dispatcher: graph finished - $uuid: $(FrameworkDemo.get_name(dags[uuid]))")
     end
 end
 
@@ -90,6 +110,6 @@ graphs_map = Dict{String, String}(
 if abspath(PROGRAM_FILE) == @__FILE__
     mkpath(output_dir)
     main(graphs_map)
-    rmprocs!(Dagger.Sch.eager_context(), workers())
-    rmprocs(workers())
+    Dagger.rmprocs!(Dagger.Sch.eager_context(), Distributed.workers())
+    Distributed.rmprocs(Distributed.workers())
 end
