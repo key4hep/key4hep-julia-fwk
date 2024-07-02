@@ -5,7 +5,7 @@ using MetaGraphs
 
 mutable struct DataObject
     data
-    size::Int
+    size::Float64
 end
 
 function populate_data_object!(object::DataObject, data)
@@ -25,7 +25,8 @@ function _algorithm(graph::MetaDiGraph, vertex_id::Int)
         println("Gaudi algorithm for vertex $vertex_id !")
 
         for output in outputs
-            populate_data_object!(output, ' '^output.size)
+            bytes = round(Int, output.size * 1e3)
+            populate_data_object!(output, ' '^bytes)
         end
 
         sleep(runtime)
@@ -131,7 +132,7 @@ function schedule_graph(G::MetaDiGraph)
     sorted_vertices = MetaGraphs.topological_sort(G)
 
     for data_id in data_vertices
-        size = get_prop(G, data_id, :size)
+        size = get_prop(G, data_id, :size_kb)
         set_prop!(G, data_id, :res_data, DataObject(nothing, size))
     end
 
