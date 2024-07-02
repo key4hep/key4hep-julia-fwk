@@ -1,8 +1,6 @@
 name = "FrameworkDemo"
 uuid = "cfbf7e84-66d2-421e-b147-9edb7a8672d2"
-authors = ["SmalRat <30555080+SmalRat@users.noreply.github.com>",
-           "Mateusz Jakub Fila <mateusz.jakub.fila@cern.ch>",
-           "hegner <benedikt.hegner@cern.ch>"]
+authors = ["SmalRat <30555080+SmalRat@users.noreply.github.com>", "Mateusz Jakub Fila <mateusz.jakub.fila@cern.ch>", "hegner <benedikt.hegner@cern.ch>"]
 version = "0.1.0"
 
 [deps]
@@ -21,6 +19,7 @@ LightGraphs = "093fc24a-ae57-5d10-9952-331d41423f4d"
 MetaGraphs = "626554b9-1ddb-594c-aa3c-2596fe9399a5"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 TimespanLogging = "a526e669-04d3-4846-9525-c66122c55f63"
+UUIDs = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
 
 [compat]
 Dagger = "0.18.11"
