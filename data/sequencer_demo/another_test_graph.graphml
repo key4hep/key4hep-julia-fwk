@@ -4,7 +4,7 @@
   <key id="d1" for="node" attr.name="node_id" attr.type="string" />
   <key id="d2" for="node" attr.name="type" attr.type="string" />
   <key id="d3" for="node" attr.name="runtime_average_s" attr.type="double" />
-  <key id="d4" for="node" attr.name="size_kb" attr.type="double" />
+  <key id="d4" for="node" attr.name="size_average_B" attr.type="double" />
   <graph id="G" edgedefault="directed" parse.nodeids="free" parse.edgeids="canonical" parse.order="nodesfirst">
     <node id="n0">
       <data key="d0">MicroProducer</data>
