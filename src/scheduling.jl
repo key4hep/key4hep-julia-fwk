@@ -132,7 +132,7 @@ function schedule_graph(G::MetaDiGraph)
     sorted_vertices = MetaGraphs.topological_sort(G)
 
     for data_id in data_vertices
-        size = get_prop(G, data_id, :size_kb)
+        size = get_prop(G, data_id, :size_average_B)
         set_prop!(G, data_id, :res_data, DataObject(nothing, size))
     end
 
