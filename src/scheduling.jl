@@ -35,9 +35,6 @@ function make_algorithm(graph::MetaDiGraph, vertex_id::Int)
     return algorithm
 end
 
-AVAILABLE_TRANSFORMS = Dict{String, Function}(
-    "Algorithm" => _algorithm,
-)
 
 function get_transform(graph::MetaDiGraph, vertex_id::Int)
     type = get_prop(graph, vertex_id, :type)
