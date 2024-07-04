@@ -37,7 +37,8 @@ end
 
 @testset verbose = true "Scheduling" begin
     graph = FrameworkDemo.parse_graphml(["../data/demo/datadeps/df.graphml"])
-    algorithms_count = 7
+    ilength(x) = sum(_ -> 1, x) # no standard length for MetaGraphs.filter_vertices iterator
+    algorithms_count = ilength(MetaGraphs.filter_vertices(graph, :type, "Algorithm"))
     set_indexing_prop!(graph, :node_id)
 
     Dagger.enable_logging!(timeline=true,
