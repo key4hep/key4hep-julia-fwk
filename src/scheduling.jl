@@ -18,7 +18,7 @@ function populate_data_object!(object::DataObject, data)
 end
 
 # Algorithms
-function _algorithm(graph::MetaDiGraph, vertex_id::Int)
+function make_algorithm(graph::MetaDiGraph, vertex_id::Int)
     runtime = get_prop(graph, vertex_id, :runtime_average_s)
 
     function algorithm(inputs, outputs)
