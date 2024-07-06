@@ -3,16 +3,27 @@ using Distributed
 using MetaGraphs
 
 # Algorithms
-function mock_Gaudi_algorithm(graph_name, graph_id, vertex_id, data...)
-    println("Graph: $graph_name, Gaudi algorithm for vertex $vertex_id !")
-    sleep(1)
-    return vertex_id
+struct MockupAlgorithm
+    name::String
+    runtime::Float64
+    input_length::UInt
+    MockupAlgorithm(graph::MetaDiGraph, vertex_id::Int) = begin
+        runtime = get_prop(graph, vertex_id, :runtime_average_s)
+        name = get_prop(graph, vertex_id, :node_id)
+        inputs = length(inneighbors(graph, vertex_id))
+        new(name, runtime, inputs)
+    end
 end
 
-function dataobject_algorithm(graph_name, graph_id, vertex_id, data...)
-    println("Graph: $graph_name, Dataobject algorithm for vertex $vertex_id !")
-    sleep(0.1)
-    return vertex_id
+function (alg::MockupAlgorithm)(args...)
+    # struct not fully used yet, but it will be!
+
+    function execute!(alg::MockupAlgorithm, _)
+        println("Executing $(alg.name)")
+        return alg.name
+    end
+
+    execute!(alg, args)
 end
 
 function notify_graph_finalization(notifications::RemoteChannel, graph_name::String, graph_id::Int, final_vertices_promises...)
@@ -28,7 +39,7 @@ function parse_graphs(graphs_map::Dict, output_graph_path::String, output_graph_
         parsed_graph_dot = timestamp_string("$output_graph_path$graph_name") * ".dot"
         parsed_graph_image = timestamp_string("$output_graph_image_path$graph_name") * ".png"
         G = parse_graphml([graph_path])
-        
+
         open(parsed_graph_dot, "w") do f
             MetaGraphs.savedot(f, G)
         end
@@ -45,7 +56,7 @@ function get_ine_map(G)
     for edge in Graphs.edges(G)
         src_vertex = src(edge)
         dest_vertex = dst(edge)
-        
+
         if haskey(incoming_edges_sources_map, dest_vertex)
             push!(incoming_edges_sources_map[dest_vertex], src_vertex)
         else
@@ -63,14 +74,14 @@ function get_oute_map(G)
     for edge in Graphs.edges(G)
         src_vertex = src(edge)
         dest_vertex = dst(edge)
-        
+
         if haskey(outgoing_edges_destinations_map, src_vertex)
             push!(outgoing_edges_destinations_map[src_vertex], dest_vertex)
         else
             outgoing_edges_destinations_map[src_vertex] = [dest_vertex]
         end
     end
-    
+
     return outgoing_edges_destinations_map
 end
 
@@ -82,33 +93,32 @@ function get_vertices_promises(vertices::Vector, G::MetaDiGraph)
     return promises
 end
 
-function get_deps_promises(vertex_id, map, G)
-    incoming_data = []
-    if haskey(map, vertex_id)
-        for src in map[vertex_id]
-            push!(incoming_data, get_prop(G, src, :res_data))
-        end
-    end
-    return incoming_data
+function get_in_promises(graph::MetaDiGraph, vertex_id::Int)
+    return [get_prop(graph, src, :res_data) for src in inneighbors(graph, vertex_id)]
+end
+
+function schedule_algorithm!(graph::MetaDiGraph, vertex_id::Int)
+    incoming_data = get_in_promises(graph, vertex_id)
+    algorithm = MockupAlgorithm(graph, vertex_id)
+    Dagger.@spawn algorithm(incoming_data...)
 end
 
 function schedule_graph(G::MetaDiGraph)
-    inc_e_src_map = get_ine_map(G)
+    alg_vertices = MetaGraphs.filter_vertices(G, :type, "Algorithm")
+    sorted_vertices = MetaGraphs.topological_sort(G)
 
-    for vertex_id in MetaGraphs.topological_sort(G)
-        incoming_data = get_deps_promises(vertex_id, inc_e_src_map, G)
-        set_prop!(G, vertex_id, :res_data, Dagger.@spawn AVAILABLE_TRANSFORMS[get_prop(G, vertex_id, :type)](name, graph_id, vertex_id, incoming_data...))
+    for vertex_id in intersect(sorted_vertices, alg_vertices)
+        res = schedule_algorithm!(G, vertex_id)
+        for v in outneighbors(G, vertex_id)
+            set_prop!(G, v, :res_data, res)
+        end
     end
 end
 
 function schedule_graph_with_notify(G::MetaDiGraph, notifications::RemoteChannel, graph_name::String, graph_id::Int)
-    final_vertices = []
-    inc_e_src_map = get_ine_map(G)
+    schedule_graph(G::MetaDiGraph)
 
-    for vertex_id in MetaGraphs.topological_sort(G)
-        incoming_data = get_deps_promises(vertex_id, inc_e_src_map, G)
-        set_prop!(G, vertex_id, :res_data, Dagger.@spawn AVAILABLE_TRANSFORMS[get_prop(G, vertex_id, :type)](graph_name, graph_id, vertex_id, incoming_data...))
-    end
+    final_vertices = []
 
     out_e_src_map = get_oute_map(G)
     for vertex_id in MetaGraphs.vertices(G)
@@ -118,12 +128,10 @@ function schedule_graph_with_notify(G::MetaDiGraph, notifications::RemoteChannel
     end
 
     for vertex_id in keys(out_e_src_map)
-        if out_e_src_map[vertex_id] == [] # TODO: a native method to check for emptiness should exist
+        if isempty(out_e_src_map[vertex_id])
             push!(final_vertices, vertex_id)
         end
     end
 
     Dagger.@spawn notify_graph_finalization(notifications, graph_name, graph_id, get_vertices_promises(final_vertices, G)...)
 end
-
-AVAILABLE_TRANSFORMS = Dict{String, Function}("Algorithm" => mock_Gaudi_algorithm, "DataObject" => dataobject_algorithm)
