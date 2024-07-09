@@ -1,88 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
-  <key id="key0" for="node" attr.name="class" attr.type="string" />
-  <key id="key1" for="node" attr.name="node_id" attr.type="string" />
-  <key id="key2" for="node" attr.name="type" attr.type="string" />
+  <key id="d0" for="node" attr.name="class" attr.type="string" />
+  <key id="d1" for="node" attr.name="node_id" attr.type="string" />
+  <key id="d2" for="node" attr.name="type" attr.type="string" />
+  <key id="d3" for="node" attr.name="runtime_average_s" attr.type="double" />
+  <key id="d4" for="node" attr.name="size_average_B" attr.type="double" />
   <graph id="G" edgedefault="directed" parse.nodeids="free" parse.edgeids="canonical" parse.order="nodesfirst">
     <node id="n0">
-      <data key="key0">MicroProducer</data>
-      <data key="key1">ProducerA</data>
-      <data key="key2">Algorithm</data>
+      <data key="d0">MicroProducer</data>
+      <data key="d1">ProducerA</data>
+      <data key="d2">Algorithm</data>
+      <data key="d3">9.3027e-05</data>
     </node>
     <node id="n1">
-      <data key="key0"></data>
-      <data key="key1">A</data>
-      <data key="key2">DataObject</data>
+      <data key="d0"></data>
+      <data key="d1">A</data>
+      <data key="d2">DataObject</data>
+      <data key="d4">8.0</data>
     </node>
     <node id="n2">
-      <data key="key0">MicroTransformer</data>
-      <data key="key1">TransformerB</data>
-      <data key="key2">Algorithm</data>
+      <data key="d0">MicroTransformer</data>
+      <data key="d1">TransformerB</data>
+      <data key="d2">Algorithm</data>
+      <data key="d3">4.2463e-05</data>
     </node>
     <node id="n3">
-      <data key="key0"></data>
-      <data key="key1">C</data>
-      <data key="key2">DataObject</data>
+      <data key="d0"></data>
+      <data key="d1">C</data>
+      <data key="d2">DataObject</data>
+      <data key="d4">8.0</data>
     </node>
     <node id="n4">
-      <data key="key0">MicroTransformer</data>
-      <data key="key1">TransformerD</data>
-      <data key="key2">Algorithm</data>
+      <data key="d0">MicroTransformer</data>
+      <data key="d1">TransformerD</data>
+      <data key="d2">Algorithm</data>
+      <data key="d3">8.241000000000001e-06</data>
     </node>
     <node id="n5">
-      <data key="key0"></data>
-      <data key="key1">E</data>
-      <data key="key2">DataObject</data>
+      <data key="d0"></data>
+      <data key="d1">E</data>
+      <data key="d2">DataObject</data>
+      <data key="d4">8.0</data>
     </node>
     <node id="n6">
-      <data key="key0">MicroTransformer</data>
-      <data key="key1">TransformerF</data>
-      <data key="key2">Algorithm</data>
+      <data key="d0">MicroTransformer</data>
+      <data key="d1">TransformerF</data>
+      <data key="d2">Algorithm</data>
+      <data key="d3">7.264e-06</data>
     </node>
     <node id="n7">
-      <data key="key0"></data>
-      <data key="key1">G</data>
-      <data key="key2">DataObject</data>
+      <data key="d0"></data>
+      <data key="d1">G</data>
+      <data key="d2">DataObject</data>
+      <data key="d4">8.0</data>
     </node>
     <node id="n8">
-      <data key="key0">MicroTransformer</data>
-      <data key="key1">TransformerH</data>
-      <data key="key2">Algorithm</data>
+      <data key="d0">MicroTransformer</data>
+      <data key="d1">TransformerH</data>
+      <data key="d2">Algorithm</data>
+      <data key="d3">6.705e-06</data>
     </node>
     <node id="n9">
-      <data key="key0"></data>
-      <data key="key1">I</data>
-      <data key="key2">DataObject</data>
+      <data key="d0"></data>
+      <data key="d1">I</data>
+      <data key="d2">DataObject</data>
+      <data key="d4">8.0</data>
     </node>
     <node id="n10">
-      <data key="key0">MicroTransformer</data>
-      <data key="key1">TransformerJ</data>
-      <data key="key2">Algorithm</data>
+      <data key="d0">MicroTransformer</data>
+      <data key="d1">TransformerJ</data>
+      <data key="d2">Algorithm</data>
+      <data key="d3">8.59e-06</data>
     </node>
     <node id="n11">
-      <data key="key0"></data>
-      <data key="key1">K</data>
-      <data key="key2">DataObject</data>
+      <data key="d0"></data>
+      <data key="d1">K</data>
+      <data key="d2">DataObject</data>
+      <data key="d4">8.0</data>
     </node>
     <node id="n12">
-      <data key="key0">MicroTransformer</data>
-      <data key="key1">TransformerL</data>
-      <data key="key2">Algorithm</data>
+      <data key="d0">MicroTransformer</data>
+      <data key="d1">TransformerL</data>
+      <data key="d2">Algorithm</data>
+      <data key="d3">8.94e-06</data>
     </node>
     <node id="n13">
-      <data key="key0"></data>
-      <data key="key1">M</data>
-      <data key="key2">DataObject</data>
+      <data key="d0"></data>
+      <data key="d1">M</data>
+      <data key="d2">DataObject</data>
+      <data key="d4">8.0</data>
     </node>
     <node id="n14">
-      <data key="key0">MicroTransformer</data>
-      <data key="key1">TransformerN</data>
-      <data key="key2">Algorithm</data>
+      <data key="d0">MicroTransformer</data>
+      <data key="d1">TransformerN</data>
+      <data key="d2">Algorithm</data>
+      <data key="d3">8.94e-06</data>
     </node>
     <node id="n15">
-      <data key="key0"></data>
-      <data key="key1">O</data>
-      <data key="key2">DataObject</data>
+      <data key="d0"></data>
+      <data key="d1">O</data>
+      <data key="d2">DataObject</data>
+      <data key="d4">8.0</data>
     </node>
     
     <edge id="e0" source="n0" target="n1">
