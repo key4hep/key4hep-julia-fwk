@@ -16,14 +16,9 @@ struct MockupAlgorithm
 end
 
 function (alg::MockupAlgorithm)(args...)
-    # struct not fully used yet, but it will be!
+    println("Executing $(alg.name)")
 
-    function execute!(alg::MockupAlgorithm, _)
-        println("Executing $(alg.name)")
-        return alg.name
-    end
-
-    execute!(alg, args)
+    return alg.name
 end
 
 function notify_graph_finalization(notifications::RemoteChannel, graph_name::String, graph_id::Int, final_vertices_promises...)
