@@ -46,7 +46,8 @@ function execution(graphs_map)
     results = []
     for (g_name, g) in graphs
         g_map = Dict{Int, Any}()
-        for vertex_id in Graphs.vertices(g)
+        data_vertices = MetaGraphs.filter_vertices(g, :type, "DataObject")
+        for vertex_id in data_vertices
             future = get_prop(g, vertex_id, :res_data)
             g_map[vertex_id] = fetch(future)
         end
@@ -64,10 +65,6 @@ end
 
 function main(graphs_map)
     FrameworkDemo.configure_LocalEventLog()
-    #
-    # OR 
-    #
-    # configure_webdash_multievent()
 
     @time execution(graphs_map)
 
