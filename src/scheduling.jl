@@ -54,7 +54,7 @@ function is_terminating_alg(graph::AbstractGraph, vertex_id::Int)
     all(is_terminating, successor_dataobjects)
 end
 
-function schedule_algorithm!(graph::MetaDiGraph, vertex_id::Int)
+function schedule_algorithm(graph::MetaDiGraph, vertex_id::Int)
     incoming_data = get_promises(graph, inneighbors(graph, vertex_id))
     algorithm = MockupAlgorithm(graph, vertex_id)
     Dagger.@spawn algorithm(incoming_data...)
@@ -67,7 +67,7 @@ function schedule_graph(graph::MetaDiGraph)
     terminating_results = []
 
     for vertex_id in intersect(sorted_vertices, alg_vertices)
-        res = schedule_algorithm!(graph, vertex_id)
+        res = schedule_algorithm(graph, vertex_id)
         set_prop!(graph, vertex_id, :res_data, res)
         for v in outneighbors(graph, vertex_id)
             set_prop!(graph, v, :res_data, res)
@@ -80,9 +80,9 @@ function schedule_graph(graph::MetaDiGraph)
 end
 
 function schedule_graph_with_notify(graph::MetaDiGraph,
-        notifications::RemoteChannel,
-        graph_name::String,
-        graph_id::Int)
+    notifications::RemoteChannel,
+    graph_name::String,
+    graph_id::Int)
     terminating_results = schedule_graph(graph)
 
     Dagger.@spawn notify_graph_finalization(notifications, graph_name, graph_id, terminating_results...)
