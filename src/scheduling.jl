@@ -44,42 +44,6 @@ function parse_graphs(graphs_map::Dict, output_graph_path::String, output_graph_
     return graphs
 end
 
-# Function to get the map of incoming edges to a vertex (i.e. the sources of the incoming edges)
-function get_ine_map(G)
-    incoming_edges_sources_map = Dict{eltype(G), Vector{eltype(G)}}()
-
-    for edge in Graphs.edges(G)
-        src_vertex = src(edge)
-        dest_vertex = dst(edge)
-
-        if haskey(incoming_edges_sources_map, dest_vertex)
-            push!(incoming_edges_sources_map[dest_vertex], src_vertex)
-        else
-            incoming_edges_sources_map[dest_vertex] = [src_vertex]
-        end
-    end
-
-    return incoming_edges_sources_map
-end
-
-# Function to get the map of outgoing edges from a vertex (i.e. the destinations of the outgoing edges)
-function get_oute_map(G)
-    outgoing_edges_destinations_map = Dict{eltype(G), Vector{eltype(G)}}()
-
-    for edge in Graphs.edges(G)
-        src_vertex = src(edge)
-        dest_vertex = dst(edge)
-
-        if haskey(outgoing_edges_destinations_map, src_vertex)
-            push!(outgoing_edges_destinations_map[src_vertex], dest_vertex)
-        else
-            outgoing_edges_destinations_map[src_vertex] = [dest_vertex]
-        end
-    end
-
-    return outgoing_edges_destinations_map
-end
-
 function get_promises(graph::MetaDiGraph, vertices::Vector)
     return [get_prop(graph, v, :res_data) for v in vertices]
 end
