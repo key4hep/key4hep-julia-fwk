@@ -33,7 +33,7 @@ function parse_graphs(graphs_map::Dict, output_graph_path::String, output_graph_
     for (graph_name, graph_path) in graphs_map
         parsed_graph_dot = timestamp_string("$output_graph_path$graph_name") * ".dot"
         parsed_graph_image = timestamp_string("$output_graph_image_path$graph_name") * ".png"
-        G = parse_graphml([graph_path])
+        G = parse_graphml(graph_path)
 
         open(parsed_graph_dot, "w") do f
             MetaGraphs.savedot(f, G)
