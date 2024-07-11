@@ -10,8 +10,8 @@ using MetaGraphs
 using FrameworkDemo
 
 # Defining constants
-graph1_path = "./data/sequencer_demo/df_sequencer_demo.graphml"
-graph2_path = "./data/sequencer_demo/another_test_graph.graphml"
+graph1_path = "./data/demo/sequencer/df.graphml"
+graph2_path = "./data/demo/parallel/df.graphml"
 
 output_dir = "examples/results"
 mkpath(output_dir)

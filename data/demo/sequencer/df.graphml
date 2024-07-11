@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d4" for="node" attr.name="size_average_B" attr.type="double"/>
+  <key id="d3" for="node" attr.name="class" attr.type="string"/>
+  <key id="d2" for="node" attr.name="node_id" attr.type="string"/>
+  <key id="d1" for="node" attr.name="runtime_average_s" attr.type="double"/>
+  <key id="d0" for="node" attr.name="type" attr.type="string"/>
+  <graph edgedefault="directed" id="G">
+    <node id="0">
+      <data key="d0">Algorithm</data>
+      <data key="d1">9.3027e-05</data>
+      <data key="d2">ProducerA</data>
+    </node>
+    <node id="1">
+      <data key="d0">Algorithm</data>
+      <data key="d1">4.2463e-05</data>
+      <data key="d2">TransformerB</data>
+    </node>
+    <node id="2">
+      <data key="d0">Algorithm</data>
+      <data key="d1">8.241000000000001e-06</data>
+      <data key="d2">TransformerC</data>
+    </node>
+    <node id="3">
+      <data key="d0">Algorithm</data>
+      <data key="d1">7.264e-06</data>
+      <data key="d2">TransformerD</data>
+    </node>
+    <node id="4">
+      <data key="d0">Algorithm</data>
+      <data key="d1">6.705e-06</data>
+      <data key="d2">TransformerE</data>
+    </node>
+    <node id="5">
+      <data key="d0">Algorithm</data>
+      <data key="d1">8.59e-06</data>
+      <data key="d2">TransformerF</data>
+    </node>
+    <node id="6">
+      <data key="d0">Algorithm</data>
+      <data key="d1">8.94e-06</data>
+      <data key="d2">TransformerG</data>
+    </node>
+    <node id="7">
+      <data key="d0">DataObject</data>
+      <data key="d3">AnyDataWrapper&lt;int&gt;</data>
+      <data key="d4">8.0</data>
+      <data key="d2">A</data>
+    </node>
+    <node id="8">
+      <data key="d0">DataObject</data>
+      <data key="d3">AnyDataWrapper&lt;int&gt;</data>
+      <data key="d4">8.0</data>
+      <data key="d2">B</data>
+    </node>
+    <node id="9">
+      <data key="d0">DataObject</data>
+      <data key="d3">AnyDataWrapper&lt;int&gt;</data>
+      <data key="d4">8.0</data>
+      <data key="d2">C</data>
+    </node>
+    <node id="10">
+      <data key="d0">DataObject</data>
+      <data key="d3">AnyDataWrapper&lt;int&gt;</data>
+      <data key="d4">8.0</data>
+      <data key="d2">D</data>
+    </node>
+    <node id="11">
+      <data key="d0">DataObject</data>
+      <data key="d3">AnyDataWrapper&lt;int&gt;</data>
+      <data key="d4">8.0</data>
+      <data key="d2">E</data>
+    </node>
+    <node id="12">
+      <data key="d0">DataObject</data>
+      <data key="d3">AnyDataWrapper&lt;int&gt;</data>
+      <data key="d4">8.0</data>
+      <data key="d2">F</data>
+    </node>
+    <node id="13">
+      <data key="d0">DataObject</data>
+      <data key="d3">AnyDataWrapper&lt;int&gt;</data>
+      <data key="d4">8.0</data>
+      <data key="d2">G</data>
+    </node>
+    <edge source="0" target="7"/>
+    <edge source="1" target="8"/>
+    <edge source="2" target="9"/>
+    <edge source="3" target="10"/>
+    <edge source="4" target="11"/>
+    <edge source="5" target="12"/>
+    <edge source="6" target="13"/>
+    <edge source="7" target="1"/>
+    <edge source="8" target="2"/>
+    <edge source="8" target="6"/>
+    <edge source="9" target="3"/>
+    <edge source="10" target="4"/>
+    <edge source="11" target="5"/>
+  </graph>
+</graphml>

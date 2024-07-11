@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d4" for="node" attr.name="size_average_B" attr.type="double"/>
+  <key id="d3" for="node" attr.name="class" attr.type="string"/>
+  <key id="d2" for="node" attr.name="node_id" attr.type="string"/>
+  <key id="d1" for="node" attr.name="runtime_average_s" attr.type="double"/>
+  <key id="d0" for="node" attr.name="type" attr.type="string"/>
+  <graph edgedefault="directed" id="G">
+    <node id="0">
+      <data key="d0">Algorithm</data>
+      <data key="d1">0.090454089</data>
+      <data key="d2">ProducerA</data>
+    </node>
+    <node id="1">
+      <data key="d0">Algorithm</data>
+      <data key="d1">0.08399550800000001</data>
+      <data key="d2">TransformerB</data>
+    </node>
+    <node id="2">
+      <data key="d0">Algorithm</data>
+      <data key="d1">0.122708727</data>
+      <data key="d2">TransformerC1</data>
+    </node>
+    <node id="3">
+      <data key="d0">Algorithm</data>
+      <data key="d1">0.104400635</data>
+      <data key="d2">TransformerD1</data>
+    </node>
+    <node id="4">
+      <data key="d0">Algorithm</data>
+      <data key="d1">0.101963336</data>
+      <data key="d2">TransformerE1</data>
+    </node>
+    <node id="5">
+      <data key="d0">Algorithm</data>
+      <data key="d1">0.108919183</data>
+      <data key="d2">TransformerF1</data>
+    </node>
+    <node id="6">
+      <data key="d0">Algorithm</data>
+      <data key="d1">0.106618842</data>
+      <data key="d2">TransformerG1</data>
+    </node>
+    <node id="7">
+      <data key="d0">Algorithm</data>
+      <data key="d1">0.094613099</data>
+      <data key="d2">TransformerH1</data>
+    </node>
+    <node id="8">
+      <data key="d0">Algorithm</data>
+      <data key="d1">0.085144037</data>
+      <data key="d2">TransformerC2</data>
+    </node>
+    <node id="9">
+      <data key="d0">Algorithm</data>
+      <data key="d1">0.10125201</data>
+      <data key="d2">TransformerD2</data>
+    </node>
+    <node id="10">
+      <data key="d0">Algorithm</data>
+      <data key="d1">0.09871882000000001</data>
+      <data key="d2">TransformerE2</data>
+    </node>
+    <node id="11">
+      <data key="d0">Algorithm</data>
+      <data key="d1">0.115230541</data>
+      <data key="d2">TransformerF2</data>
+    </node>
+    <node id="12">
+      <data key="d0">Algorithm</data>
+      <data key="d1">0.098872609</data>
+      <data key="d2">TransformerG2</data>
+    </node>
+    <node id="13">
+      <data key="d0">Algorithm</data>
+      <data key="d1">0.11312973600000001</data>
+      <data key="d2">TransformerC3</data>
+    </node>
+    <node id="14">
+      <data key="d0">Algorithm</data>
+      <data key="d1">0.092332174</data>
+      <data key="d2">TransformerD3</data>
+    </node>
+    <node id="15">
+      <data key="d0">Algorithm</data>
+      <data key="d1">0.087334728</data>
+      <data key="d2">TransformerE3</data>
+    </node>
+    <node id="16">
+      <data key="d0">Algorithm</data>
+      <data key="d1">0.093240103</data>
+      <data key="d2">TransformerF3</data>
+    </node>
+    <node id="17">
+      <data key="d0">Algorithm</data>
+      <data key="d1">0.104140409</data>
+      <data key="d2">TransformerC4</data>
+    </node>
+    <node id="18">
+      <data key="d0">Algorithm</data>
+      <data key="d1">0.097009471</data>
+      <data key="d2">TransformerD4</data>
+    </node>
+    <node id="19">
+      <data key="d0">Algorithm</data>
+      <data key="d1">0.115724664</data>
+      <data key="d2">TransformerE4</data>
+    </node>
+    <node id="20">
+      <data key="d0">DataObject</data>
+      <data key="d3">DataObject</data>
+      <data key="d4">8.0</data>
+      <data key="d2">a</data>
+    </node>
+    <node id="21">
+      <data key="d0">DataObject</data>
+      <data key="d3">DataObject</data>
+      <data key="d4">8.0</data>
+      <data key="d2">b</data>
+    </node>
+    <node id="22">
+      <data key="d0">DataObject</data>
+      <data key="d3">DataObject</data>
+      <data key="d4">8.0</data>
+      <data key="d2">c1</data>
+    </node>
+    <node id="23">
+      <data key="d0">DataObject</data>
+      <data key="d3">DataObject</data>
+      <data key="d4">16.0</data>
+      <data key="d2">c2</data>
+    </node>
+    <node id="24">
+      <data key="d0">DataObject</data>
+      <data key="d3">DataObject</data>
+      <data key="d4">16.0</data>
+      <data key="d2">c3</data>
+    </node>
+    <node id="25">
+      <data key="d0">DataObject</data>
+      <data key="d3">DataObject</data>
+      <data key="d4">16.0</data>
+      <data key="d2">c4</data>
+    </node>
+    <node id="26">
+      <data key="d0">DataObject</data>
+      <data key="d3">DataObject</data>
+      <data key="d4">16.0</data>
+      <data key="d2">d1</data>
+    </node>
+    <node id="27">
+      <data key="d0">DataObject</data>
+      <data key="d3">DataObject</data>
+      <data key="d4">16.0</data>
+      <data key="d2">d2</data>
+    </node>
+    <node id="28">
+      <data key="d0">DataObject</data>
+      <data key="d3">DataObject</data>
+      <data key="d4">16.0</data>
+      <data key="d2">d3</data>
+    </node>
+    <node id="29">
+      <data key="d0">DataObject</data>
+      <data key="d3">DataObject</data>
+      <data key="d4">16.0</data>
+      <data key="d2">d4</data>
+    </node>
+    <node id="30">
+      <data key="d0">DataObject</data>
+      <data key="d3">DataObject</data>
+      <data key="d4">16.0</data>
+      <data key="d2">e1</data>
+    </node>
+    <node id="31">
+      <data key="d0">DataObject</data>
+      <data key="d3">DataObject</data>
+      <data key="d4">16.0</data>
+      <data key="d2">e2</data>
+    </node>
+    <node id="32">
+      <data key="d0">DataObject</data>
+      <data key="d3">DataObject</data>
+      <data key="d4">16.0</data>
+      <data key="d2">e3</data>
+    </node>
+    <node id="33">
+      <data key="d0">DataObject</data>
+      <data key="d3">DataObject</data>
+      <data key="d4">16.0</data>
+      <data key="d2">e4</data>
+    </node>
+    <node id="34">
+      <data key="d0">DataObject</data>
+      <data key="d3">DataObject</data>
+      <data key="d4">16.0</data>
+      <data key="d2">f1</data>
+    </node>
+    <node id="35">
+      <data key="d0">DataObject</data>
+      <data key="d3">DataObject</data>
+      <data key="d4">16.0</data>
+      <data key="d2">f2</data>
+    </node>
+    <node id="36">
+      <data key="d0">DataObject</data>
+      <data key="d3">DataObject</data>
+      <data key="d4">16.0</data>
+      <data key="d2">f3</data>
+    </node>
+    <node id="37">
+      <data key="d0">DataObject</data>
+      <data key="d3">DataObject</data>
+      <data key="d4">16.0</data>
+      <data key="d2">g1</data>
+    </node>
+    <node id="38">
+      <data key="d0">DataObject</data>
+      <data key="d3">DataObject</data>
+      <data key="d4">16.0</data>
+      <data key="d2">g2</data>
+    </node>
+    <node id="39">
+      <data key="d0">DataObject</data>
+      <data key="d3">DataObject</data>
+      <data key="d4">16.0</data>
+      <data key="d2">h1</data>
+    </node>
+    <edge source="0" target="20"/>
+    <edge source="1" target="21"/>
+    <edge source="2" target="22"/>
+    <edge source="3" target="26"/>
+    <edge source="4" target="30"/>
+    <edge source="5" target="34"/>
+    <edge source="6" target="37"/>
+    <edge source="7" target="39"/>
+    <edge source="8" target="23"/>
+    <edge source="9" target="27"/>
+    <edge source="10" target="31"/>
+    <edge source="11" target="35"/>
+    <edge source="12" target="38"/>
+    <edge source="13" target="24"/>
+    <edge source="14" target="28"/>
+    <edge source="15" target="32"/>
+    <edge source="16" target="36"/>
+    <edge source="17" target="25"/>
+    <edge source="18" target="29"/>
+    <edge source="19" target="33"/>
+    <edge source="20" target="1"/>
+    <edge source="21" target="2"/>
+    <edge source="21" target="8"/>
+    <edge source="21" target="13"/>
+    <edge source="21" target="17"/>
+    <edge source="22" target="3"/>
+    <edge source="23" target="9"/>
+    <edge source="24" target="14"/>
+    <edge source="25" target="18"/>
+    <edge source="26" target="4"/>
+    <edge source="27" target="10"/>
+    <edge source="28" target="15"/>
+    <edge source="29" target="19"/>
+    <edge source="30" target="5"/>
+    <edge source="31" target="11"/>
+    <edge source="32" target="16"/>
+    <edge source="34" target="6"/>
+    <edge source="35" target="12"/>
+    <edge source="37" target="7"/>
+  </graph>
+</graphml>

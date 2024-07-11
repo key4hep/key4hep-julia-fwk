@@ -13,8 +13,8 @@ using FrameworkDemo.ModGraphVizSimple # This is a workaround to make visualizati
 
 # Defining constants
 output_dir = "results"
-graph1_path = "./data/sequencer_demo/df_sequencer_demo.graphml"
-graph2_path = "./data/sequencer_demo/another_test_graph.graphml"
+graph1_path = "./data/demo/sequencer/df.graphml"
+graph2_path = "./data/demo/parallel/df.graphml"
 
 LOGS_FILE = FrameworkDemo.timestamp_string("$output_dir/out") * ".dot"
 GRAPH_IMAGE_PATH = FrameworkDemo.timestamp_string("$output_dir/DAG") * ".png"
