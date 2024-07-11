@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d6" for="node" attr.name="blocking" attr.type="boolean"/>
+  <key id="d5" for="node" attr.name="node_id" attr.type="string"/>
+  <key id="d4" for="node" attr.name="ignoreFilterPassed" attr.type="boolean"/>
+  <key id="d3" for="node" attr.name="shortCircuit" attr.type="boolean"/>
+  <key id="d2" for="node" attr.name="sequential" attr.type="boolean"/>
+  <key id="d1" for="node" attr.name="modeOR" attr.type="boolean"/>
+  <key id="d0" for="node" attr.name="type" attr.type="string"/>
+  <graph edgedefault="directed" id="G">
+    <node id="0">
+      <data key="d0">DecisionHub</data>
+      <data key="d1">True</data>
+      <data key="d2">False</data>
+      <data key="d3">False</data>
+      <data key="d4">True</data>
+      <data key="d5">RootDecisionHub</data>
+    </node>
+    <node id="1">
+      <data key="d0">Algorithm</data>
+      <data key="d6">False</data>
+      <data key="d5">ProducerA</data>
+    </node>
+    <node id="2">
+      <data key="d0">Algorithm</data>
+      <data key="d6">False</data>
+      <data key="d5">TransformerA</data>
+    </node>
+    <node id="3">
+      <data key="d0">Algorithm</data>
+      <data key="d6">False</data>
+      <data key="d5">TransformerB</data>
+    </node>
+    <node id="4">
+      <data key="d0">Algorithm</data>
+      <data key="d6">False</data>
+      <data key="d5">TransformerC</data>
+    </node>
+    <node id="5">
+      <data key="d0">Algorithm</data>
+      <data key="d6">False</data>
+      <data key="d5">TransformerD</data>
+    </node>
+    <edge source="0" target="1"/>
+    <edge source="0" target="2"/>
+    <edge source="0" target="3"/>
+    <edge source="0" target="4"/>
+    <edge source="0" target="5"/>
+  </graph>
+</graphml>
