@@ -41,18 +41,12 @@ end
     algorithms_count = ilength(MetaGraphs.filter_vertices(graph, :type, "Algorithm"))
     set_indexing_prop!(graph, :node_id)
 
-    Dagger.enable_logging!(timeline=true,
-        tasknames=true,
-        taskdeps=true,
-        taskargs=true,
-        taskargmoves=true,
-    )
+    Dagger.enable_logging!(tasknames=true, taskdeps=true)
     _ = Dagger.fetch_logs!() # flush logs
 
-    FrameworkDemo.schedule_graph(graph)
-    for v in vertices(graph)
-        wait(get_prop(graph, v, :res_data))
-    end
+    tasks = FrameworkDemo.schedule_graph(graph)
+    wait.(tasks)
+
     logs = Dagger.fetch_logs!()
     @test !isnothing(logs)
 
