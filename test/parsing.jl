@@ -3,7 +3,7 @@ using Graphs
 using MetaGraphs
 
 @testset "Parsing" begin
-    graph = FrameworkDemo.parse_graphml(["../data/sequencer_demo/df_sequencer_demo.graphml"])
+    graph = FrameworkDemo.parse_graphml(["../data/demo/sequencer/df.graphml"])
     set_indexing_prop!(graph, :original_id)
 
     # Test the general structure of the graph

@@ -3,7 +3,7 @@
 using FrameworkDemo
 
 function main()
-    G = FrameworkDemo.parse_graphml(["./data/sequencer_demo/df_sequencer_demo.graphml"])
+    G = FrameworkDemo.parse_graphml(["./data/demo/sequencer/df.graphml"])
     G_copy = deepcopy(G)
     FrameworkDemo.show_graph(G_copy)
 end
