@@ -2,9 +2,8 @@ using Graphs
 using MetaGraphs
 include("../deps/GraphMLReader.jl/src/GraphMLReader.jl")
 
-function parse_graphml(path)
-    file_path = joinpath(path...)
-    G = GraphMLReader.loadgraphml(file_path, "G")
+function parse_graphml(filename::String)::MetaDiGraph
+    GraphMLReader.loadgraphml(filename, "G")
 end
 
 function show_graph(G)
