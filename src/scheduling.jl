@@ -8,12 +8,19 @@ struct MockupAlgorithm
     runtime::Float64
     input_length::UInt
     MockupAlgorithm(graph::MetaDiGraph, vertex_id::Int) = begin
-        runtime = get_prop(graph, vertex_id, :runtime_average_s)
         name = get_prop(graph, vertex_id, :node_id)
+        if has_prop(graph, vertex_id, :runtime_average_s)
+           runtime = get_prop(graph, vertex_id, :runtime_average_s)
+        else
+            runtime = alg_default_runtime_s
+            @warn "Runtime not provided for $name algorithm. Using default value $runtime"
+        end
         inputs = length(inneighbors(graph, vertex_id))
         new(name, runtime, inputs)
     end
 end
+
+alg_default_runtime_s::Float64 = 0
 
 function (alg::MockupAlgorithm)(args...)
     println("Executing $(alg.name)")
