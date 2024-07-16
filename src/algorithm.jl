@@ -1,30 +1,30 @@
-function find_nth_prime(n::Int)
+# meant to be consistently inefficient for crunching purposes.
+# just returns the largest prime less than `n_max`
+function find_primes(n_max::Int)
     primes = [2]
     x = 3
 
-    while length(primes) < n
+    for n in 3:n_max
         isPrime = true
 
-        for y in primes
-            if x % y == 0
+        for y in 2:n÷2
+            if n % y == 0
                 isPrime = false
                 break
             end
         end
 
         if isPrime
-            push!(primes, x)
+            push!(primes, n)
         end
-
-        x += 2
     end
 
-    return primes[n]
+    return primes[end]
 end
 
 function benchmark_prime(n::Int)
     t0 = time()
-    find_nth_prime(n)
+    find_primes(n)
     Δt = time() - t0
 
     return Δt
