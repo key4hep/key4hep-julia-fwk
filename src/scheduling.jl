@@ -15,9 +15,9 @@ struct MockupAlgorithm
     end
 end
 
-function (alg::MockupAlgorithm)(args...; coefficient::Float64)
+function (alg::MockupAlgorithm)(args...; coefficients::Vector{Float64})
     println("Executing $(alg.name)")
-    crunch_for_seconds(alg.runtime, coefficient)
+    crunch_for_seconds(alg.runtime, coefficients)
 
     return alg.name
 end
@@ -55,20 +55,20 @@ function is_terminating_alg(graph::AbstractGraph, vertex_id::Int)
     all(is_terminating, successor_dataobjects)
 end
 
-function schedule_algorithm(graph::MetaDiGraph, vertex_id::Int, coefficient::Dagger.Shard)
+function schedule_algorithm(graph::MetaDiGraph, vertex_id::Int, coefficients::Dagger.Shard)
     incoming_data = get_promises(graph, inneighbors(graph, vertex_id))
     algorithm = MockupAlgorithm(graph, vertex_id)
-    Dagger.@spawn algorithm(incoming_data...; coefficient)
+    Dagger.@spawn algorithm(incoming_data...; coefficients)
 end
 
-function schedule_graph(graph::MetaDiGraph, coefficient::Dagger.Shard)
+function schedule_graph(graph::MetaDiGraph, coefficients::Dagger.Shard)
     alg_vertices = MetaGraphs.filter_vertices(graph, :type, "Algorithm")
     sorted_vertices = MetaGraphs.topological_sort(graph)
 
     terminating_results = []
 
     for vertex_id in intersect(sorted_vertices, alg_vertices)
-        res = schedule_algorithm(graph, vertex_id, coefficient)
+        res = schedule_algorithm(graph, vertex_id, coefficients)
         set_prop!(graph, vertex_id, :res_data, res)
         for v in outneighbors(graph, vertex_id)
             set_prop!(graph, v, :res_data, res)
@@ -84,8 +84,8 @@ function schedule_graph_with_notify(graph::MetaDiGraph,
         notifications::RemoteChannel,
         graph_name::String,
         graph_id::Int,
-        coefficient::Dagger.Shard)
-    terminating_results = schedule_graph(graph, coefficient)
+        coefficients::Dagger.Shard)
+    terminating_results = schedule_graph(graph, coefficients)
 
     Dagger.@spawn notify_graph_finalization(notifications, graph_name, graph_id, terminating_results...)
 end
