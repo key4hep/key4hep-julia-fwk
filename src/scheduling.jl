@@ -8,12 +8,19 @@ struct MockupAlgorithm
     runtime::Float64
     input_length::UInt
     MockupAlgorithm(graph::MetaDiGraph, vertex_id::Int) = begin
-        runtime = get_prop(graph, vertex_id, :runtime_average_s)
         name = get_prop(graph, vertex_id, :node_id)
+        if has_prop(graph, vertex_id, :runtime_average_s)
+           runtime = get_prop(graph, vertex_id, :runtime_average_s)
+        else
+            runtime = alg_default_runtime_s
+            @warn "Runtime not provided for $name algorithm. Using default value $runtime"
+        end
         inputs = length(inneighbors(graph, vertex_id))
         new(name, runtime, inputs)
     end
 end
+
+alg_default_runtime_s::Float64 = 0
 
 function (alg::MockupAlgorithm)(args...; coefficients::Vector{Float64})
     println("Executing $(alg.name)")
@@ -34,7 +41,7 @@ function parse_graphs(graphs_map::Dict, output_graph_path::String, output_graph_
     for (graph_name, graph_path) in graphs_map
         parsed_graph_dot = timestamp_string("$output_graph_path$graph_name") * ".dot"
         parsed_graph_image = timestamp_string("$output_graph_image_path$graph_name") * ".png"
-        G = parse_graphml([graph_path])
+        G = parse_graphml(graph_path)
 
         open(parsed_graph_dot, "w") do f
             MetaGraphs.savedot(f, G)

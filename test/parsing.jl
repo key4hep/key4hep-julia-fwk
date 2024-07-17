@@ -3,7 +3,8 @@ using Graphs
 using MetaGraphs
 
 @testset "Parsing" begin
-    graph = FrameworkDemo.parse_graphml(["../data/demo/sequencer/df.graphml"])
+    path = joinpath(pkgdir(FrameworkDemo), "data/demo/sequencer/df.graphml")
+    graph = FrameworkDemo.parse_graphml(path)
     set_indexing_prop!(graph, :original_id)
 
     # Test the general structure of the graph
