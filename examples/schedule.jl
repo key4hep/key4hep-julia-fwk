@@ -31,6 +31,8 @@ function execution(graphs_map)
     graphs = FrameworkDemo.parse_graphs(graphs_map, OUTPUT_GRAPH_PATH, OUTPUT_GRAPH_IMAGE_PATH)
     notifications = RemoteChannel(()->Channel{Int}(32))
     # notifications = Channel{Int}(32)
+    coefficients = Dagger.@shard FrameworkDemo.calculate_coefficients()
+
     for (i, (g_name, g)) in enumerate(graphs)
         graphs_dict[i] = g_name
         while !(length(graphs_being_run) < MAX_GRAPHS_RUN)
@@ -39,7 +41,7 @@ function execution(graphs_map)
             delete!(graphs_tasks, i)
             println("Dispatcher: graph finished - $finished_graph_id: $(graphs_dict[finished_graph_id])")
         end
-        graphs_tasks[i] = FrameworkDemo.schedule_graph_with_notify(g, notifications, g_name, i)
+        graphs_tasks[i] = FrameworkDemo.schedule_graph_with_notify(g, notifications, g_name, i, coefficients)
         push!(graphs_being_run, i)
         println("Dispatcher: scheduled graph $i: $g_name")
     end
