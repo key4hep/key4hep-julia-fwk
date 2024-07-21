@@ -2,7 +2,8 @@ using FrameworkDemo
 using BenchmarkTools
 using Plots
 suite = BenchmarkGroup()
-result_processors = []
+result_processors = Function[]
+
 include("cpu_crunching.jl")
 
 if abspath(PROGRAM_FILE) == @__FILE__
