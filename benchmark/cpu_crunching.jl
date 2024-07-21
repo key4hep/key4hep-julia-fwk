@@ -18,6 +18,7 @@ function plot_find_primes(results)
     y = primes_r .|> last .|> minimum .|> time |> x -> x * 1e-9
     p = plot(x, y, xaxis=:log10, yaxis=:log10, xlabel="n", ylabel="time [s]",
         title="find_primes(n)", label="find_primes",
+        marker=(:circle, 5), linewidth=3,
         xguidefonthalign=:right, yguidefontvalign=:top, legend=:topleft)
     filename = "bench_find_primes.png"
     savefig(p, filename)
@@ -30,9 +31,11 @@ function plot_crunch_for_seconds(results)
     crunch_r = sort(collect(results["cpu_crunching"]["crunch_for_seconds"]), by=first)
     x = first.(crunch_r)
     y = crunch_r .|> last .|> minimum .|> time |> x -> x * 1e-9
-    p = plot(x, y, xaxis=:log10, yaxis=:log10, xlabel="time [s]", ylabel="time [s]",
+    p = plot(x, (y - x)./x, xaxis=:log10, xlabel="t [s]", ylabel="Time relative error",
+    yformatter = x->"$(100*x) %",
         title="crunch_for_seconds(t)", label="crunch_for_seconds",
-        xguidefonthalign=:right, yguidefontvalign=:top, legend=:topleft)
+        marker=(:circle, 5), linewidth=3,
+        xguidefonthalign=:right, yguidefontvalign=:top, legend=:topright)
     filename = "bench_crunch_for_seconds.png"
     savefig(p, filename)
     @info "Results of benchmark cpu_crunching/crunch_for_seconds written to $filename"
