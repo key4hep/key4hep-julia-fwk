@@ -1,17 +1,17 @@
 import Printf
 
-suite["cpu_crunching"] = BenchmarkGroup(["cpu_crunching"])
+SUITE["cpu_crunching"] = BenchmarkGroup(["cpu_crunching"])
 
-suite["cpu_crunching"]["find_primes"] = BenchmarkGroup(["find_primes"])
+SUITE["cpu_crunching"]["find_primes"] = BenchmarkGroup(["find_primes"])
 for i in exp10.(range(0, stop=6, length=10))
     n = ceil(Int, i)
-    suite["cpu_crunching"]["find_primes"][n] = @benchmarkable FrameworkDemo.find_primes($n) evals = 1 samples = 1
+    SUITE["cpu_crunching"]["find_primes"][n] = @benchmarkable FrameworkDemo.find_primes($n) evals = 1 samples = 1
 end
 
-suite["cpu_crunching"]["crunch_for_seconds"] = BenchmarkGroup(["crunch_for_seconds"])
+SUITE["cpu_crunching"]["crunch_for_seconds"] = BenchmarkGroup(["crunch_for_seconds"])
 coef = FrameworkDemo.calculate_coefficients()
 for i in exp10.(range(-6, stop=1.5, length=10))
-    suite["cpu_crunching"]["crunch_for_seconds"][i] = @benchmarkable FrameworkDemo.crunch_for_seconds($i, $coef) evals = 1 samples = 1
+    SUITE["cpu_crunching"]["crunch_for_seconds"][i] = @benchmarkable FrameworkDemo.crunch_for_seconds($i, $coef) evals = 1 samples = 1
 end
 
 function plot_find_primes(results::BenchmarkGroup)
