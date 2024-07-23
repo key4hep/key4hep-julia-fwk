@@ -36,22 +36,6 @@ function notify_graph_finalization(notifications::RemoteChannel, graph_name::Str
     println("Graph: $graph_name, notified, graph_id: $graph_id !")
 end
 
-function parse_graphs(graphs_map::Dict, output_graph_path::String, output_graph_image_path::String)
-    graphs = []
-    for (graph_name, graph_path) in graphs_map
-        parsed_graph_dot = timestamp_string("$output_graph_path$graph_name") * ".dot"
-        parsed_graph_image = timestamp_string("$output_graph_image_path$graph_name") * ".png"
-        G = parse_graphml(graph_path)
-
-        open(parsed_graph_dot, "w") do f
-            MetaGraphs.savedot(f, G)
-        end
-        dot_to_png(parsed_graph_dot, parsed_graph_image)
-        push!(graphs, (graph_name, G))
-    end
-    return graphs
-end
-
 function get_promises(graph::MetaDiGraph, vertices::Vector)
     return [get_prop(graph, v, :res_data) for v in vertices]
 end
