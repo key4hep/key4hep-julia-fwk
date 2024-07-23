@@ -7,7 +7,7 @@ function parse_graphml(filename::String)::MetaDiGraph
 end
 
 function show_graph(G)
-    for (_, v) in enumerate(Graphs.vertices(G))
+    for v in Graphs.vertices(G)
         println("Node: ")
         print("Node type: ")
         println(get_prop(G, v, :type))
