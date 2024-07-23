@@ -1,3 +1,5 @@
+#!/usr/bin/env julia
+
 using Distributed
 using Dagger
 using ArgParse
@@ -7,7 +9,7 @@ function parse_args()
     s = ArgParseSettings()
 
     @add_arg_table! s begin
-        "dfg"
+        "data-flow"
         help = "Input data-flow graph as a GraphML file"
         arg_type = String
         required = true
@@ -32,7 +34,7 @@ function main()
     event_count = args["event-count"]
     max_concurrent = args["max-concurrent"]
 
-    graph = FrameworkDemo.parse_graphml(args["dfg"])
+    graph = FrameworkDemo.parse_graphml(args["data-flow"])
     FrameworkDemo.run_events(graph, event_count, max_concurrent)
 end
 
