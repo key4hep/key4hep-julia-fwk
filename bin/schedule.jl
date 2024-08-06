@@ -14,12 +14,12 @@ function parse_args()
         arg_type = String
         required = true
 
-        "event-count"
+        "--event-count"
         help = "Number of events to be processed"
         arg_type = Int
         default = 1
 
-        "max-concurrent"
+        "--max-concurrent"
         help = "Number of slots for graphs to be scheduled concurrently"
         arg_type = Int
         default = 3
