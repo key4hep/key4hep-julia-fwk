@@ -38,9 +38,9 @@ function main()
     FrameworkDemo.run_events(graph, event_count, max_concurrent)
 end
 
-main()
 
 if abspath(PROGRAM_FILE) == @__FILE__
+    main()
     rmprocs!(Dagger.Sch.eager_context(), workers())
     rmprocs(workers())
 end
