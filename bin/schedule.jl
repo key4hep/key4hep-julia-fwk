@@ -23,6 +23,10 @@ function parse_args()
         help = "Number of slots for graphs to be scheduled concurrently"
         arg_type = Int
         default = 3
+
+        "--dot-trace"
+        help = "Output graphviz dot file for execution logs graph"
+        arg_type = String
     end
 
     return ArgParse.parse_args(s)
@@ -34,8 +38,21 @@ function main()
     event_count = args["event-count"]
     max_concurrent = args["max-concurrent"]
 
+    if !isnothing(args["dot-trace"])
+        @info "Enabled logging"
+        FrameworkDemo.configure_LocalEventLog()
+    end
+
     graph = FrameworkDemo.parse_graphml(args["data-flow"])
     FrameworkDemo.run_events(graph, event_count, max_concurrent)
+
+    if !isnothing(args["dot-trace"])
+        logs = Dagger.fetch_logs!()
+        open(args["dot-trace"], "w") do io
+            FrameworkDemo.ModGraphVizSimple.show_logs(io, logs, :graphviz_simple)
+            @info "Written logs dot graph to $(args["dot-trace"])"
+        end
+    end
 end
 
 
