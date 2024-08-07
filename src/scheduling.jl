@@ -29,27 +29,10 @@ function (alg::MockupAlgorithm)(args...; coefficients::Vector{Float64})
     return alg.name
 end
 
-function notify_graph_finalization(notifications::RemoteChannel, graph_name::String, graph_id::Int, final_vertices_promises...)
-    println("Graph: $graph_name, entered notify, graph_id: $graph_id !")
-    println("Graph: $graph_name, all tasks in the graph finished, graph_id: $graph_id !")
+function notify_graph_finalization(notifications::RemoteChannel, graph_id::Int, terminating_results...)
+    println("Graph $graph_id: all tasks in the graph finished!")
     put!(notifications, graph_id)
-    println("Graph: $graph_name, notified, graph_id: $graph_id !")
-end
-
-function parse_graphs(graphs_map::Dict, output_graph_path::String, output_graph_image_path::String)
-    graphs = []
-    for (graph_name, graph_path) in graphs_map
-        parsed_graph_dot = timestamp_string("$output_graph_path$graph_name") * ".dot"
-        parsed_graph_image = timestamp_string("$output_graph_image_path$graph_name") * ".png"
-        G = parse_graphml(graph_path)
-
-        open(parsed_graph_dot, "w") do f
-            MetaGraphs.savedot(f, G)
-        end
-        dot_to_png(parsed_graph_dot, parsed_graph_image)
-        push!(graphs, (graph_name, G))
-    end
-    return graphs
+    println("Graph $graph_id: notified!")
 end
 
 function get_promises(graph::MetaDiGraph, vertices::Vector)
@@ -87,12 +70,26 @@ function schedule_graph(graph::MetaDiGraph, coefficients::Dagger.Shard)
     return terminating_results
 end
 
-function schedule_graph_with_notify(graph::MetaDiGraph,
-        notifications::RemoteChannel,
-        graph_name::String,
-        graph_id::Int,
-        coefficients::Dagger.Shard)
-    terminating_results = schedule_graph(graph, coefficients)
+function run_events(graph::MetaDiGraph,
+        event_count::Int,
+        max_concurrent::Int)
 
-    Dagger.@spawn notify_graph_finalization(notifications, graph_name, graph_id, terminating_results...)
+    graphs_tasks = Dict{Int,Dagger.DTask}()
+    notifications = RemoteChannel(()->Channel{Int}(32))
+    coefficients = Dagger.@shard FrameworkDemo.calculate_coefficients()
+
+    for idx in 1:event_count
+        while length(graphs_tasks) >= max_concurrent 
+            finished_graph_id = take!(notifications)
+            delete!(graphs_tasks, finished_graph_id)
+            println("Dispatcher: graph finished - graph $finished_graph_id")
+        end
+
+        terminating_results = FrameworkDemo.schedule_graph(graph, coefficients)
+        graphs_tasks[idx] = Dagger.@spawn notify_graph_finalization(notifications, idx, terminating_results...)
+
+        println("Dispatcher: scheduled graph $idx")
+    end
+
+    values(graphs_tasks) .|> wait
 end

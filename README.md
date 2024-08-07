@@ -18,10 +18,10 @@ julia --project -e "import Pkg; Pkg.instantiate()"
 
 ## Usage
 
-Run an example:
+See options for running with an example data flow graph in `data/`:
 
 ```
-julia --project examples/schedule.jl
+julia --project bin/schedule.jl --help
 ```
 
 or use with REPL:
