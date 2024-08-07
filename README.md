@@ -1,6 +1,9 @@
 # FrameworkDemo.jl
 
+[![test](https://github.com/key4hep/key4hep-julia-fwk/actions/workflows/test.yml/badge.svg)](https://github.com/key4hep/key4hep-julia-fwk/actions/workflows/test.yml)
+
 Demonstrator project for HEP data-processing framework in Julia
+
 
 ## Getting started
 
