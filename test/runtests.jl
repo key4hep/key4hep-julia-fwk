@@ -9,6 +9,7 @@ using Test
       test_args=repr(ARGS))
 
 @testset verbose=true "FrameworkDemo.jl" begin
+    include("Aqua.jl")
     include("parsing.jl")
     include("scheduling.jl")
     include("demo_workflows.jl")
