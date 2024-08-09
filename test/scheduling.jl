@@ -41,7 +41,8 @@ end
     ilength(x) = sum(_ -> 1, x) # no standard length for MetaGraphs.filter_vertices iterator
     algorithms_count = ilength(MetaGraphs.filter_vertices(graph, :type, "Algorithm"))
     set_indexing_prop!(graph, :node_id)
-    coefficients = Dagger.@shard FrameworkDemo.calculate_coefficients()
+    is_fast = "no-fast" ∉ ARGS
+    coefficients = FrameworkDemo.calibrate_crunch(;fast=is_fast)
 
     Dagger.enable_logging!(tasknames=true, taskdeps=true)
     _ = Dagger.fetch_logs!() # flush logs

@@ -27,6 +27,11 @@ function parse_args()
         "--dot-trace"
         help = "Output graphviz dot file for execution logs graph"
         arg_type = String
+
+        "--fast"
+        help = "Execute algorithms immediately skipping algorithm runtime information and crunching"
+        action = :store_true
+
     end
 
     return ArgParse.parse_args(s)
@@ -35,16 +40,21 @@ end
 function main()
     args = parse_args()
 
-    event_count = args["event-count"]
-    max_concurrent = args["max-concurrent"]
-
     if !isnothing(args["dot-trace"])
         @info "Enabled logging"
         FrameworkDemo.configure_LocalEventLog()
     end
 
     graph = FrameworkDemo.parse_graphml(args["data-flow"])
-    FrameworkDemo.run_events(graph, event_count, max_concurrent)
+    event_count=args["event-count"]
+    max_concurrent=args["max-concurrent"]
+    fast=args["fast"]
+
+    @time "Pipeline execution" FrameworkDemo.run_events(graph;
+        event_count=event_count,
+        max_concurrent=max_concurrent,
+        fast=fast
+    )
 
     if !isnothing(args["dot-trace"])
         logs = Dagger.fetch_logs!()

@@ -22,9 +22,11 @@ end
 
 alg_default_runtime_s::Float64 = 0
 
-function (alg::MockupAlgorithm)(args...; coefficients::Vector{Float64})
+function (alg::MockupAlgorithm)(args...; coefficients::Union{Vector{Float64},Missing})
     println("Executing $(alg.name)")
-    crunch_for_seconds(alg.runtime, coefficients)
+    if coefficients isa Vector{Float64}
+        crunch_for_seconds(alg.runtime, coefficients)
+    end
 
     return alg.name
 end
@@ -45,13 +47,18 @@ function is_terminating_alg(graph::AbstractGraph, vertex_id::Int)
     all(is_terminating, successor_dataobjects)
 end
 
-function schedule_algorithm(graph::MetaDiGraph, vertex_id::Int, coefficients::Dagger.Shard)
+function schedule_algorithm(graph::MetaDiGraph, vertex_id::Int, coefficients::Union{Dagger.Shard,Nothing})
     incoming_data = get_promises(graph, inneighbors(graph, vertex_id))
     algorithm = MockupAlgorithm(graph, vertex_id)
-    Dagger.@spawn algorithm(incoming_data...; coefficients)
+    if isnothing(coefficients)
+        alg_helper(data...) = algorithm(data...; coefficients=missing) 
+        return Dagger.@spawn alg_helper(incoming_data...)
+    else
+        return Dagger.@spawn algorithm(incoming_data...; coefficients=coefficients)
+    end
 end
 
-function schedule_graph(graph::MetaDiGraph, coefficients::Dagger.Shard)
+function schedule_graph(graph::MetaDiGraph, coefficients::Union{Dagger.Shard,Nothing})
     alg_vertices = MetaGraphs.filter_vertices(graph, :type, "Algorithm")
     sorted_vertices = MetaGraphs.topological_sort(graph)
 
@@ -70,13 +77,20 @@ function schedule_graph(graph::MetaDiGraph, coefficients::Dagger.Shard)
     return terminating_results
 end
 
-function run_events(graph::MetaDiGraph,
-        event_count::Int,
-        max_concurrent::Int)
+
+
+function calibrate_crunch(; fast::Bool=false)::Union{Dagger.Shard,Nothing}
+    return fast ? nothing : Dagger.@shard calculate_coefficients()
+end
+
+function run_events(graph::MetaDiGraph;
+    event_count::Int,
+    max_concurrent::Int,
+    fast::Bool=false)
 
     graphs_tasks = Dict{Int,Dagger.DTask}()
     notifications = RemoteChannel(()->Channel{Int}(32))
-    coefficients = Dagger.@shard FrameworkDemo.calculate_coefficients()
+    coefficients = FrameworkDemo.calibrate_crunch(;fast=fast)
 
     for idx in 1:event_count
         while length(graphs_tasks) >= max_concurrent 
