@@ -1,0 +1,4 @@
+style = "sciml"
+yas_style_nesting = true
+
+ignore = ["deps", "data", "results"]
