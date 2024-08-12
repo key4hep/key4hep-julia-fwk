@@ -13,4 +13,5 @@ using Test
 @testset verbose = true "FrameworkDemo.jl" begin
     include("parsing.jl")
     include("scheduling.jl")
+    include("demo_workflows.jl")
 end
