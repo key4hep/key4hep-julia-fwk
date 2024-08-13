@@ -24,6 +24,7 @@ Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 TimespanLogging = "a526e669-04d3-4846-9525-c66122c55f63"
 
 [compat]
+Aqua = "0.8"
 ArgParse = "1.2"
 BenchmarkTools = "1.5"
 Cairo = "1.0"
