@@ -31,7 +31,6 @@ function parse_args()
         "--fast"
         help = "Execute algorithms immediately skipping algorithm runtime information and crunching"
         action = :store_true
-
     end
 
     return ArgParse.parse_args(s)
@@ -46,15 +45,14 @@ function main()
     end
 
     graph = FrameworkDemo.parse_graphml(args["data-flow"])
-    event_count=args["event-count"]
-    max_concurrent=args["max-concurrent"]
-    fast=args["fast"]
+    event_count = args["event-count"]
+    max_concurrent = args["max-concurrent"]
+    fast = args["fast"]
 
     @time "Pipeline execution" FrameworkDemo.run_events(graph;
-        event_count=event_count,
-        max_concurrent=max_concurrent,
-        fast=fast
-    )
+                                                        event_count = event_count,
+                                                        max_concurrent = max_concurrent,
+                                                        fast = fast)
 
     if !isnothing(args["dot-trace"])
         logs = Dagger.fetch_logs!()
@@ -64,7 +62,6 @@ function main()
         end
     end
 end
-
 
 if abspath(PROGRAM_FILE) == @__FILE__
     main()

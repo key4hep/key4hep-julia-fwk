@@ -15,7 +15,7 @@ ml[:profile] = DaggerWebDash.ProfileMetrics()
 ctx.profile = true
 
 # Create a LogWindow; necessary for real-time event updates
-lw = TimespanLogging.Events.LogWindow(20*10^9, :core)
+lw = TimespanLogging.Events.LogWindow(20 * 10^9, :core)
 ml.aggregators[:logwindow] = lw
 
 # Create the D3Renderer server on port 8080
@@ -24,11 +24,13 @@ d3r = DaggerWebDash.D3Renderer(8080)
 ## Add some plots! Rendered top-down in order
 
 # Show an overview of all generated events as a Gantt chart
-push!(d3r, DaggerWebDash.GanttPlot(:core, :id, :esat, :psat; title="Overview"))
+push!(d3r, DaggerWebDash.GanttPlot(:core, :id, :esat, :psat; title = "Overview"))
 
 # Show various numerical events as line plots over time
 push!(d3r, DaggerWebDash.LinePlot(:core, :wsat, "Worker Saturation", "Running Tasks"))
-push!(d3r, DaggerWebDash.LinePlot(:core, :loadavg, "CPU Load Average", "Average Running Threads"))
+push!(d3r,
+      DaggerWebDash.LinePlot(:core, :loadavg, "CPU Load Average",
+                             "Average Running Threads"))
 push!(d3r, DaggerWebDash.LinePlot(:core, :bytes, "Allocated Bytes", "Bytes"))
 push!(d3r, DaggerWebDash.LinePlot(:core, :mem, "Available Memory", "% Free"))
 

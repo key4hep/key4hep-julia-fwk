@@ -10,18 +10,18 @@ include("../../../dummy_tasks.jl")
 output_dir = "examples/results"
 mkpath(output_dir)
 
-Dagger.enable_logging!(tasknames=true,
-taskdeps=true,
-taskargs=true,
-taskargmoves=true,
-)
+Dagger.enable_logging!(tasknames = true,
+                       taskdeps = true,
+                       taskargs = true,
+                       taskargmoves = true)
 
 a = modernAPI_graph_setup(0.1)
 
 ctx = Dagger.Sch.eager_context()
 println(fetch(a))
 
-graph = Dagger.render_logs(Dagger.fetch_logs!(), :graphviz, disconnected=true, color_by=:proc)
+graph = Dagger.render_logs(Dagger.fetch_logs!(), :graphviz, disconnected = true,
+                           color_by = :proc)
 
 surface = Cairo.CairoSVGSurface(IOBuffer(), 7000, 2000)
 context = Cairo.CairoContext(surface)

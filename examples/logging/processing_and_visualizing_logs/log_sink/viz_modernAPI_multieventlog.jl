@@ -40,9 +40,12 @@ spans = Dagger.TimespanLogging.build_timespans(vcat(values(events_logs)...)).com
 timespan_logs = convert(Vector{Dagger.TimespanLogging.Timespan}, spans)
 log_file_name = FrameworkDemo.timestamp_string(FILENAME_TEMPLATE) * ".dot"
 open(log_file_name, "w") do io
-    FrameworkDemo.ModGraphVizSimple.show_logs(io, graph_thunk, timespan_logs, :graphviz_simple) # Dagger.show_logs(io, graph_thunk, timespan_logs, :graphviz_simple) after the bug fix in the package
+    FrameworkDemo.ModGraphVizSimple.show_logs(io, graph_thunk, timespan_logs,
+                                              :graphviz_simple) # Dagger.show_logs(io, graph_thunk, timespan_logs, :graphviz_simple) after the bug fix in the package
     # or FrameworkDemo.ModGraphVizSimpleExt.show_logs(io, timespan_logs, :graphviz_simple) # Dagger.show_logs(io, timespan_logs, :graphviz_simple) after the bug fix in the package
     # or FrameworkDemo.ModGraphVizSimpleExt.show_logs(io, graph_thunk, :graphviz_simple) # Dagger.show_logs(io, graph_thunk, :graphviz_simple) after the bug fix in the package
 end
 
-FrameworkDemo.dot_to_png(log_file_name, FrameworkDemo.timestamp_string(FILENAME_TEMPLATE) * ".png", 2000, 2000)
+FrameworkDemo.dot_to_png(log_file_name,
+                         FrameworkDemo.timestamp_string(FILENAME_TEMPLATE) * ".png", 2000,
+                         2000)

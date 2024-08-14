@@ -28,9 +28,10 @@ MAX_GRAPHS_RUN = 3
 function execution(graphs_map)
     graphs_being_run = Set{Int}()
     graphs_dict = Dict{Int, String}()
-    graphs_tasks = Dict{Int,Dagger.DTask}()
-    graphs = FrameworkDemo.parse_graphs(graphs_map, OUTPUT_GRAPH_PATH, OUTPUT_GRAPH_IMAGE_PATH)
-    notifications = RemoteChannel(()->Channel{Int}(32))
+    graphs_tasks = Dict{Int, Dagger.DTask}()
+    graphs = FrameworkDemo.parse_graphs(graphs_map, OUTPUT_GRAPH_PATH,
+                                        OUTPUT_GRAPH_IMAGE_PATH)
+    notifications = RemoteChannel(() -> Channel{Int}(32))
     # notifications = Channel{Int}(32)
     for (i, (g_name, g)) in enumerate(graphs)
         graphs_dict[i] = g_name
@@ -40,7 +41,8 @@ function execution(graphs_map)
             delete!(graphs_tasks, i)
             println("Dispatcher: graph finished - $finished_graph_id: $(graphs_dict[finished_graph_id])")
         end
-        graphs_tasks[i] = FrameworkDemo.schedule_graph_with_notify(g, notifications, g_name, i)
+        graphs_tasks[i] = FrameworkDemo.schedule_graph_with_notify(g, notifications, g_name,
+                                                                   i)
         push!(graphs_being_run, i)
         println("Dispatcher: scheduled graph $i: $g_name")
     end
@@ -66,11 +68,10 @@ function execution(graphs_map)
 end
 
 function main(graphs_map)
-    Dagger.enable_logging!(tasknames=true,
-    taskdeps=true,
-    taskargs=true, 
-    taskargmoves=true,
-    )
+    Dagger.enable_logging!(tasknames = true,
+                           taskdeps = true,
+                           taskargs = true,
+                           taskargmoves = true)
 
     @time execution(graphs_map)
 
@@ -78,12 +79,10 @@ function main(graphs_map)
     display(plot)
 end
 
-graphs_map = Dict{String, String}(
-"graph1" => graph1_path,
-"graph2" => graph2_path,
-"graph3" => graph1_path,
-"graph4" => graph2_path
-)
+graphs_map = Dict{String, String}("graph1" => graph1_path,
+                                  "graph2" => graph2_path,
+                                  "graph3" => graph1_path,
+                                  "graph4" => graph2_path)
 
 main(graphs_map)
 rmprocs!(Dagger.Sch.eager_context(), workers())

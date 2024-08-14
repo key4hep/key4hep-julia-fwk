@@ -10,7 +10,6 @@ using MetaGraphs
 using FrameworkDemo
 using FrameworkDemo.ModGraphVizSimple # This is a workaround to make visualization work until the bugs are fixed in the package.
 
-
 # Defining constants
 output_dir = "results"
 graph1_path = "./data/demo/sequencer/df.graphml"
@@ -27,9 +26,10 @@ MAX_GRAPHS_RUN = 3
 function execution(graphs_map)
     graphs_being_run = Set{Int}()
     graphs_dict = Dict{Int, String}()
-    graphs_tasks = Dict{Int,Dagger.DTask}()
-    graphs = FrameworkDemo.parse_graphs(graphs_map, OUTPUT_GRAPH_PATH, OUTPUT_GRAPH_IMAGE_PATH)
-    notifications = RemoteChannel(()->Channel{Int}(32))
+    graphs_tasks = Dict{Int, Dagger.DTask}()
+    graphs = FrameworkDemo.parse_graphs(graphs_map, OUTPUT_GRAPH_PATH,
+                                        OUTPUT_GRAPH_IMAGE_PATH)
+    notifications = RemoteChannel(() -> Channel{Int}(32))
     # notifications = Channel{Int}(32)
     coefficients = Dagger.@shard FrameworkDemo.calculate_coefficients()
 
@@ -41,7 +41,8 @@ function execution(graphs_map)
             delete!(graphs_tasks, i)
             println("Dispatcher: graph finished - $finished_graph_id: $(graphs_dict[finished_graph_id])")
         end
-        graphs_tasks[i] = FrameworkDemo.schedule_graph_with_notify(g, notifications, g_name, i, coefficients)
+        graphs_tasks[i] = FrameworkDemo.schedule_graph_with_notify(g, notifications, g_name,
+                                                                   i, coefficients)
         push!(graphs_being_run, i)
         println("Dispatcher: scheduled graph $i: $g_name")
     end
@@ -76,15 +77,12 @@ function main(graphs_map)
         FrameworkDemo.ModGraphVizSimple.show_logs(io, logs, :graphviz_simple)
     end
     FrameworkDemo.dot_to_png(LOGS_FILE, GRAPH_IMAGE_PATH, 7000, 8000) # adjust picture size, if needed (optional param)
-    
 end
 
-graphs_map = Dict{String, String}(
-"graph1" => graph1_path,
-"graph2" => graph2_path,
-"graph3" => graph1_path,
-"graph4" => graph2_path
-)
+graphs_map = Dict{String, String}("graph1" => graph1_path,
+                                  "graph2" => graph2_path,
+                                  "graph3" => graph1_path,
+                                  "graph4" => graph2_path)
 
 if abspath(PROGRAM_FILE) == @__FILE__
     mkpath(output_dir)

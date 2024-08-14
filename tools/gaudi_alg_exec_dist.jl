@@ -12,11 +12,11 @@ using MetaGraphs
 include(joinpath(@__DIR__, "../deps/GraphMLReader.jl/src/GraphMLReader.jl"))
 
 function parse_args(args)
-    s = ArgParseSettings(description=
-    """
-    Calculate distributions of Gaudi algorithm execution duration time
-    from a timeline extracted with Gaudi TimelineSvc or data-flow graph
-    """)
+    s = ArgParseSettings(description =
+                         """
+                         Calculate distributions of Gaudi algorithm execution duration time
+                         from a timeline extracted with Gaudi TimelineSvc or data-flow graph
+                         """)
 
     @add_arg_table! s begin
         "input"
@@ -42,7 +42,8 @@ end
 function durations_from_graphml(filename)
     graph = GraphMLReader.loadgraphml(filename, "G")
     algorithm_vertices = MetaGraphs.filter_vertices(graph, :type, "Algorithm")
-    return [get_prop(graph, vertex, :runtime_average_s) for vertex in algorithm_vertices if has_prop(graph, vertex, :runtime_average_s)]
+    return [get_prop(graph, vertex, :runtime_average_s)
+            for vertex in algorithm_vertices if has_prop(graph, vertex, :runtime_average_s)]
 end
 
 function main(args)
@@ -82,11 +83,14 @@ function main(args)
     end
     num_bins = sqrt(n) |> ceil |> Int
 
-    bin_edges = exp10.(range(log10(min_duration), stop=log10(max_duration), length=num_bins + 3))
+    bin_edges = exp10.(range(log10(min_duration), stop = log10(max_duration),
+                             length = num_bins + 3))
 
-    histogram(durations; label="", bin=bin_edges, xscale=:log10, xlim=extrema(bin_edges),
-        title="Algorithm execution duration", xlabel="Duration (s)", ylabel="Counts",
-        xguidefonthalign=:right, yguidefontvalign=:top)
+    histogram(durations; label = "", bin = bin_edges, xscale = :log10,
+              xlim = extrema(bin_edges),
+              title = "Algorithm execution duration", xlabel = "Duration (s)",
+              ylabel = "Counts",
+              xguidefonthalign = :right, yguidefontvalign = :top)
     savefig(output_file)
     @info "Histogram saved to $output_file"
 end
