@@ -20,7 +20,10 @@ println(collect(ctx, graph_thunk)) # Wait for the graph execution and fetch the 
 log_file_name = FrameworkDemo.timestamp_string(FILENAME_TEMPLATE) * ".dot"
 open(log_file_name, "w") do io
     #FrameworkDemo.ModGraphVizSimple.show_logs(io, graph_thunk, Dagger.fetch_logs!(), :graphviz_simple)
-    FrameworkDemo.ModGraphVizSimple.show_logs(graph_thunk, Dagger.fetch_logs!(), :graphviz_simple)
+    FrameworkDemo.ModGraphVizSimple.show_logs(graph_thunk, Dagger.fetch_logs!(),
+                                              :graphviz_simple)
 end
 
-FrameworkDemo.dot_to_png(log_file_name, FrameworkDemo.timestamp_string(FILENAME_TEMPLATE) * ".png", 700, 700)
+FrameworkDemo.dot_to_png(log_file_name,
+                         FrameworkDemo.timestamp_string(FILENAME_TEMPLATE) * ".png", 700,
+                         700)

@@ -1,10 +1,9 @@
 include("../../dummy_tasks.jl") # here Dagger is imported as well
 
-Dagger.enable_logging!(tasknames=true, # Here we can choose the consumers to use. Check source code for more.
-taskdeps=true,
-taskargs=true,
-taskargmoves=true,
-)
+Dagger.enable_logging!(tasknames = true, # Here we can choose the consumers to use. Check source code for more.
+                       taskdeps = true,
+                       taskargs = true,
+                       taskargmoves = true)
 
 t = modernAPI_graph_setup(1) # Can also be the old API
 fetch(t)

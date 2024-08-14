@@ -21,11 +21,10 @@ end
 
 function configure_MultiEventLog()
     Dagger.enable_logging!(timeline = true, # Some example configuration
-        tasknames=true,
-        taskdeps=true,
-        taskargs=true,
-        taskargmoves=true,
-    )
+                           tasknames = true,
+                           taskdeps = true,
+                           taskargs = true,
+                           taskargmoves = true)
     Dagger.Sch.eager_context().log_sink[:full] = Dagger.TimespanLogging.Events.FullMetrics()
 end
 
@@ -49,4 +48,6 @@ open(log_file_name, "w") do io
     # FrameworkDemo.Dagger.show_logs(graph_thunk, logs, :graphviz_simple) # Returns the string representation of the graph 
 end
 
-FrameworkDemo.dot_to_png(log_file_name, FrameworkDemo.timestamp_string(FILENAME_TEMPLATE) * ".png", 2000, 2000)
+FrameworkDemo.dot_to_png(log_file_name,
+                         FrameworkDemo.timestamp_string(FILENAME_TEMPLATE) * ".png", 2000,
+                         2000)

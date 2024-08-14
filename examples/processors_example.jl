@@ -2,7 +2,7 @@
 
 using Distributed
 
-ps1 = addprocs(2, exeflags="--project")
+ps1 = addprocs(2, exeflags = "--project")
 @everywhere using Distributed, Dagger
 
 # Dummy task to wait for 0.5 seconds and then return the id of the worker
@@ -13,7 +13,7 @@ ctx = Context()
 job = @async collect(ctx, ts)
 
 # Lets fire up some new workers
-ps2 = addprocs(2, exeflags="--project")
+ps2 = addprocs(2, exeflags = "--project")
 @everywhere ps2 using Distributed, Dagger
 # New workers are not available until we do this
 addprocs!(ctx, ps2)
