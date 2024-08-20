@@ -71,7 +71,7 @@ end
 function fetch_LocalEventLog()
     ctx = Dagger.Sch.eager_context()
     logs = Dagger.TimespanLogging.get_logs!(ctx.log_sink)
-    # str = Dagger.show_plan() - doesn't work (exist)   
+    # str = Dagger.show_plan() - doesn't work (exist)
     return logs
 end
 
@@ -98,4 +98,12 @@ function save_logs(log_file, logs)
     open(log_file, "w") do io
         write(io, logs)
     end
+end
+
+function dispatch_begin_msg(index)
+    "Dispatcher: scheduled graph $index"
+end
+
+function dispatch_end_msg(index)
+    "Dispatcher: finished graph $index"
 end
