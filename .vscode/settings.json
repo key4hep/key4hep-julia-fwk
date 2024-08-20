@@ -2,7 +2,7 @@
     "[julia]": {
         "editor.detectIndentation": false,
         "editor.insertSpaces": true,
-        "editor.tabSize": 10,
+        "editor.tabSize": 4,
         "files.insertFinalNewline": true,
         "files.trimFinalNewlines": true,
         "files.trimTrailingWhitespace": true,
