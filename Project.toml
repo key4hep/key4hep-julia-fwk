@@ -1,9 +1,6 @@
 name = "FrameworkDemo"
 uuid = "cfbf7e84-66d2-421e-b147-9edb7a8672d2"
-authors = ["SmalRat <30555080+SmalRat@users.noreply.github.com>",
-           "Mateusz Jakub Fila <mateusz.jakub.fila@cern.ch>",
-           "hegner <benedikt.hegner@cern.ch>",
-           "Josh Ott <joshott16@gmail.com>"]
+authors = ["SmalRat <30555080+SmalRat@users.noreply.github.com>", "Mateusz Jakub Fila <mateusz.jakub.fila@cern.ch>", "hegner <benedikt.hegner@cern.ch>", "Josh Ott <joshott16@gmail.com>"]
 version = "0.1.0"
 
 [deps]
@@ -34,22 +31,24 @@ Colors = "0.12"
 Dagger = "0.18.11"
 DaggerWebDash = "0.1.3"
 DataFrames = "1.6"
+Dates = "1.10"
+Distributed = "1.10"
 EzXML = "1.2"
 FileIO = "1.16"
 GraphViz = "0.2"
 Graphs = "1"
 LightGraphs = "1.3"
+Logging = "1.10"
 MetaGraphs = "0.7"
 Plots = "1.40"
-TimespanLogging = "0.1.0"
-julia = "1.10"
-Dates = "1.10"
-Distributed = "1.10"
 Printf = "1.10"
 Test = "1.10"
+TimespanLogging = "0.1.0"
+julia = "1.10"
 
 [extras]
+Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Test"]
+test = ["Logging", "Test"]
