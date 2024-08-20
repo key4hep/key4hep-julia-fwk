@@ -84,9 +84,9 @@ function calibrate_crunch(; fast::Bool = false)::Union{Dagger.Shard, Nothing}
 end
 
 function run_pipeline(graph::MetaDiGraph;
-                    event_count::Int,
-                    max_concurrent::Int,
-                    fast::Bool = false)
+                      event_count::Int,
+                      max_concurrent::Int,
+                      fast::Bool = false)
     graphs_tasks = Dict{Int, Dagger.DTask}()
     notifications = RemoteChannel(() -> Channel{Int}(max_concurrent))
     coefficients = FrameworkDemo.calibrate_crunch(; fast = fast)
