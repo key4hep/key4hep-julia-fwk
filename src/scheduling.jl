@@ -105,5 +105,8 @@ function run_pipeline(graph::MetaDiGraph;
         @info dispatch_begin_msg(idx)
     end
 
-    values(graphs_tasks) .|> wait
+    for (idx, future) in graphs_tasks
+        wait(future)
+        @info dispatch_end_msg(idx)
+    end
 end
