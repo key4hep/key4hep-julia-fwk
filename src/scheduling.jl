@@ -88,7 +88,7 @@ function run_events(graph::MetaDiGraph;
                     max_concurrent::Int,
                     fast::Bool = false)
     graphs_tasks = Dict{Int, Dagger.DTask}()
-    notifications = RemoteChannel(() -> Channel{Int}(32))
+    notifications = RemoteChannel(() -> Channel{Int}(max_concurrent))
     coefficients = FrameworkDemo.calibrate_crunch(; fast = fast)
 
     for idx in 1:event_count
