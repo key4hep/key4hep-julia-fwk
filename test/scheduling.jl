@@ -2,6 +2,7 @@ using FrameworkDemo
 using Dagger
 using Graphs
 using MetaGraphs
+using Logging
 
 function get_alg_timeline(logs::Dict)
     timeline = Dict{Int, Any}()
@@ -50,6 +51,7 @@ end
     wait.(tasks)
 
     logs = Dagger.fetch_logs!()
+    Dagger.disable_logging!()
     @test !isnothing(logs)
 
     task_to_tid = lock(Dagger.Sch.EAGER_ID_MAP) do id_map
@@ -87,5 +89,29 @@ end
         @test get_tid("ProducerBC") ∈ get_deps("ConsumerCD")
         @test get_tid("TransformerAB") ∈ get_deps("ConsumerE")
         @test get_tid("TransformerAB") ∈ get_deps("ConsumerCD")
+    end
+
+    @testset "Pipeline" begin
+        event_count = 5
+
+        test_logger = TestLogger()
+        with_logger(test_logger) do
+            FrameworkDemo.run_pipeline(graph;
+                                       max_concurrent = 3,
+                                       event_count = event_count,
+                                       fast = is_fast)
+        end
+        @testset "Start message" begin
+            messages = for i in 1:event_count
+                @test any(record -> record.message == FrameworkDemo.dispatch_begin_msg(i),
+                          test_logger.logs)
+            end
+        end
+        @testset "Finish message" begin
+            messages = for i in 1:event_count
+                @test any(record -> record.message == FrameworkDemo.dispatch_end_msg(i),
+                          test_logger.logs)
+            end
+        end
     end
 end

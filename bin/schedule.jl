@@ -49,10 +49,10 @@ function main()
     max_concurrent = args["max-concurrent"]
     fast = args["fast"]
 
-    @time "Pipeline execution" FrameworkDemo.run_events(graph;
-                                                        event_count = event_count,
-                                                        max_concurrent = max_concurrent,
-                                                        fast = fast)
+    @time "Pipeline execution" FrameworkDemo.run_pipeline(graph;
+                                                          event_count = event_count,
+                                                          max_concurrent = max_concurrent,
+                                                          fast = fast)
 
     if !isnothing(args["dot-trace"])
         logs = Dagger.fetch_logs!()

@@ -83,10 +83,10 @@ function calibrate_crunch(; fast::Bool = false)::Union{Dagger.Shard, Nothing}
     return fast ? nothing : Dagger.@shard calculate_coefficients()
 end
 
-function run_events(graph::MetaDiGraph;
-                    event_count::Int,
-                    max_concurrent::Int,
-                    fast::Bool = false)
+function run_pipeline(graph::MetaDiGraph;
+                      event_count::Int,
+                      max_concurrent::Int,
+                      fast::Bool = false)
     graphs_tasks = Dict{Int, Dagger.DTask}()
     notifications = RemoteChannel(() -> Channel{Int}(max_concurrent))
     coefficients = FrameworkDemo.calibrate_crunch(; fast = fast)
@@ -95,15 +95,18 @@ function run_events(graph::MetaDiGraph;
         while length(graphs_tasks) >= max_concurrent
             finished_graph_id = take!(notifications)
             delete!(graphs_tasks, finished_graph_id)
-            println("Dispatcher: graph finished - graph $finished_graph_id")
+            @info dispatch_end_msg(finished_graph_id)
         end
 
         terminating_results = FrameworkDemo.schedule_graph(graph, coefficients)
         graphs_tasks[idx] = Dagger.@spawn notify_graph_finalization(notifications, idx,
                                                                     terminating_results...)
 
-        println("Dispatcher: scheduled graph $idx")
+        @info dispatch_begin_msg(idx)
     end
 
-    values(graphs_tasks) .|> wait
+    for (idx, future) in graphs_tasks
+        wait(future)
+        @info dispatch_end_msg(idx)
+    end
 end
