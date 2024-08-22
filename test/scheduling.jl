@@ -35,7 +35,7 @@ function get_alg_deps(logs::Dict)
     return task_deps
 end
 
-@testset verbose=true "Scheduling" begin
+@testset "Scheduling" begin
     path = joinpath(pkgdir(FrameworkDemo), "data/demo/datadeps/df.graphml")
     graph = FrameworkDemo.parse_graphml(path)
     ilength(x) = sum(_ -> 1, x) # no standard length for MetaGraphs.filter_vertices iterator

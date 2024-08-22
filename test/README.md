@@ -22,6 +22,8 @@ Run the tests with:
 - REPL:
   ```julia
   append!(ARGS, <list of args>)
+  import TestEnv
+  TestEnv.activate()
   include("test/runtests.jl")
   ```
 
