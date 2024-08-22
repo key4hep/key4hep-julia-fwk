@@ -25,6 +25,8 @@ Run the tests with:
   import TestEnv
   TestEnv.activate()
   include("test/runtests.jl")
+  # or run only specific set of tests
+  include("test/parsing.jl")
   ```
 
 ## Arguments
@@ -32,3 +34,4 @@ Run the tests with:
 The tests support arguments:
 
 - `no-fast` - don't skip algorithm CPU crunching
+- `all` - run all the tests including tests that are skipped by default (QA)
