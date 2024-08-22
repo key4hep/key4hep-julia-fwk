@@ -1,4 +1,5 @@
 using FrameworkDemo
+using Test
 using Dagger
 
 function run_demo(name::String, coefficients::Union{Dagger.Shard, Nothing})
