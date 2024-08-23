@@ -3,7 +3,15 @@ using Distributed
 using MetaGraphs
 
 # Algorithms
-struct MockupAlgorithm
+
+abstract type AbstractAlgorithm end
+
+function (alg::AbstractAlgorithm)(args...; event_number::Int,
+                                  coefficients::Union{Vector{Float64}, Missing})
+    error("Subtypes of AbstractAlgorithm must implement function call")
+end
+
+struct MockupAlgorithm <: AbstractAlgorithm
     name::String
     runtime::Float64
     input_length::UInt
@@ -22,13 +30,24 @@ end
 
 alg_default_runtime_s::Float64 = 0
 
-function (alg::MockupAlgorithm)(args...; coefficients::Union{Vector{Float64}, Missing})
-    println("Executing $(alg.name)")
+function (alg::MockupAlgorithm)(args...; event_number::Int,
+                                coefficients::Union{Vector{Float64}, Missing})
+    println("Executing $(alg.name) event $event_number")
     if coefficients isa Vector{Float64}
         crunch_for_seconds(alg.runtime, coefficients)
     end
 
     return alg.name
+end
+
+struct BoundAlgorithm
+    alg::AbstractAlgorithm
+    event_number::Int
+end
+
+function (algorithm::BoundAlgorithm)(data...; coefficients::Union{Vector{Float64}, Missing})
+    return algorithm.alg(data...; event_number = algorithm.event_number,
+                         coefficients = coefficients)
 end
 
 struct DataFlowGraph
@@ -87,7 +106,8 @@ end
 function schedule_algorithm(event::Event, vertex_id::Int,
                             coefficients::Union{Dagger.Shard, Nothing})
     incoming_data = get_results(event, inneighbors(event.data_flow.graph, vertex_id))
-    algorithm = get_algorithm(event.data_flow, vertex_id)
+    algorithm = BoundAlgorithm(get_algorithm(event.data_flow, vertex_id),
+                               event.event_number)
     if isnothing(coefficients)
         alg_helper(data...) = algorithm(data...; coefficients = missing)
         return Dagger.@spawn alg_helper(incoming_data...)
