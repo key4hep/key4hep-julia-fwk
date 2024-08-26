@@ -63,7 +63,7 @@ end
     end
 
     function get_tid(node_id::String)::Int
-        task = get_prop(event.store, graph[node_id, :node_id], :res_data)
+        task = FrameworkDemo.get_result(event, graph[node_id, :node_id])
         return task_to_tid[task.uid]
     end
 
