@@ -96,7 +96,7 @@ function schedule_algorithm(event::Event, vertex_id::Int,
     end
 end
 
-function schedule_graph(event::Event, coefficients::Union{Dagger.Shard, Nothing})
+function schedule_graph!(event::Event, coefficients::Union{Dagger.Shard, Nothing})
     terminating_results = Dagger.DTask[]
     for vertex_id in event.data_flow.algorithm_indices
         res = schedule_algorithm(event, vertex_id, coefficients)
@@ -131,7 +131,7 @@ function run_pipeline(graph::MetaDiGraph;
             @info dispatch_end_msg(finished_graph_id)
         end
         event = Event(data_flow, idx)
-        terminating_tasks = FrameworkDemo.schedule_graph(event, coefficients)
+        terminating_tasks = FrameworkDemo.schedule_graph!(event, coefficients)
         graphs_tasks[idx] = Dagger.@spawn notify_graph_finalization(notifications, idx,
                                                                     terminating_tasks...)
 

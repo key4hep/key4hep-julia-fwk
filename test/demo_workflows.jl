@@ -9,7 +9,7 @@ function run_demo(name::String, coefficients::Union{Dagger.Shard, Nothing})
         graph = FrameworkDemo.parse_graphml(path)
         df = FrameworkDemo.DataFlowGraph(graph)
         event = FrameworkDemo.Event(df)
-        @test_nowarn wait.(FrameworkDemo.schedule_graph(event, coefficients))
+        @test_nowarn wait.(FrameworkDemo.schedule_graph!(event, coefficients))
     end
 end
 

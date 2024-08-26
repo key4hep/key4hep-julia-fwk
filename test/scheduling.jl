@@ -51,7 +51,7 @@ end
     Dagger.enable_logging!(tasknames = true, taskdeps = true)
     _ = Dagger.fetch_logs!() # flush logs
 
-    tasks = FrameworkDemo.schedule_graph(event, coefficients)
+    tasks = FrameworkDemo.schedule_graph!(event, coefficients)
     wait.(tasks)
 
     logs = Dagger.fetch_logs!()
