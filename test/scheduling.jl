@@ -45,10 +45,13 @@ end
     is_fast = "no-fast" ∉ ARGS
     coefficients = FrameworkDemo.calibrate_crunch(; fast = is_fast)
 
+    df = FrameworkDemo.DataFlowGraph(graph)
+    event = FrameworkDemo.Event(df)
+
     Dagger.enable_logging!(tasknames = true, taskdeps = true)
     _ = Dagger.fetch_logs!() # flush logs
 
-    tasks = FrameworkDemo.schedule_graph(graph, coefficients)
+    tasks = FrameworkDemo.schedule_graph(event, coefficients)
     wait.(tasks)
 
     logs = Dagger.fetch_logs!()
@@ -60,7 +63,7 @@ end
     end
 
     function get_tid(node_id::String)::Int
-        task = get_prop(graph, graph[node_id, :node_id], :res_data)
+        task = get_prop(event.store, graph[node_id, :node_id], :res_data)
         return task_to_tid[task.uid]
     end
 

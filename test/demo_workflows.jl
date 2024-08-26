@@ -7,7 +7,9 @@ function run_demo(name::String, coefficients::Union{Dagger.Shard, Nothing})
         println("Running $(name) workflow demo")
         path = joinpath(pkgdir(FrameworkDemo), "data/demo/$(name)/df.graphml")
         graph = FrameworkDemo.parse_graphml(path)
-        @test_nowarn wait.(FrameworkDemo.schedule_graph(graph, coefficients))
+        df = FrameworkDemo.DataFlowGraph(graph)
+        event = FrameworkDemo.Event(df)
+        @test_nowarn wait.(FrameworkDemo.schedule_graph(event, coefficients))
     end
 end
 
