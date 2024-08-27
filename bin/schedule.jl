@@ -65,6 +65,8 @@ end
 
 if abspath(PROGRAM_FILE) == @__FILE__
     main()
-    rmprocs!(Dagger.Sch.eager_context(), workers())
-    rmprocs(workers())
+    if length(workers()) > 1
+        rmprocs!(Dagger.Sch.eager_context(), workers())
+        rmprocs(workers())
+    end
 end
