@@ -31,15 +31,51 @@ function (alg::MockupAlgorithm)(args...; coefficients::Union{Vector{Float64}, Mi
     return alg.name
 end
 
+struct DataFlowGraph
+    graph::MetaDiGraph
+    algorithm_indices::Vector{Int}
+    function DataFlowGraph(graph::MetaDiGraph)
+        alg_vertices = MetaGraphs.filter_vertices(graph, :type, "Algorithm")
+        sorted_vertices = MetaGraphs.topological_sort(graph)
+        sorted_alg_vertices = intersect(sorted_vertices, alg_vertices)
+        for i in sorted_alg_vertices
+            alg = MockupAlgorithm(graph, i)
+            set_prop!(graph, i, :algorithm, alg)
+        end
+        new(graph, sorted_alg_vertices)
+    end
+end
+
+function get_algorithm(data_flow::DataFlowGraph, index::Int)
+    return get_prop(data_flow.graph, index, :algorithm)
+end
+
+struct Event
+    data_flow::DataFlowGraph
+    store::Dict{Int, Dagger.DTask}
+    event_number::Int
+    function Event(data_flow::DataFlowGraph, event_number::Int = 0)
+        new(data_flow, Dict{Int, Dagger.DTask}(), event_number)
+    end
+end
+
+function put_result!(event::Event, index::Int, result::Dagger.DTask)
+    return event.store[index] = result
+end
+
+function get_result(event::Event, index::Int)::Dagger.DTask
+    return event.store[index]
+end
+
+function get_results(event::Event, vertices::Vector{Int})
+    return get_result.(Ref(event), vertices)
+end
+
 function notify_graph_finalization(notifications::RemoteChannel, graph_id::Int,
                                    terminating_results...)
     println("Graph $graph_id: all tasks in the graph finished!")
     put!(notifications, graph_id)
     println("Graph $graph_id: notified!")
-end
-
-function get_promises(graph::MetaDiGraph, vertices::Vector)
-    return [get_prop(graph, v, :res_data) for v in vertices]
 end
 
 function is_terminating_alg(graph::AbstractGraph, vertex_id::Int)
@@ -48,10 +84,10 @@ function is_terminating_alg(graph::AbstractGraph, vertex_id::Int)
     all(is_terminating, successor_dataobjects)
 end
 
-function schedule_algorithm(graph::MetaDiGraph, vertex_id::Int,
+function schedule_algorithm(event::Event, vertex_id::Int,
                             coefficients::Union{Dagger.Shard, Nothing})
-    incoming_data = get_promises(graph, inneighbors(graph, vertex_id))
-    algorithm = MockupAlgorithm(graph, vertex_id)
+    incoming_data = get_results(event, inneighbors(event.data_flow.graph, vertex_id))
+    algorithm = get_algorithm(event.data_flow, vertex_id)
     if isnothing(coefficients)
         alg_helper(data...) = algorithm(data...; coefficients = missing)
         return Dagger.@spawn alg_helper(incoming_data...)
@@ -60,20 +96,16 @@ function schedule_algorithm(graph::MetaDiGraph, vertex_id::Int,
     end
 end
 
-function schedule_graph(graph::MetaDiGraph, coefficients::Union{Dagger.Shard, Nothing})
-    alg_vertices = MetaGraphs.filter_vertices(graph, :type, "Algorithm")
-    sorted_vertices = MetaGraphs.topological_sort(graph)
-
-    terminating_results = []
-
-    for vertex_id in intersect(sorted_vertices, alg_vertices)
-        res = schedule_algorithm(graph, vertex_id, coefficients)
-        set_prop!(graph, vertex_id, :res_data, res)
-        for v in outneighbors(graph, vertex_id)
-            set_prop!(graph, v, :res_data, res)
+function schedule_graph!(event::Event, coefficients::Union{Dagger.Shard, Nothing})
+    terminating_results = Dagger.DTask[]
+    for vertex_id in event.data_flow.algorithm_indices
+        res = schedule_algorithm(event, vertex_id, coefficients)
+        put_result!(event, vertex_id, res)
+        for v in outneighbors(event.data_flow.graph, vertex_id)
+            put_result!(event, v, res)
         end
-
-        is_terminating_alg(graph, vertex_id) && push!(terminating_results, res)
+        is_terminating_alg(event.data_flow.graph, vertex_id) &&
+            push!(terminating_results, res)
     end
 
     return terminating_results
@@ -90,6 +122,7 @@ function run_pipeline(graph::MetaDiGraph;
     graphs_tasks = Dict{Int, Dagger.DTask}()
     notifications = RemoteChannel(() -> Channel{Int}(max_concurrent))
     coefficients = FrameworkDemo.calibrate_crunch(; fast = fast)
+    data_flow = DataFlowGraph(graph)
 
     for idx in 1:event_count
         while length(graphs_tasks) >= max_concurrent
@@ -97,10 +130,10 @@ function run_pipeline(graph::MetaDiGraph;
             delete!(graphs_tasks, finished_graph_id)
             @info dispatch_end_msg(finished_graph_id)
         end
-
-        terminating_results = FrameworkDemo.schedule_graph(graph, coefficients)
+        event = Event(data_flow, idx)
+        terminating_tasks = FrameworkDemo.schedule_graph!(event, coefficients)
         graphs_tasks[idx] = Dagger.@spawn notify_graph_finalization(notifications, idx,
-                                                                    terminating_results...)
+                                                                    terminating_tasks...)
 
         @info dispatch_begin_msg(idx)
     end
