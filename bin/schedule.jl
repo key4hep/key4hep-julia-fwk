@@ -22,7 +22,7 @@ function parse_args()
         "--max-concurrent"
         help = "Number of slots for graphs to be scheduled concurrently"
         arg_type = Int
-        default = 3
+        default = 1
 
         "--dot-trace"
         help = "Output graphviz dot file for execution logs graph"
