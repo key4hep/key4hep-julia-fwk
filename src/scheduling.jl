@@ -11,6 +11,10 @@ function (alg::AbstractAlgorithm)(args...; event_number::Int,
     error("Subtypes of AbstractAlgorithm must implement function call")
 end
 
+function get_name(alg::AbstractAlgorithm)
+    error("Subtypes of AbstractAlgorithm must implement get_name")
+end
+
 struct MockupAlgorithm <: AbstractAlgorithm
     name::String
     runtime::Float64
@@ -40,6 +44,10 @@ function (alg::MockupAlgorithm)(args...; event_number::Int,
     return alg.name
 end
 
+function get_name(alg::MockupAlgorithm)
+    return alg.name
+end
+
 struct BoundAlgorithm
     alg::AbstractAlgorithm
     event_number::Int
@@ -48,6 +56,10 @@ end
 function (algorithm::BoundAlgorithm)(data...; coefficients::Union{Vector{Float64}, Missing})
     return algorithm.alg(data...; event_number = algorithm.event_number,
                          coefficients = coefficients)
+end
+
+function get_name(alg::BoundAlgorithm)
+    return get_name(alg.alg)
 end
 
 struct DataFlowGraph
