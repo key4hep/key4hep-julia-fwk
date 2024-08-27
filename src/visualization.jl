@@ -1,6 +1,8 @@
 import Colors
 import GraphViz
 import FileIO
+import DataFrames
+import Plots
 
 function save_logs_dot(logs, path::String)
     if splitext(path)[2] == ".dot"
