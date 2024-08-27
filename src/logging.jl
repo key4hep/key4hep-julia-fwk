@@ -6,7 +6,7 @@ function configure_LocalEventLog()
     ctx.log_sink = log
 end
 
-function fetch_LocalEventLog()
+function fetch_logs!()
     return Dagger.fetch_logs!()
 end
 
