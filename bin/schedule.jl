@@ -39,9 +39,11 @@ end
 function main()
     args = parse_args()
 
-    if !isnothing(args["dot-trace"])
-        @info "Enabled logging"
+    logging_required = !isnothing(args["dot-trace"])
+
+    if logging_required
         FrameworkDemo.configure_LocalEventLog()
+        @info "Enabled logging"
     end
 
     graph = FrameworkDemo.parse_graphml(args["data-flow"])
@@ -53,12 +55,10 @@ function main()
                                                           event_count = event_count,
                                                           max_concurrent = max_concurrent,
                                                           fast = fast)
-
-    if !isnothing(args["dot-trace"])
-        logs = Dagger.fetch_logs!()
-        open(args["dot-trace"], "w") do io
-            FrameworkDemo.ModGraphVizSimple.show_logs(io, logs, :graphviz_simple)
-            @info "Written logs dot graph to $(args["dot-trace"])"
+    if logging_required
+        logs = FrameworkDemo.fetch_logs!()
+        if !isnothing(args["dot-trace"])
+            FrameworkDemo.save_logs_dot(logs, args["dot-trace"])
         end
     end
 end

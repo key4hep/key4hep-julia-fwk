@@ -7,7 +7,5 @@ using Aqua
                   ambiguities = false,
                   stale_deps = (;
                                 ignore = [:ArgParse, # bin/
-                                    :BenchmarkTools, # benchmarks.jl
-                                    :Plots, # benchmarks.jl, Dagger ext
-                                    :DataFrames]))
+                                    :BenchmarkTools]))
 end
