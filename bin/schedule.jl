@@ -31,6 +31,10 @@ function parse_args()
         "--fast"
         help = "Execute algorithms immediately skipping algorithm runtime information and crunching"
         action = :store_true
+
+        "--dry-run"
+        help = "Assemble workflow but don't schedule it, don't create any output files"
+        action = :store_true
     end
 
     return ArgParse.parse_args(s)
@@ -51,6 +55,11 @@ function main()
     event_count = args["event-count"]
     max_concurrent = args["max-concurrent"]
     fast = args["fast"]
+
+    if args["dry-run"]
+        @info "Dry run: not executing workflow, not writing logs"
+        return
+    end
 
     @time "Pipeline execution" FrameworkDemo.run_pipeline(data_flow;
                                                           event_count = event_count,
