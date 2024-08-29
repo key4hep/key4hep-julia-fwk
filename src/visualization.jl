@@ -1,26 +1,8 @@
-import Colors
 import GraphViz
 import FileIO
 import DataFrames
 import Plots
 import JSON3
-
-function save_logs_dot(logs, path::String)
-    if splitext(path)[2] == ".dot"
-        open(path, "w") do io
-            ModGraphVizSimple.show_logs(io, logs, :graphviz_simple)
-            @info "Written logs dot graph (simple) to $path"
-        end
-    else
-        buffer = IOBuffer()
-        ModGraphVizSimple.show_logs(buffer, logs, :graphviz_simple)
-        dot = String(take!(buffer))
-        graphviz = GraphViz.Graph(dot)
-        GraphViz.layout!(graphviz; engine = "dot")
-        FileIO.save(path, graphviz)
-        @info "Written logs graph (simple) to $path"
-    end
-end
 
 function save_logs_graphviz(logs, path::String)
     if splitext(path)[2] == ".dot"

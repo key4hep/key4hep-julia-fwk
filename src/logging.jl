@@ -1,11 +1,5 @@
 using Dagger
 
-function configure_LocalEventLog()
-    ctx = Dagger.Sch.eager_context()
-    log = Dagger.TimespanLogging.LocalEventLog()
-    ctx.log_sink = log
-end
-
 function enable_logging!()
     Dagger.enable_logging!(tasknames = true,
                            taskfuncnames = true,
