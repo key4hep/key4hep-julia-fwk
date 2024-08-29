@@ -54,7 +54,7 @@ function main()
     logging_required = !isnothing(args["logs-graph"]) || !isnothing(args["logs-raw"])
 
     if logging_required
-        FrameworkDemo.configure_LocalEventLog()
+        FrameworkDemo.enable_logging!()
         @info "Enabled logging"
     end
 
@@ -80,7 +80,7 @@ function main()
     if logging_required
         logs = FrameworkDemo.fetch_logs!()
         if !isnothing(args["logs-graph"])
-            FrameworkDemo.save_logs_dot(logs, args["logs-graph"])
+            FrameworkDemo.save_logs_graphviz(logs, args["logs-graph"])
         end
         if !isnothing(args["logs-raw"])
             FrameworkDemo.save_logs_raw(logs, args["logs-raw"])
