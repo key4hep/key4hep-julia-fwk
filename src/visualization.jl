@@ -8,7 +8,7 @@ function save_logs_dot(logs, path::String)
     if splitext(path)[2] == ".dot"
         open(path, "w") do io
             ModGraphVizSimple.show_logs(io, logs, :graphviz_simple)
-            @info "Written logs dot graph to $path"
+            @info "Written logs dot graph (simple) to $path"
         end
     else
         buffer = IOBuffer()
@@ -16,6 +16,19 @@ function save_logs_dot(logs, path::String)
         dot = String(take!(buffer))
         graphviz = GraphViz.Graph(dot)
         GraphViz.layout!(graphviz; engine = "dot")
+        FileIO.save(path, graphviz)
+        @info "Written logs graph (simple) to $path"
+    end
+end
+
+function save_logs_graphviz(logs, path::String)
+    if splitext(path)[2] == ".dot"
+        open(path, "w") do io
+            Dagger.show_logs(io, logs, :graphviz; color_by = :proc)
+            @info "Written logs dot graph to $path"
+        end
+    else
+        graphviz = Dagger.render_logs(logs, :graphviz; color_by = :proc)
         FileIO.save(path, graphviz)
         @info "Written logs graph to $path"
     end
