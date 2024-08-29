@@ -3,7 +3,19 @@ using Distributed
 using MetaGraphs
 
 # Algorithms
-struct MockupAlgorithm
+
+abstract type AbstractAlgorithm end
+
+function (alg::AbstractAlgorithm)(args...; event_number::Int,
+                                  coefficients::Union{Vector{Float64}, Missing})
+    error("Subtypes of AbstractAlgorithm must implement function call")
+end
+
+function get_name(alg::AbstractAlgorithm)
+    error("Subtypes of AbstractAlgorithm must implement get_name")
+end
+
+struct MockupAlgorithm <: AbstractAlgorithm
     name::String
     runtime::Float64
     input_length::UInt
@@ -22,13 +34,32 @@ end
 
 alg_default_runtime_s::Float64 = 0
 
-function (alg::MockupAlgorithm)(args...; coefficients::Union{Vector{Float64}, Missing})
-    println("Executing $(alg.name)")
+function (alg::MockupAlgorithm)(args...; event_number::Int,
+                                coefficients::Union{Vector{Float64}, Missing})
+    println("Executing $(alg.name) event $event_number")
     if coefficients isa Vector{Float64}
         crunch_for_seconds(alg.runtime, coefficients)
     end
 
     return alg.name
+end
+
+function get_name(alg::MockupAlgorithm)
+    return alg.name
+end
+
+struct BoundAlgorithm
+    alg::AbstractAlgorithm
+    event_number::Int
+end
+
+function (algorithm::BoundAlgorithm)(data...; coefficients::Union{Vector{Float64}, Missing})
+    return algorithm.alg(data...; event_number = algorithm.event_number,
+                         coefficients = coefficients)
+end
+
+function get_name(alg::BoundAlgorithm)
+    return get_name(alg.alg)
 end
 
 struct DataFlowGraph
@@ -38,16 +69,21 @@ struct DataFlowGraph
         alg_vertices = MetaGraphs.filter_vertices(graph, :type, "Algorithm")
         sorted_vertices = MetaGraphs.topological_sort(graph)
         sorted_alg_vertices = intersect(sorted_vertices, alg_vertices)
-        for i in sorted_alg_vertices
-            alg = MockupAlgorithm(graph, i)
-            set_prop!(graph, i, :algorithm, alg)
-        end
         new(graph, sorted_alg_vertices)
     end
 end
 
-function get_algorithm(data_flow::DataFlowGraph, index::Int)
+function get_algorithm(data_flow::DataFlowGraph, index::Int)::AbstractAlgorithm
     return get_prop(data_flow.graph, index, :algorithm)
+end
+
+function mockup_dataflow(graph::MetaDiGraph)::DataFlowGraph
+    data_flow = DataFlowGraph(graph)
+    for i in data_flow.algorithm_indices
+        alg = MockupAlgorithm(data_flow.graph, i)
+        set_prop!(data_flow.graph, i, :algorithm, alg)
+    end
+    return data_flow
 end
 
 struct Event
@@ -87,7 +123,8 @@ end
 function schedule_algorithm(event::Event, vertex_id::Int,
                             coefficients::Union{Dagger.Shard, Nothing})
     incoming_data = get_results(event, inneighbors(event.data_flow.graph, vertex_id))
-    algorithm = get_algorithm(event.data_flow, vertex_id)
+    algorithm = BoundAlgorithm(get_algorithm(event.data_flow, vertex_id),
+                               event.event_number)
     if isnothing(coefficients)
         alg_helper(data...) = algorithm(data...; coefficients = missing)
         return Dagger.@spawn alg_helper(incoming_data...)
@@ -115,14 +152,13 @@ function calibrate_crunch(; fast::Bool = false)::Union{Dagger.Shard, Nothing}
     return fast ? nothing : Dagger.@shard calculate_coefficients()
 end
 
-function run_pipeline(graph::MetaDiGraph;
+function run_pipeline(data_flow::DataFlowGraph;
                       event_count::Int,
                       max_concurrent::Int,
                       fast::Bool = false)
     graphs_tasks = Dict{Int, Dagger.DTask}()
     notifications = RemoteChannel(() -> Channel{Int}(max_concurrent))
     coefficients = FrameworkDemo.calibrate_crunch(; fast = fast)
-    data_flow = DataFlowGraph(graph)
 
     for idx in 1:event_count
         while length(graphs_tasks) >= max_concurrent

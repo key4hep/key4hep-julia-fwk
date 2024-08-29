@@ -45,7 +45,7 @@ end
     is_fast = "no-fast" ∉ ARGS
     coefficients = FrameworkDemo.calibrate_crunch(; fast = is_fast)
 
-    df = FrameworkDemo.DataFlowGraph(graph)
+    df = FrameworkDemo.mockup_dataflow(graph)
     event = FrameworkDemo.Event(df)
 
     Dagger.enable_logging!(tasknames = true, taskdeps = true)
@@ -97,10 +97,11 @@ end
 
     @testset "Pipeline" begin
         event_count = 5
+        data_flow = FrameworkDemo.mockup_dataflow(graph)
 
         test_logger = TestLogger()
         with_logger(test_logger) do
-            FrameworkDemo.run_pipeline(graph;
+            FrameworkDemo.run_pipeline(data_flow;
                                        max_concurrent = 3,
                                        event_count = event_count,
                                        fast = is_fast)

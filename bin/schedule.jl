@@ -47,11 +47,12 @@ function main()
     end
 
     graph = FrameworkDemo.parse_graphml(args["data-flow"])
+    data_flow = FrameworkDemo.mockup_dataflow(graph)
     event_count = args["event-count"]
     max_concurrent = args["max-concurrent"]
     fast = args["fast"]
 
-    @time "Pipeline execution" FrameworkDemo.run_pipeline(graph;
+    @time "Pipeline execution" FrameworkDemo.run_pipeline(data_flow;
                                                           event_count = event_count,
                                                           max_concurrent = max_concurrent,
                                                           fast = fast)
