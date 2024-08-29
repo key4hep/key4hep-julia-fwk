@@ -42,6 +42,12 @@ function save_logs_chrome_trace(logs, path::String)
     end
 end
 
+function save_logs_gantt(logs, path::String)
+    plot = Dagger.render_logs(logs, :plots_gantt)
+    Plots.savefig(plot, path)
+    @info "Written logs gantt chart to $path"
+end
+
 function save_logs_raw(logs, path::String)
     open(path, "w") do io
         println(io, logs)
