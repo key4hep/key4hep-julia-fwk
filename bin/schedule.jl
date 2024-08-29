@@ -28,6 +28,10 @@ function parse_args()
         help = "Output graphviz dot file for execution logs graph"
         arg_type = String
 
+        "--dump-plan"
+        help = "Output the execution plan as a graph. Either dot or graphics file format like png, svg, pdf"
+        arg_type = String
+
         "--fast"
         help = "Execute algorithms immediately skipping algorithm runtime information and crunching"
         action = :store_true
@@ -55,6 +59,10 @@ function main()
     event_count = args["event-count"]
     max_concurrent = args["max-concurrent"]
     fast = args["fast"]
+
+    if !isnothing(args["dump-plan"])
+        FrameworkDemo.save_execution_plan(data_flow, args["dump-plan"])
+    end
 
     if args["dry-run"]
         @info "Dry run: not executing workflow, not writing logs"

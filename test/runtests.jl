@@ -25,4 +25,5 @@ end
     include("parsing.jl")
     include("scheduling.jl")
     include("demo_workflows.jl")
+    include("visualization.jl")
 end
