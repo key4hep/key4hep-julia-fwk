@@ -3,6 +3,7 @@ import GraphViz
 import FileIO
 import DataFrames
 import Plots
+import JSON3
 
 function save_logs_dot(logs, path::String)
     if splitext(path)[2] == ".dot"
@@ -31,6 +32,13 @@ function save_logs_graphviz(logs, path::String)
         graphviz = Dagger.render_logs(logs, :graphviz; color_by = :proc)
         FileIO.save(path, graphviz)
         @info "Written logs graph to $path"
+    end
+end
+
+function save_logs_chrome_trace(logs, path::String)
+    open(path, "w") do io
+        Dagger.show_logs(io, logs, :chrome_trace)
+        @info "Written logs trace to $path"
     end
 end
 

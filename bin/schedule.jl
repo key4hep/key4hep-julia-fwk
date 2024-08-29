@@ -28,6 +28,10 @@ function parse_args()
         help = "Output the execution logs as a graph. Either dot or graphics file format like png, svg, pdf"
         arg_type = String
 
+        "--logs-trace"
+        help = "Output the execution logs as a chrome trace. Must be a json file"
+        arg_type = String
+
         "--logs-raw"
         help = "Output the execution logs as text"
         arg_type = String
@@ -51,7 +55,7 @@ end
 function main()
     args = parse_args()
 
-    logging_required = !isnothing(args["logs-graph"]) || !isnothing(args["logs-raw"])
+    logging_required = !isnothing(args["logs-graph"]) || !isnothing(args["logs-trace"]) || !isnothing(args["logs-raw"])
 
     if logging_required
         FrameworkDemo.enable_logging!()
@@ -81,6 +85,9 @@ function main()
         logs = FrameworkDemo.fetch_logs!()
         if !isnothing(args["logs-graph"])
             FrameworkDemo.save_logs_graphviz(logs, args["logs-graph"])
+        end
+        if !isnothing(args["logs-trace"])
+            FrameworkDemo.save_logs_chrome_trace(logs, args["logs-trace"])
         end
         if !isnothing(args["logs-raw"])
             FrameworkDemo.save_logs_raw(logs, args["logs-raw"])
