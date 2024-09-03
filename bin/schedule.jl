@@ -24,8 +24,8 @@ function parse_args()
         arg_type = Int
         default = 1
 
-        "--dot-trace"
-        help = "Output graphviz dot file for execution logs graph"
+        "--logs-graph"
+        help = "Output the execution logs as a graph. Either dot or graphics file format like png, svg, pdf"
         arg_type = String
 
         "--dump-plan"
@@ -47,7 +47,7 @@ end
 function main()
     args = parse_args()
 
-    logging_required = !isnothing(args["dot-trace"])
+    logging_required = !isnothing(args["logs-graph"])
 
     if logging_required
         FrameworkDemo.configure_LocalEventLog()
@@ -75,8 +75,8 @@ function main()
                                                           fast = fast)
     if logging_required
         logs = FrameworkDemo.fetch_logs!()
-        if !isnothing(args["dot-trace"])
-            FrameworkDemo.save_logs_dot(logs, args["dot-trace"])
+        if !isnothing(args["logs-graph"])
+            FrameworkDemo.save_logs_dot(logs, args["logs-graph"])
         end
     end
 end
