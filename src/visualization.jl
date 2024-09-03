@@ -21,6 +21,13 @@ function save_logs_dot(logs, path::String)
     end
 end
 
+function save_logs_raw(logs, path::String)
+    open(path, "w") do io
+        println(io, logs)
+        @info "Written raw logs to $path"
+    end
+end
+
 function get_execution_plan(df::DataFlowGraph)::MetaDiGraph
     g = MetaDiGraph()
     for (i, v) in enumerate(df.algorithm_indices)
