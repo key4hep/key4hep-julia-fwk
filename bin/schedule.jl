@@ -28,6 +28,10 @@ function parse_args()
         help = "Output the execution logs as a graph. Either dot or graphics file format like png, svg, pdf"
         arg_type = String
 
+        "--logs-raw"
+        help = "Output the execution logs as text"
+        arg_type = String
+
         "--dump-plan"
         help = "Output the execution plan as a graph. Either dot or graphics file format like png, svg, pdf"
         arg_type = String
@@ -47,7 +51,7 @@ end
 function main()
     args = parse_args()
 
-    logging_required = !isnothing(args["logs-graph"])
+    logging_required = !isnothing(args["logs-graph"]) || !isnothing(args["logs-raw"])
 
     if logging_required
         FrameworkDemo.configure_LocalEventLog()
@@ -77,6 +81,9 @@ function main()
         logs = FrameworkDemo.fetch_logs!()
         if !isnothing(args["logs-graph"])
             FrameworkDemo.save_logs_dot(logs, args["logs-graph"])
+        end
+        if !isnothing(args["logs-raw"])
+            FrameworkDemo.save_logs_raw(logs, args["logs-raw"])
         end
     end
 end
