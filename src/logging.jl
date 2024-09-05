@@ -10,6 +10,10 @@ function fetch_logs!()
     return Dagger.fetch_logs!()
 end
 
+function disable_logging!()
+    Dagger.disable_logging!()
+end
+
 function dispatch_begin_msg(index)
     "Dispatcher: scheduled graph $index"
 end

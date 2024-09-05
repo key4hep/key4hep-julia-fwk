@@ -49,13 +49,13 @@ end
     event = FrameworkDemo.Event(df)
 
     Dagger.enable_logging!(tasknames = true, taskdeps = true)
-    _ = Dagger.fetch_logs!() # flush logs
+    _ = FrameworkDemo.fetch_logs!() # flush logs
 
     tasks = FrameworkDemo.schedule_graph!(event, coefficients)
     wait.(tasks)
 
-    logs = Dagger.fetch_logs!()
-    Dagger.disable_logging!()
+    logs = FrameworkDemo.fetch_logs!()
+    FrameworkDemo.disable_logging!()
     @test !isnothing(logs)
 
     task_to_tid = lock(Dagger.Sch.EAGER_ID_MAP) do id_map

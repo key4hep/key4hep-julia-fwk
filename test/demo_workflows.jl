@@ -14,7 +14,7 @@ function run_demo(name::String, coefficients::Union{Dagger.Shard, Nothing})
 end
 
 @testset "Demo workflows" begin
-    Dagger.disable_logging!()
+    FrameworkDemo.disable_logging!()
     is_fast = "no-fast" ∉ ARGS
     coefficients = FrameworkDemo.calibrate_crunch(; fast = is_fast)
     run(name) = run_demo(name, coefficients)

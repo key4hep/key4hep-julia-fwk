@@ -23,6 +23,7 @@ end
         include("Aqua.jl")
     end
     include("parsing.jl")
+    include("cpu_crunching.jl")
     include("scheduling.jl")
     include("demo_workflows.jl")
     include("visualization.jl")

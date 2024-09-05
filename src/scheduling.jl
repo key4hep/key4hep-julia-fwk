@@ -148,8 +148,9 @@ function schedule_graph!(event::Event, coefficients::Union{Dagger.Shard, Nothing
     return terminating_results
 end
 
-function calibrate_crunch(; fast::Bool = false)::Union{Dagger.Shard, Nothing}
-    return fast ? nothing : Dagger.@shard calculate_coefficients()
+function calibrate_crunch(min::Int = 1000, max::Int = 200_000;
+                          fast::Bool = false)::Union{Dagger.Shard, Nothing}
+    return fast ? nothing : Dagger.@shard calculate_coefficients(min, max)
 end
 
 function run_pipeline(data_flow::DataFlowGraph;
