@@ -37,7 +37,7 @@ function parse_args()
         arg_type = String
 
         "--logs-raw"
-        help = "Output the execution logs as text"
+        help = "Output the execution logs as text. The file will be formatted as json if json extension is given"
         arg_type = String
 
         "--dump-plan"

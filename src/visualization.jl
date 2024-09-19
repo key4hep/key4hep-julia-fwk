@@ -31,9 +31,16 @@ function save_logs_gantt(logs, path::String)
 end
 
 function save_logs_raw(logs, path::String)
-    open(path, "w") do io
-        println(io, logs)
-        @info "Written raw logs to $path"
+    if splitext(path)[2] == ".json"
+        open(path, "w") do io
+            JSON3.write(io, logs)
+            @info "Written raw json logs to $path"
+        end
+    else
+        open(path, "w") do io
+            println(io, logs)
+            @info "Written raw logs to $path"
+        end
     end
 end
 
