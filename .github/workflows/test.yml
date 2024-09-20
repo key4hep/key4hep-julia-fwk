@@ -12,18 +12,20 @@ concurrency:
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
 jobs:
   test:
-    name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
+    name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} (${{matrix.test_args}})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         version:
-          - '1.10'
           - '1'
         os:
           - ubuntu-latest
         arch:
           - x64
+        test_args:
+          - 'no-fast'
+          - 'all'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -34,4 +36,7 @@ jobs:
           arch: ${{ matrix.arch }}
       - uses: julia-actions/cache@v2
       - uses: julia-actions/julia-buildpkg@v1
-      - uses: julia-actions/julia-runtest@v1
+      # change to julia-actions/julia-runtest@v1.11 once it's available
+      - uses: julia-actions/julia-runtest@main
+        with:
+          test_args: ${{matrix.test_args}}
