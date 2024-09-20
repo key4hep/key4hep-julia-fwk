@@ -36,6 +36,7 @@ jobs:
           arch: ${{ matrix.arch }}
       - uses: julia-actions/cache@v2
       - uses: julia-actions/julia-buildpkg@v1
+      # change to julia-actions/julia-runtest@v1.11 once it's available
       - uses: julia-actions/julia-runtest@main
         with:
           test_args: ${{matrix.test_args}}
