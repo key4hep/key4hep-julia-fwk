@@ -28,8 +28,16 @@ function parse_args()
         help = "Output the execution logs as a graph. Either dot or graphics file format like png, svg, pdf"
         arg_type = String
 
+        "--logs-trace"
+        help = "Output the execution logs as a chrome trace. Must be a json file"
+        arg_type = String
+
+        "--logs-gantt"
+        help = "Output the execution logs as a Gantt chart. Must be a graphics file format like png, svg, pdf"
+        arg_type = String
+
         "--logs-raw"
-        help = "Output the execution logs as text"
+        help = "Output the execution logs as text. The file will be formatted as json if json extension is given"
         arg_type = String
 
         "--dump-plan"
@@ -51,10 +59,11 @@ end
 function main()
     args = parse_args()
 
-    logging_required = !isnothing(args["logs-graph"]) || !isnothing(args["logs-raw"])
+    logging_required = !isnothing(args["logs-graph"]) || !isnothing(args["logs-trace"]) ||
+                       !isnothing(args["logs-gantt"]) || !isnothing(args["logs-raw"])
 
     if logging_required
-        FrameworkDemo.configure_LocalEventLog()
+        FrameworkDemo.enable_logging!()
         @info "Enabled logging"
     end
 
@@ -80,7 +89,13 @@ function main()
     if logging_required
         logs = FrameworkDemo.fetch_logs!()
         if !isnothing(args["logs-graph"])
-            FrameworkDemo.save_logs_dot(logs, args["logs-graph"])
+            FrameworkDemo.save_logs_graphviz(logs, args["logs-graph"])
+        end
+        if !isnothing(args["logs-trace"])
+            FrameworkDemo.save_logs_chrome_trace(logs, args["logs-trace"])
+        end
+        if !isnothing(args["logs-gantt"])
+            FrameworkDemo.save_logs_gantt(logs, args["logs-gantt"])
         end
         if !isnothing(args["logs-raw"])
             FrameworkDemo.save_logs_raw(logs, args["logs-raw"])

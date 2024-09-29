@@ -83,9 +83,10 @@ function schedule_algorithm(event::Event, vertex_id::Int,
                                event.event_number)
     if isnothing(coefficients)
         alg_helper(data...) = algorithm(data...; coefficients = missing)
-        return Dagger.@spawn alg_helper(incoming_data...)
+        return Dagger.@spawn name=get_name(algorithm) alg_helper(incoming_data...)
     else
-        return Dagger.@spawn algorithm(incoming_data...; coefficients = coefficients)
+        return Dagger.@spawn name=get_name(algorithm) algorithm(incoming_data...;
+                                                                coefficients = coefficients)
     end
 end
 
