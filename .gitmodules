@@ -1,3 +1,0 @@
-[submodule "deps/GraphMLReader.jl"]
-	path = deps/GraphMLReader.jl
-	url = https://github.com/SmalRat/GraphMLReader.jl
