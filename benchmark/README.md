@@ -7,7 +7,7 @@ Run benchmarks from the project's main directory
 Run benchmark script
 
 ```
-julia --project benchmark/benchmarks.jl
+julia --project=benchmark benchmark/benchmarks.jl
 ```
 
 or benchmark with [PkgBenchmark](https://github.com/JuliaCI/PkgBenchmark.jl)
