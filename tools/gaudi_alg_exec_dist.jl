@@ -1,15 +1,12 @@
 #!/usr/bin/env julia
-
+using ArgParse
 using CSV
 using DataFrames
-using Statistics
 using Plots
-using ArgParse
 using Printf
-using EzXML
+using Statistics
 using MetaGraphs
-
-include(joinpath(@__DIR__, "../deps/GraphMLReader.jl/src/GraphMLReader.jl"))
+import GraphMLReader
 
 function parse_args(args)
     s = ArgParseSettings(description =
