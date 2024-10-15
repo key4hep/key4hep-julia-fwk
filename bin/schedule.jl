@@ -5,7 +5,7 @@ using Dagger
 using ArgParse
 using FrameworkDemo
 
-function parse_args()
+function parse_args(raw_args)
     s = ArgParseSettings()
 
     @add_arg_table! s begin
@@ -53,11 +53,11 @@ function parse_args()
         action = :store_true
     end
 
-    return ArgParse.parse_args(s)
+    return ArgParse.parse_args(raw_args, s)
 end
 
-function main()
-    args = parse_args()
+function (@main)(raw_args)
+    args = parse_args(raw_args)
 
     logging_required = !isnothing(args["logs-graph"]) || !isnothing(args["logs-trace"]) ||
                        !isnothing(args["logs-gantt"]) || !isnothing(args["logs-raw"])
@@ -101,10 +101,7 @@ function main()
             FrameworkDemo.save_logs_raw(logs, args["logs-raw"])
         end
     end
-end
 
-if abspath(PROGRAM_FILE) == @__FILE__
-    main()
     if length(workers()) > 1
         rmprocs!(Dagger.Sch.eager_context(), workers())
         rmprocs(workers())
