@@ -104,6 +104,6 @@ function (@main)(raw_args)
 
     if length(workers()) > 1
         rmprocs!(Dagger.Sch.eager_context(), workers())
-        rmprocs(workers())
+        workers() |> rmprocs |> wait
     end
 end
