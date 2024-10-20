@@ -13,8 +13,8 @@ function get_name(alg::AbstractAlgorithm)
     error("Subtypes of AbstractAlgorithm must implement get_name")
 end
 
-struct BoundAlgorithm
-    alg::AbstractAlgorithm
+struct BoundAlgorithm{T <: AbstractAlgorithm}
+    alg::T
     event_number::Int
 end
 
