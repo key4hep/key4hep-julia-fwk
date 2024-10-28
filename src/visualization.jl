@@ -59,6 +59,10 @@ function get_execution_plan(df::DataFlowGraph)::MetaDiGraph
     translate_alg_vertices(indices) = indices |> get_algs .|>
                                       get_name .|> names_to_vertices
 
+    for i in vertices(g)
+        set_prop!(g, i, :shape, "box")
+    end
+
     for dataobject_idx in dataobject_indices
         predecessors_vertices = inneighbors(df.graph, dataobject_idx) |>
                                 translate_alg_vertices
