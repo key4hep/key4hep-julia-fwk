@@ -28,7 +28,7 @@ function get_name(alg::BoundAlgorithm)
 end
 
 struct DataFlowGraph
-    graph::MetaDiGraph
+    graph::MetaDiGraph{Int, Float64}
     algorithm_indices::Vector{Int}
     function DataFlowGraph(graph::MetaDiGraph)
         alg_vertices = MetaGraphs.filter_vertices(graph, :type, "Algorithm")
