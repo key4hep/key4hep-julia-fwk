@@ -13,8 +13,8 @@ function get_name(alg::AbstractAlgorithm)
     error("Subtypes of AbstractAlgorithm must implement get_name")
 end
 
-struct BoundAlgorithm
-    alg::AbstractAlgorithm
+struct BoundAlgorithm{T <: AbstractAlgorithm}
+    alg::T
     event_number::Int
 end
 
@@ -28,7 +28,7 @@ function get_name(alg::BoundAlgorithm)
 end
 
 struct DataFlowGraph
-    graph::MetaDiGraph
+    graph::MetaDiGraph{Int, Float64}
     algorithm_indices::Vector{Int}
     function DataFlowGraph(graph::MetaDiGraph)
         alg_vertices = MetaGraphs.filter_vertices(graph, :type, "Algorithm")
