@@ -4,7 +4,15 @@ import DataFrames
 import Plots
 import JSON3
 
-function save_logs_graphviz(logs, path::String)
+function save_logs(logs, ::String, ::Val{T}) where {T}
+    throw(ArgumentError("Unsupported visualization mode: `$T`"))
+end
+
+function save_logs(logs, path::String, mode::Symbol)
+    return save_logs(logs, path, Val{mode}())
+end
+
+function save_logs(logs, path::String, ::Val{:graph})
     if splitext(path)[2] == ".dot"
         open(path, "w") do io
             Dagger.show_logs(io, logs, :graphviz; color_by = :proc)
@@ -17,20 +25,20 @@ function save_logs_graphviz(logs, path::String)
     end
 end
 
-function save_logs_chrome_trace(logs, path::String)
+function save_logs(logs, path::String, ::Val{:trace})
     open(path, "w") do io
         Dagger.show_logs(io, logs, :chrome_trace)
         @info "Written logs trace to $path"
     end
 end
 
-function save_logs_gantt(logs, path::String)
+function save_logs(logs, path::String, ::Val{:gantt})
     plot = Dagger.render_logs(logs, :plots_gantt)
     Plots.savefig(plot, path)
     @info "Written logs gantt chart to $path"
 end
 
-function save_logs_raw(logs, path::String)
+function save_logs(logs, path::String, ::Val{:raw})
     if splitext(path)[2] == ".json"
         open(path, "w") do io
             JSON3.write(io, logs)
