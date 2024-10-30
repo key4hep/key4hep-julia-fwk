@@ -5,6 +5,8 @@ using Dagger
 using ArgParse
 using FrameworkDemo
 
+const logs_formats = ["graph", "trace", "gantt", "raw"]
+
 function parse_args(raw_args)
     s = ArgParseSettings()
 
@@ -58,9 +60,7 @@ end
 
 function (@main)(raw_args)
     args = parse_args(raw_args)
-
-    logging_required = !isnothing(args["logs-graph"]) || !isnothing(args["logs-trace"]) ||
-                       !isnothing(args["logs-gantt"]) || !isnothing(args["logs-raw"])
+    logging_required = any(x -> !isnothing(args["logs-$x"]), logs_formats)
 
     if logging_required
         FrameworkDemo.enable_logging!()
@@ -88,17 +88,11 @@ function (@main)(raw_args)
                                                           fast = fast)
     if logging_required
         logs = FrameworkDemo.fetch_logs!()
-        if !isnothing(args["logs-graph"])
-            FrameworkDemo.save_logs_graphviz(logs, args["logs-graph"])
-        end
-        if !isnothing(args["logs-trace"])
-            FrameworkDemo.save_logs_chrome_trace(logs, args["logs-trace"])
-        end
-        if !isnothing(args["logs-gantt"])
-            FrameworkDemo.save_logs_gantt(logs, args["logs-gantt"])
-        end
-        if !isnothing(args["logs-raw"])
-            FrameworkDemo.save_logs_raw(logs, args["logs-raw"])
+        for format in logs_formats
+            path = args["logs-$format"]
+            if !isnothing(path)
+                FrameworkDemo.save_logs(logs, path, Symbol(format))
+            end
         end
     end
 
