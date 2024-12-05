@@ -1,5 +1,4 @@
 import Dagger
-using Distributed
 using MetaGraphs
 
 abstract type AbstractAlgorithm end
