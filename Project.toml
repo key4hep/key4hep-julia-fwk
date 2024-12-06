@@ -28,7 +28,7 @@ GraphMLReader = {rev = "master", url = "https://github.com/SmalRat/GraphMLReader
 Aqua = "0.8"
 ArgParse = "1.2"
 CSV = "0.10"
-Dagger = "0.18.13"
+Dagger = "0.18.14"
 DataFrames = "1.6"
 Distributed = "1.11"
 DistributedNext = "1.0"
