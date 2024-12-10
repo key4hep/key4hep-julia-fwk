@@ -1,4 +1,9 @@
-using Distributed
+import Preferences
+if Preferences.load_preference("Dagger", "distributed-package") == "DistributedNext"
+    using DistributedNext
+else
+    using Distributed
+end
 using Test
 
 if abspath(PROGRAM_FILE) == @__FILE__
@@ -13,8 +18,8 @@ end
 
 @info("Execution environment details",
       julia_version=VERSION,
-      n_workers=Distributed.nworkers(),
-      n_procs=Distributed.nprocs(),
+      n_workers=nworkers(),
+      n_procs=nprocs(),
       n_threads=Threads.nthreads(),
       test_args=repr(ARGS))
 
