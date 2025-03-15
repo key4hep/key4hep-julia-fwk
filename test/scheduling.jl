@@ -49,14 +49,14 @@ end
     event = FrameworkDemo.Event(df)
 
     Dagger.enable_logging!(tasknames = true, taskdeps = true)
-    _ = FrameworkDemo.fetch_logs!() # flush logs
+    _ = FrameworkDemo.fetch_trace!() # flush
 
     tasks = FrameworkDemo.schedule_graph!(event, coefficients)
     wait.(tasks)
 
-    logs = FrameworkDemo.fetch_logs!()
-    FrameworkDemo.disable_logging!()
-    @test !isnothing(logs)
+    trace = FrameworkDemo.fetch_trace!()
+    FrameworkDemo.disable_tracing!()
+    @test !isnothing(trace)
 
     task_to_tid = lock(Dagger.Sch.EAGER_ID_MAP) do id_map
         return deepcopy(id_map)
@@ -68,7 +68,7 @@ end
     end
 
     @testset "Timeline" begin
-        timeline = get_alg_timeline(logs)
+        timeline = get_alg_timeline(trace)
         @test length(timeline) == algorithms_count
 
         get_time = (node_id) -> timeline[get_tid(node_id)]
@@ -83,7 +83,7 @@ end
     end
 
     @testset "Dependencies" begin
-        deps = get_alg_deps(logs)
+        deps = get_alg_deps(trace)
         get_deps = node_id -> deps[get_tid(node_id)]
 
         @test get_tid("ProducerA") ∈ get_deps("TransformerAB")

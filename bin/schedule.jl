@@ -5,7 +5,7 @@ using Dagger
 using ArgParse
 using FrameworkDemo
 
-const logs_formats = ["graph", "trace", "gantt", "raw"]
+const trace_formats = ["graph", "chrome", "gantt", "raw"]
 
 function parse_args(raw_args)
     s = ArgParseSettings()
@@ -26,20 +26,20 @@ function parse_args(raw_args)
         arg_type = Int
         default = 1
 
-        "--logs-graph"
-        help = "Output the execution logs as a graph. Either dot or graphics file format like png, svg, pdf"
+        "--trace-graph"
+        help = "Output the execution trace as a graph. Either dot or graphics file format like png, svg, pdf"
         arg_type = String
 
-        "--logs-trace"
-        help = "Output the execution logs as a chrome trace. Must be a json file"
+        "--trace-chrome"
+        help = "Output the execution trace as a chrome trace. Must be a json file"
         arg_type = String
 
-        "--logs-gantt"
-        help = "Output the execution logs as a Gantt chart. Must be a graphics file format like png, svg, pdf"
+        "--trace-gantt"
+        help = "Output the execution trace as a Gantt chart. Must be a graphics file format like png, svg, pdf"
         arg_type = String
 
-        "--logs-raw"
-        help = "Output the execution logs as text. The file will be formatted as json if json extension is given"
+        "--trace-raw"
+        help = "Output the execution trace as text. The file will be formatted as json if json extension is given"
         arg_type = String
 
         "--dump-plan"
@@ -60,11 +60,11 @@ end
 
 function (@main)(raw_args)
     args = parse_args(raw_args)
-    logging_required = any(x -> !isnothing(args["logs-$x"]), logs_formats)
+    tracing_required = any(x -> !isnothing(args["trace-$x"]), trace_formats)
 
-    if logging_required
-        FrameworkDemo.enable_logging!()
-        @info "Enabled logging"
+    if tracing_required
+        FrameworkDemo.enable_tracing!()
+        @info "Enabled tracing"
     end
 
     graph = FrameworkDemo.parse_graphml(args["data-flow"])
@@ -78,7 +78,7 @@ function (@main)(raw_args)
     end
 
     if args["dry-run"]
-        @info "Dry run: not executing workflow, not writing logs"
+        @info "Dry run: not executing workflow, not writing traces"
         return
     end
 
@@ -88,12 +88,13 @@ function (@main)(raw_args)
                                                           event_count = event_count,
                                                           max_concurrent = max_concurrent,
                                                           crunch_coefficients = crunch_coefficients)
-    if logging_required
-        logs = FrameworkDemo.fetch_logs!()
-        for format in logs_formats
-            path = args["logs-$format"]
+
+    if tracing_required
+        trace = FrameworkDemo.fetch_trace!()
+        for format in trace_formats
+            path = args["trace-$format"]
             if !isnothing(path)
-                FrameworkDemo.save_logs(logs, path, Symbol(format))
+                FrameworkDemo.save_trace(trace, path, Symbol(format))
             end
         end
     end
