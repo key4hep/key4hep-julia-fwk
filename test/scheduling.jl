@@ -104,7 +104,7 @@ end
             FrameworkDemo.run_pipeline(data_flow;
                                        max_concurrent = 3,
                                        event_count = event_count,
-                                       fast = is_fast)
+                                       crunch_coefficients = coefficients)
         end
         @testset "Start message" begin
             messages = for i in 1:event_count

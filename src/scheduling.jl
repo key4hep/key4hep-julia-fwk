@@ -113,10 +113,9 @@ end
 function run_pipeline(data_flow::DataFlowGraph;
                       event_count::Int,
                       max_concurrent::Int,
-                      fast::Bool = false)
+                      crunch_coefficients::Union{Dagger.Shard, Nothing} = nothing,)
     graphs_tasks = Dict{Int, Dagger.DTask}()
     notifications = RemoteChannel(() -> Channel{Int}(max_concurrent))
-    coefficients = FrameworkDemo.calibrate_crunch(; fast = fast)
 
     for idx in 1:event_count
         while length(graphs_tasks) >= max_concurrent
@@ -125,7 +124,7 @@ function run_pipeline(data_flow::DataFlowGraph;
             @info dispatch_end_msg(finished_graph_id)
         end
         event = Event(data_flow, idx)
-        terminating_tasks = FrameworkDemo.schedule_graph!(event, coefficients)
+        terminating_tasks = FrameworkDemo.schedule_graph!(event, crunch_coefficients)
         graphs_tasks[idx] = Dagger.@spawn notify_graph_finalization(notifications, idx,
                                                                     terminating_tasks...)
 
