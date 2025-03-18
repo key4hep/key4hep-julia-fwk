@@ -82,10 +82,12 @@ function (@main)(raw_args)
         return
     end
 
+    crunch_coefficients = FrameworkDemo.calibrate_crunch(; fast = fast)
+
     @time "Pipeline execution" FrameworkDemo.run_pipeline(data_flow;
                                                           event_count = event_count,
                                                           max_concurrent = max_concurrent,
-                                                          fast = fast)
+                                                          crunch_coefficients = crunch_coefficients)
     if logging_required
         logs = FrameworkDemo.fetch_logs!()
         for format in logs_formats
