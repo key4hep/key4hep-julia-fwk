@@ -65,9 +65,9 @@ end
 
 function notify_graph_finalization(notifications::RemoteChannel, graph_id::Int,
                                    terminating_results...)
-    println("Graph $graph_id: all tasks in the graph finished!")
+    @info "Graph $graph_id: all tasks in the graph finished!"
     put!(notifications, graph_id)
-    println("Graph $graph_id: notified!")
+    @info "Graph $graph_id: notified!"
 end
 
 function is_terminating_alg(graph::AbstractGraph, vertex_id::Int)
