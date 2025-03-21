@@ -4,6 +4,7 @@ using Distributed
 using Dagger
 using ArgParse
 using FrameworkDemo
+using Logging
 
 const trace_formats = ["graph", "chrome", "gantt", "raw"]
 
@@ -53,13 +54,33 @@ function parse_args(raw_args)
         "--dry-run"
         help = "Assemble workflow but don't schedule it, don't create any output files"
         action = :store_true
+
+        "--disable-logging"
+        help = "Disable logging for a given level and below (debug, info, warn, error)"
+        arg_type = String
     end
 
     return ArgParse.parse_args(raw_args, s)
 end
 
+function disable_logging(level_str::AbstractString)
+    level_map = Dict("debug" => Logging.Debug,
+                     "info" => Logging.Info,
+                     "warn" => Logging.Warn,
+                     "error" => Logging.Error)
+    level = get(level_map, lowercase(level_str), nothing)
+    isnothing(level) &&
+        error("Invalid log level: $level_str. Choose from debug, info, warn, error.")
+    Logging.disable_logging(level) # global setting, named logging levels differ by 1000
+end
+
 function (@main)(raw_args)
     args = parse_args(raw_args)
+
+    if !isnothing(args["disable-logging"])
+        disable_logging(args["disable-logging"])
+    end
+
     tracing_required = any(x -> !isnothing(args["trace-$x"]), trace_formats)
 
     if tracing_required
