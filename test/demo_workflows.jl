@@ -1,6 +1,7 @@
 using FrameworkDemo
 using Test
 using Dagger
+using Logging
 
 function run_demo(name::String, coefficients::Union{Dagger.Shard, Nothing})
     @testset "$name" begin
@@ -9,12 +10,13 @@ function run_demo(name::String, coefficients::Union{Dagger.Shard, Nothing})
         graph = FrameworkDemo.parse_graphml(path)
         df = FrameworkDemo.mockup_dataflow(graph)
         event = FrameworkDemo.Event(df)
-        @test_nowarn wait.(FrameworkDemo.schedule_graph!(event, coefficients))
+        @test_logs min_level=Logging.Warn wait.(FrameworkDemo.schedule_graph!(event,
+                                                                              coefficients))
     end
 end
 
 @testset "Demo workflows" begin
-    FrameworkDemo.disable_logging!()
+    FrameworkDemo.disable_tracing!()
     is_fast = "no-fast" ∉ ARGS
     coefficients = FrameworkDemo.calibrate_crunch(; fast = is_fast)
     run(name) = run_demo(name, coefficients)

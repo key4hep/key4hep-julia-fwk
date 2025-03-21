@@ -4,50 +4,50 @@ import DataFrames
 import Plots
 import JSON3
 
-function save_logs(logs, ::String, ::Val{T}) where {T}
+function save_trace(trace, ::String, ::Val{T}) where {T}
     throw(ArgumentError("Unsupported visualization mode: `$T`"))
 end
 
-function save_logs(logs, path::String, mode::Symbol)
-    return save_logs(logs, path, Val{mode}())
+function save_trace(trace, path::String, mode::Symbol)
+    return save_trace(trace, path, Val{mode}())
 end
 
-function save_logs(logs, path::String, ::Val{:graph})
+function save_trace(trace, path::String, ::Val{:graph})
     if splitext(path)[2] == ".dot"
         open(path, "w") do io
-            Dagger.show_logs(io, logs, :graphviz; color_by = :proc)
-            @info "Written logs dot graph to $path"
+            Dagger.show_logs(io, trace, :graphviz; color_by = :proc)
+            @info "Written trace dot graph to $path"
         end
     else
-        graphviz = Dagger.render_logs(logs, :graphviz; color_by = :proc)
+        graphviz = Dagger.render_logs(trace, :graphviz; color_by = :proc)
         FileIO.save(path, graphviz)
-        @info "Written logs graph to $path"
+        @info "Written trace graph to $path"
     end
 end
 
-function save_logs(logs, path::String, ::Val{:trace})
+function save_trace(trace, path::String, ::Val{:chrome})
     open(path, "w") do io
-        Dagger.show_logs(io, logs, :chrome_trace)
-        @info "Written logs trace to $path"
+        Dagger.show_logs(io, trace, :chrome_trace)
+        @info "Written chrome trace to $path"
     end
 end
 
-function save_logs(logs, path::String, ::Val{:gantt})
-    plot = Dagger.render_logs(logs, :plots_gantt)
+function save_trace(trace, path::String, ::Val{:gantt})
+    plot = Dagger.render_logs(trace, :plots_gantt)
     Plots.savefig(plot, path)
-    @info "Written logs gantt chart to $path"
+    @info "Written trace gantt chart to $path"
 end
 
-function save_logs(logs, path::String, ::Val{:raw})
+function save_trace(trace, path::String, ::Val{:raw})
     if splitext(path)[2] == ".json"
         open(path, "w") do io
-            JSON3.write(io, logs)
-            @info "Written raw json logs to $path"
+            JSON3.write(io, trace)
+            @info "Written raw json trace to $path"
         end
     else
         open(path, "w") do io
-            println(io, logs)
-            @info "Written raw logs to $path"
+            println(io, trace)
+            @info "Written raw trace to $path"
         end
     end
 end
