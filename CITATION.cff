@@ -19,8 +19,9 @@ authors:
     orcid: 'https://orcid.org/0009-0009-2020-1620'
     affiliation: CERN
   - given-names: Oleksandr
-    affiliation: Ukrainian Catholic University
     family-names: Shchur
+    affiliation: Ukrainian Catholic University
+    orcid: 'https://orcid.org/0009-0009-3275-533X'
   - given-names: Josh
     family-names: Ott
     orcid: 'https://orcid.org/0000-0002-4893-5484'
