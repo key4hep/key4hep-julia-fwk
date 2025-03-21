@@ -1,0 +1,33 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: FrameworkDemo.jl
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Mateusz Jakub
+    family-names: Fila
+    affiliation: CERN
+    orcid: 'https://orcid.org/0000-0003-3917-2371'
+    email: mateusz.jakub.fila@cern.ch
+  - given-names: Benedikt
+    family-names: Hegner
+    email: Benedikt.Hegner@cern.ch
+    orcid: 'https://orcid.org/0009-0009-2020-1620'
+    affiliation: CERN
+  - given-names: Oleksandr
+    family-names: Shchur
+    affiliation: Ukrainian Catholic University
+    orcid: 'https://orcid.org/0009-0009-3275-533X'
+  - given-names: Josh
+    family-names: Ott
+    orcid: 'https://orcid.org/0000-0002-4893-5484'
+    affiliation: North Carolina State University
+repository-code: 'https://github.com/key4hep/key4hep-julia-fwk'
+abstract: >-
+  Demonstrator project for HEP event-processing application
+  framework in Julia and using Dagger.jl
+license: Apache-2.0
