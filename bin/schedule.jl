@@ -48,7 +48,7 @@ function parse_args(raw_args)
         arg_type = String
 
         "--fast"
-        help = "Execute algorithms immediately skipping algorithm runtime information and crunching"
+        help = "Execute algorithms immediately skipping algorithm runtime information and crunching. Conflicts with --crunch-coefficients"
         action = :store_true
 
         "--dry-run"
@@ -58,9 +58,18 @@ function parse_args(raw_args)
         "--disable-logging"
         help = "Disable logging for a given level and below (debug, info, warn, error)"
         arg_type = String
+
+        "--crunch-coefficients"
+        help = "Set the crunching coefficients manually. Must be a 2-element vector. Conflicts with --fast"
+        arg_type = Float64
+        nargs = 2
     end
 
-    return ArgParse.parse_args(raw_args, s)
+    parsed = ArgParse.parse_args(raw_args, s)
+    if !isnothing(parsed["crunch-coefficients"]) && parsed["fast"]
+        error("--fast and --crunch-coefficients are mutually exclusive")
+    end
+    return parsed
 end
 
 function disable_logging(level_str::AbstractString)
@@ -103,7 +112,13 @@ function (@main)(raw_args)
         return
     end
 
-    crunch_coefficients = FrameworkDemo.calibrate_crunch(; fast = fast)
+    if !isnothing(args["crunch-coefficients"])
+        coefs = args["crunch-coefficients"]
+        @info "Using in each worker the provided crunching coefficients: $coefs"
+        crunch_coefficients = Dagger.@shard coefs
+    else
+        crunch_coefficients = FrameworkDemo.calibrate_crunch(; fast = fast)
+    end
 
     @time "Pipeline execution" FrameworkDemo.run_pipeline(data_flow;
                                                           event_count = event_count,
