@@ -1,6 +1,7 @@
 #!/usr/bin/env julia
 using ArgParse
 using CSV
+using JSON3
 using DataFrames
 using Plots
 using Printf
@@ -11,13 +12,14 @@ import GraphMLReader
 function parse_args(args)
     s = ArgParseSettings(description =
                          """
-                         Calculate distributions of Gaudi algorithm execution duration time
+                         Calculate distributions of algorithm execution duration time
                          from a timeline extracted with Gaudi TimelineSvc or data-flow graph
+                         or from a chrome trace JSON file
                          """)
 
     @add_arg_table! s begin
         "input"
-        help = "Input Gaudi timeline CSV file or data-flow graph GraphML file"
+        help = "Input Gaudi timeline CSV file or data-flow graph GraphML file or chrome trace JSON file"
         arg_type = String
         required = true
 
@@ -25,6 +27,18 @@ function parse_args(args)
         help = "Output histogram file"
         arg_type = String
         required = false
+
+        "--plot-min"
+        help = "Minimum of OX axis (duration) for output histogram"
+        arg_type = Float64
+
+        "--plot-max"
+        help = "Minimum of OX axis (duration) for output histogram"
+        arg_type = Float64
+
+        "--plot-bins"
+        help = "Number of bins for output histogram"
+        arg_type = UInt32
     end
     return ArgParse.parse_args(args, s)
 end
@@ -43,7 +57,13 @@ function durations_from_graphml(filename)
             for vertex in algorithm_vertices if has_prop(graph, vertex, :runtime_average_s)]
 end
 
-function main(args)
+function durations_from_json(filename)
+    data = JSON3.read(read(filename, String))
+    return [x["dur"] / 1e6
+            for x in data[:traceEvents] if x["ph"] == "X" && x["cat"] == "compute"]
+end
+
+function (@main)(args)
     parsed_args = parse_args(args)
 
     input_file = parsed_args["input"]
@@ -53,6 +73,11 @@ function main(args)
         durations = durations_from_csv(input_file)
     elseif ext == ".graphml"
         durations = durations_from_graphml(input_file)
+    elseif ext == ".json"
+        durations = durations_from_json(input_file)
+    else
+        @error "Unsupported file extension: $ext"
+        return
     end
 
     n = length(durations)
@@ -78,10 +103,26 @@ function main(args)
         max_duration = maximum(positive_durations)
         n = length(positive_durations)
     end
-    num_bins = sqrt(n) |> ceil |> Int
 
-    bin_edges = exp10.(range(log10(min_duration), stop = log10(max_duration),
-                             length = num_bins + 3))
+    min_edge = parsed_args["plot-min"]
+    min_edge = isnothing(min_edge) ? min_duration : min_edge
+    max_edge = parsed_args["plot-max"]
+    max_edge = isnothing(max_edge) ? max_duration : max_edge
+
+    if min_edge > max_edge
+        @info "Plot min edge is greater than max edge, swapping"
+        min_edge, max_edge = max_edge, min_edge
+    end
+
+    n_edges = parsed_args["plot-bins"]
+    if isnothing(n_edges)
+        durations = filter(x -> min_edge <= x <= max_edge, durations)
+        n_edges = durations |> length |> sqrt |> ceil |> Int
+        n_edges += 2
+    end
+
+    bin_edges = exp10.(range(log10(min_edge), stop = log10(max_edge),
+                             length = n_edges + 1))
 
     histogram(durations; label = "", bin = bin_edges, xscale = :log10,
               xlim = extrema(bin_edges),
@@ -90,8 +131,4 @@ function main(args)
               xguidefonthalign = :right, yguidefontvalign = :top)
     savefig(output_file)
     @info "Histogram saved to $output_file"
-end
-
-if abspath(PROGRAM_FILE) == @__FILE__
-    main(ARGS)
 end
