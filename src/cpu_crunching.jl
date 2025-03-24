@@ -33,7 +33,9 @@ function calculate_coefficients(min = 1000, max = 200_000)::Vector{Float64}
     n_max = [min, max]
     t_average = benchmark_prime.(n_max)
 
-    return inv([n_max[i]^j for i in 1:2, j in 1:2]) * t_average
+    coefficients = inv([n_max[i]^j for i in 1:2, j in 1:2]) * t_average
+    @info "Calibrated crunching coefficients: $coefficients"
+    return coefficients
 end
 
 function crunch_for_seconds(t::Float64, coefficients::Vector{Float64})

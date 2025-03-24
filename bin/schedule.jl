@@ -4,6 +4,7 @@ using Distributed
 using Dagger
 using ArgParse
 using FrameworkDemo
+using Logging
 
 const trace_formats = ["graph", "chrome", "gantt", "raw"]
 
@@ -47,19 +48,48 @@ function parse_args(raw_args)
         arg_type = String
 
         "--fast"
-        help = "Execute algorithms immediately skipping algorithm runtime information and crunching"
+        help = "Execute algorithms immediately skipping algorithm runtime information and crunching. Conflicts with --crunch-coefficients"
         action = :store_true
 
         "--dry-run"
         help = "Assemble workflow but don't schedule it, don't create any output files"
         action = :store_true
+
+        "--disable-logging"
+        help = "Disable logging for a given level and below (debug, info, warn, error)"
+        arg_type = String
+
+        "--crunch-coefficients"
+        help = "Set the CPU-crunching coefficients manually. Must be a 2-element vector. Each process will use the same values. Conflicts with --fast"
+        arg_type = Float64
+        nargs = 2
     end
 
-    return ArgParse.parse_args(raw_args, s)
+    parsed = ArgParse.parse_args(raw_args, s)
+    if !isempty(parsed["crunch-coefficients"]) && parsed["fast"]
+        error("--fast and --crunch-coefficients are mutually exclusive")
+    end
+    return parsed
+end
+
+function disable_logging(level_str::AbstractString)
+    level_map = Dict("debug" => Logging.Debug,
+                     "info" => Logging.Info,
+                     "warn" => Logging.Warn,
+                     "error" => Logging.Error)
+    level = get(level_map, lowercase(level_str), nothing)
+    isnothing(level) &&
+        error("Invalid log level: $level_str. Choose from debug, info, warn, error.")
+    Logging.disable_logging(level) # global setting, named logging levels differ by 1000
 end
 
 function (@main)(raw_args)
     args = parse_args(raw_args)
+
+    if !isnothing(args["disable-logging"])
+        disable_logging(args["disable-logging"])
+    end
+
     tracing_required = any(x -> !isnothing(args["trace-$x"]), trace_formats)
 
     if tracing_required
@@ -82,7 +112,13 @@ function (@main)(raw_args)
         return
     end
 
-    crunch_coefficients = FrameworkDemo.calibrate_crunch(; fast = fast)
+    if !isempty(args["crunch-coefficients"])
+        coefs = args["crunch-coefficients"]
+        @info "Using provided CPU-crunching coefficients: $coefs"
+        crunch_coefficients = Dagger.@shard coefs
+    else
+        crunch_coefficients = FrameworkDemo.calibrate_crunch(; fast = fast)
+    end
 
     @time "Pipeline execution" FrameworkDemo.run_pipeline(data_flow;
                                                           event_count = event_count,
