@@ -1,6 +1,7 @@
 #!/usr/bin/env julia
 using ArgParse
 using CSV
+using JSON3
 using DataFrames
 using Plots
 using Printf
@@ -11,13 +12,14 @@ import GraphMLReader
 function parse_args(args)
     s = ArgParseSettings(description =
                          """
-                         Calculate distributions of Gaudi algorithm execution duration time
+                         Calculate distributions of algorithm execution duration time
                          from a timeline extracted with Gaudi TimelineSvc or data-flow graph
+                         or from a chrome trace JSON file
                          """)
 
     @add_arg_table! s begin
         "input"
-        help = "Input Gaudi timeline CSV file or data-flow graph GraphML file"
+        help = "Input Gaudi timeline CSV file or data-flow graph GraphML file or chrome trace JSON file"
         arg_type = String
         required = true
 
@@ -43,7 +45,13 @@ function durations_from_graphml(filename)
             for vertex in algorithm_vertices if has_prop(graph, vertex, :runtime_average_s)]
 end
 
-function main(args)
+function durations_from_json(filename)
+    data = JSON3.read(read(filename, String))
+    return [x["dur"] / 1e6
+            for x in data[:traceEvents] if x["ph"] == "X" && x["cat"] == "compute"]
+end
+
+function (@main)(args)
     parsed_args = parse_args(args)
 
     input_file = parsed_args["input"]
@@ -53,6 +61,11 @@ function main(args)
         durations = durations_from_csv(input_file)
     elseif ext == ".graphml"
         durations = durations_from_graphml(input_file)
+    elseif ext == ".json"
+        durations = durations_from_json(input_file)
+    else
+        @error "Unsupported file extension: $ext"
+        return
     end
 
     n = length(durations)
@@ -90,8 +103,4 @@ function main(args)
               xguidefonthalign = :right, yguidefontvalign = :top)
     savefig(output_file)
     @info "Histogram saved to $output_file"
-end
-
-if abspath(PROGRAM_FILE) == @__FILE__
-    main(ARGS)
 end
