@@ -60,13 +60,13 @@ function parse_args(raw_args)
         arg_type = String
 
         "--crunch-coefficients"
-        help = "Set the crunching coefficients manually. Must be a 2-element vector. Conflicts with --fast"
+        help = "Set the CPU-crunching coefficients manually. Must be a 2-element vector. Each process will use the same values. Conflicts with --fast"
         arg_type = Float64
         nargs = 2
     end
 
     parsed = ArgParse.parse_args(raw_args, s)
-    if !isnothing(parsed["crunch-coefficients"]) && parsed["fast"]
+    if !isempty(parsed["crunch-coefficients"]) && parsed["fast"]
         error("--fast and --crunch-coefficients are mutually exclusive")
     end
     return parsed
@@ -112,9 +112,9 @@ function (@main)(raw_args)
         return
     end
 
-    if !isnothing(args["crunch-coefficients"])
+    if !isempty(args["crunch-coefficients"])
         coefs = args["crunch-coefficients"]
-        @info "Using in each worker the provided crunching coefficients: $coefs"
+        @info "Using provided CPU-crunching coefficients: $coefs"
         crunch_coefficients = Dagger.@shard coefs
     else
         crunch_coefficients = FrameworkDemo.calibrate_crunch(; fast = fast)
