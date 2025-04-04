@@ -132,6 +132,17 @@ function (@main)(raw_args)
                                                    event_count = warmup_count,
                                                    max_concurrent = max_concurrent,
                                                    crunch_coefficients = crunch_coefficients)
+        if tracing_required
+            trace = FrameworkDemo.fetch_trace!()
+            for format in trace_formats
+                path = args["trace-$format"]
+                if !isnothing(path)
+                    base, ext = splitext(path)
+                    warmup_path = base * "_warmup" * ext
+                    FrameworkDemo.save_trace(trace, warmup_path, Symbol(format))
+                end
+            end
+        end
     end
 
     @info "Pipeline: processing $event_count events"
