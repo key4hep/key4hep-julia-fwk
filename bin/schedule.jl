@@ -17,6 +17,11 @@ function parse_args(raw_args)
         arg_type = String
         required = true
 
+        "--warmup-count"
+        help = "Number of events to be processed as a warm up before the actual run"
+        arg_type = Int
+        default = 0
+
         "--event-count"
         help = "Number of events to be processed"
         arg_type = Int
@@ -99,6 +104,7 @@ function (@main)(raw_args)
 
     graph = FrameworkDemo.parse_graphml(args["data-flow"])
     data_flow = FrameworkDemo.mockup_dataflow(graph)
+    warmup_count = args["warmup-count"]
     event_count = args["event-count"]
     max_concurrent = args["max-concurrent"]
     fast = args["fast"]
@@ -120,6 +126,15 @@ function (@main)(raw_args)
         crunch_coefficients = FrameworkDemo.calibrate_crunch(; fast = fast)
     end
 
+    if warmup_count > 0
+        @info "Warm up: processing $warmup_count events"
+        @time "Warm up" FrameworkDemo.run_pipeline(data_flow;
+                                                   event_count = warmup_count,
+                                                   max_concurrent = max_concurrent,
+                                                   crunch_coefficients = crunch_coefficients)
+    end
+
+    @info "Pipeline: processing $event_count events"
     @time "Pipeline execution" FrameworkDemo.run_pipeline(data_flow;
                                                           event_count = event_count,
                                                           max_concurrent = max_concurrent,
