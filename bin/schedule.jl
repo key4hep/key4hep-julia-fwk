@@ -72,7 +72,7 @@ function parse_args(raw_args)
         arg_type = Float64
         nargs = 2
 
-        "--timing-file"
+        "--save-timing"
         help = "Output the timing information. Must be a csv file"
         arg_type = String
 
@@ -217,8 +217,8 @@ function (@main)(raw_args)
         println(select(df, Not([:threads, :event_count, :max_concurrent, :coefs])))
     end
 
-    if !isnothing(args["timing-file"])
-        path = args["timing-file"]
+    if !isnothing(args["save-timing"])
+        path = args["save-timing"]
         CSV.write(path, df)
         @info "Written timing information to $path"
     end
