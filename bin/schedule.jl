@@ -5,6 +5,9 @@ using Dagger
 using ArgParse
 using FrameworkDemo
 using Logging
+using DataFrames
+using CSV
+using Printf
 
 const trace_formats = ["graph", "chrome", "gantt", "raw"]
 
@@ -68,6 +71,15 @@ function parse_args(raw_args)
         help = "Set the CPU-crunching coefficients manually. Must be a 2-element vector. Each process will use the same values. Conflicts with --fast"
         arg_type = Float64
         nargs = 2
+
+        "--timing-file"
+        help = "Output the timing information. Must be a csv file"
+        arg_type = String
+
+        "--trials"
+        help = "Run the pipeline N times"
+        arg_type = Int
+        default = 1
     end
 
     parsed = ArgParse.parse_args(raw_args, s)
@@ -86,6 +98,45 @@ function disable_logging(level_str::AbstractString)
     isnothing(level) &&
         error("Invalid log level: $level_str. Choose from debug, info, warn, error.")
     Logging.disable_logging(level) # global setting, named logging levels differ by 1000
+end
+
+function measure_pipeline(data_flow,
+                          event_count,
+                          max_concurrent,
+                          crunch_coefficients)
+    @info "Pipeline: processing $event_count events"
+    stats = @timed FrameworkDemo.run_pipeline(data_flow;
+                                              event_count = event_count,
+                                              max_concurrent = max_concurrent,
+                                              crunch_coefficients = crunch_coefficients)
+    msg = @sprintf("Pipeline (throughput %.2f events/s)", event_count/stats.time)
+    print_timing(msg, stats)
+    return stats
+end
+
+function print_timing(message, stats)
+    Base.time_print(stdout, stats.time * 1e9, stats.gcstats.allocd,
+                    stats.gcstats.total_time,
+                    Base.gc_alloc_count(stats.gcstats), stats.lock_conflicts,
+                    stats.compile_time * 1e9,
+                    stats.recompile_time * 1e9, true; msg = message)
+end
+
+function timings_to_df(stats, event_count, max_concurrent, coefs_shard)
+    df = DataFrame(stats)
+    transform!(df, :gcstats => ByRow(x -> x.allocd) => :gc_allocd)
+    transform!(df, :gcstats => ByRow(x -> x.total_time) => :gc_total_time)
+    transform!(df, :gcstats => ByRow(x -> Base.gc_alloc_count(x)) => :gc_alloc_count)
+    transform!(df, :time => ByRow(x -> event_count / x) => :throughput)
+    select!(df, Not([:value, :gcstats]))
+    df.threads .= Threads.nthreads()
+    df.event_count .= event_count
+    df.max_concurrent .= max_concurrent
+    coefs_task = Dagger.@spawn identity(coefs_shard)
+    coefs = fetch(coefs_task)
+    coefs = something(coefs, missing)
+    df.coefs .= [coefs for _ in 1:nrow(df)]
+    return df
 end
 
 function (@main)(raw_args)
@@ -145,11 +196,10 @@ function (@main)(raw_args)
         end
     end
 
-    @info "Pipeline: processing $event_count events"
-    @time "Pipeline execution" FrameworkDemo.run_pipeline(data_flow;
-                                                          event_count = event_count,
-                                                          max_concurrent = max_concurrent,
-                                                          crunch_coefficients = crunch_coefficients)
+    # Schedule the pipelines
+    pipeline_stats = [measure_pipeline(data_flow, event_count,
+                                       max_concurrent, crunch_coefficients)
+                      for _ in 1:args["trials"]]
 
     if tracing_required
         trace = FrameworkDemo.fetch_trace!()
@@ -159,6 +209,18 @@ function (@main)(raw_args)
                 FrameworkDemo.save_trace(trace, path, Symbol(format))
             end
         end
+    end
+
+    df = timings_to_df(pipeline_stats, event_count, max_concurrent, crunch_coefficients)
+
+    if args["trials"] > 1
+        println(select(df, Not([:threads, :event_count, :max_concurrent, :coefs])))
+    end
+
+    if !isnothing(args["timing-file"])
+        path = args["timing-file"]
+        CSV.write(path, df)
+        @info "Written timing information to $path"
     end
 
     if length(workers()) > 1

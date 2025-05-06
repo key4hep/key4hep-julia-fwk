@@ -5,6 +5,7 @@ version = "0.1.0"
 
 [deps]
 ArgParse = "c7e460c6-2fb9-53a9-8c5b-16f535851c63"
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 Dagger = "d58978e5-989f-55fb-8d15-ea34adc7bf54"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 Distributed = "8ba89e20-285c-5b6f-9357-94700520ee1b"
@@ -24,6 +25,7 @@ GraphMLReader = {rev = "master", url = "https://github.com/SmalRat/GraphMLReader
 [compat]
 Aqua = "0.8"
 ArgParse = "1.2"
+CSV = "0.10"
 Dagger = "0.18.13"
 DataFrames = "1.6"
 Distributed = "1.11"
