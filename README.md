@@ -32,9 +32,11 @@ using FrameworkDemo
 
 ## Preferences
 
-The [Preferences](https://juliapackaging.github.io/Preferences.jl/stable/) are used to select whether [DistributedNext](https://github.com/JuliaParallel/DistributedNext.jl) (default) or [Distributed](https://github.com/JuliaLang/Distributed.jl) is used.
+The [Preferences](https://juliapackaging.github.io/Preferences.jl/stable/) are used to select whether [DistributedNext](https://github.com/JuliaParallel/DistributedNext.jl) (default) or [Distributed](https://github.com/JuliaLang/Distributed.jl) is used for distributed computing.
 The preferences can be changed with:
 
 ```julia
 julia --project -e "using FrameworkDemo; FrameworkDemo.set_distributed_package!(\"Distributed\")"
 ```
+
+The changes will be stored in `LocalPreferences.toml` in the project directory which overwrites the default preferences in [`Project.toml`](Project.toml).
