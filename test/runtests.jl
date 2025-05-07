@@ -29,6 +29,7 @@ end
     if "all" ∈ ARGS
         include("Aqua.jl")
     end
+    include("preferences.jl")
     include("parsing.jl")
     include("cpu_crunching.jl")
     include("scheduling.jl")
