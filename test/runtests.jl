@@ -1,19 +1,20 @@
+using Test
+
+if abspath(PROGRAM_FILE) == @__FILE__
+    import Pkg
+    try
+        Pkg.test(; test_args = ARGS)
+        exit(0)
+    catch
+        exit(1)
+    end
+end
+
 import Preferences
 if Preferences.load_preference("FrameworkDemo", "distributed-package") == "DistributedNext"
     using DistributedNext
 else
     using Distributed
-end
-using Test
-
-if abspath(PROGRAM_FILE) == @__FILE__
-    if !isnothing(Base.find_package("TestEnv"))
-        import TestEnv
-        TestEnv.activate()
-    else
-        @error "Install TestEnv package for running manually"
-        exit(1)
-    end
 end
 
 @info("Execution environment details",
