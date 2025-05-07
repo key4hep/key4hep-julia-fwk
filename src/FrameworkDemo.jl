@@ -1,10 +1,5 @@
 module FrameworkDemo
-import Preferences
-if Preferences.load_preference("Dagger", "distributed-package") == "DistributedNext"
-    using DistributedNext
-else
-    using Distributed
-end
+
 include("logging.jl")
 include("parsing.jl")
 include("scheduling.jl")

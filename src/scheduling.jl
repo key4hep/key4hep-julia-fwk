@@ -1,5 +1,11 @@
 import Dagger
 using MetaGraphs
+import Preferences
+if Preferences.@load_preference("distributed-package") == "DistributedNext"
+    using DistributedNext
+else
+    using Distributed
+end
 
 abstract type AbstractAlgorithm end
 

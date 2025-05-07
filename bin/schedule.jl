@@ -1,7 +1,7 @@
 #!/usr/bin/env julia
 
 import Preferences
-if Preferences.load_preference("Dagger", "distributed-package") == "DistributedNext"
+if Preferences.@load_preference("distributed-package") == "DistributedNext"
     using DistributedNext
 else
     using Distributed

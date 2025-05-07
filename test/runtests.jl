@@ -1,5 +1,5 @@
 import Preferences
-if Preferences.load_preference("Dagger", "distributed-package") == "DistributedNext"
+if Preferences.load_preference("FrameworkDemo", "distributed-package") == "DistributedNext"
     using DistributedNext
 else
     using Distributed
@@ -21,7 +21,8 @@ end
       n_workers=nworkers(),
       n_procs=nprocs(),
       n_threads=Threads.nthreads(),
-      distrbuted_package=Preferences.load_preference("Dagger", "distributed-package"),
+      distributed_package=Preferences.load_preference("FrameworkDemo",
+                                                      "distributed-package"),
       test_args=repr(ARGS))
 
 @testset verbose=true "FrameworkDemo.jl" begin
