@@ -59,9 +59,12 @@ test = ["Aqua", "Logging", "Test"]
 
 [preferences.Dagger]
 distributed-package = "DistributedNext"
+
 [preferences.FrameworkDemo]
 distributed-package = "DistributedNext"
+
 [preferences.MemPool]
 distributed-package = "DistributedNext"
+
 [preferences.TimespanLogging]
 distributed-package = "DistributedNext"
