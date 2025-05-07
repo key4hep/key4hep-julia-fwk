@@ -31,3 +31,6 @@ Manifest.toml
 
 # Data/results/output files
 results/
+
+# Local Julia preferences
+LocalPreferences.toml
