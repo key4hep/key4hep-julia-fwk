@@ -5,13 +5,7 @@ function set_distributed_package!(package_name::String)
     if package_name ∉ ("Distributed", "DistributedNext")
         throw(ArgumentError("Invalid distributed package: $(package_name)"))
     end
-    Preferences.set_preferences!("Dagger", "distributed-package" => package_name;
-                                 force = true)
-    Preferences.set_preferences!("MemPool", "distributed-package" => package_name;
-                                 force = true)
-    Preferences.set_preferences!("TimespanLogging", "distributed-package" => package_name;
-                                 force = true)
-    Preferences.set_preferences!("FrameworkDemo", "distributed-package" => package_name;
-                                 force = true)
-    @info("Preferences updated; restart your Julia session to take effect!")
+    Dagger.set_distributed_package!(package_name)
+    Preferences.@set_preferences!("distributed-package" => package_name)
+    @info("Preferences updated, restart your Julia session for this change to take effect")
 end
