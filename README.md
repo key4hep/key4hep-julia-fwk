@@ -29,3 +29,12 @@ or use with REPL:
 ```julia
 using FrameworkDemo
 ```
+
+## Preferences
+
+The [Preferences](https://juliapackaging.github.io/Preferences.jl/stable/) are used to select whether [DistributedNext](https://github.com/JuliaParallel/DistributedNext.jl) (default) or [Distributed](https://github.com/JuliaLang/Distributed.jl) is used.
+The preferences can be changed with:
+
+```julia
+julia --project -e "using FrameworkDemo; FrameworkDemo.set_distributed_package!(\"Distributed\")"
+```
