@@ -1,6 +1,11 @@
 #!/usr/bin/env julia
 
-using Distributed
+import Preferences
+if Preferences.@load_preference("distributed-package") == "DistributedNext"
+    using DistributedNext
+else
+    using Distributed
+end
 using Dagger
 using ArgParse
 using FrameworkDemo
