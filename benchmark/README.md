@@ -53,4 +53,10 @@ The script will run the executable and save the results in a CSV file for each t
 ./benchmark/throughput.sh
 ```
 
-The benchmark can be adjusted by modifying the script. Requires `numactl`
+The benchmark configuration can be adjusted by modifying the script. Requires `numactl`.
+
+A basic set of plots can be drawn from the outputted CSV files with [`benchmark/throughput_vis.jl`](throughput_vis.jl):
+
+```sh
+julia --project=benchmark benchmark/throughput_viz.jl timing_*.csv
+```
