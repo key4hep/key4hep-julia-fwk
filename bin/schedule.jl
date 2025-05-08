@@ -1,7 +1,7 @@
 #!/usr/bin/env julia
 
 import Preferences
-if Preferences.@load_preference("distributed-package") == "DistributedNext"
+if Preferences.load_preference("FrameworkDemo", "distributed-package") == "DistributedNext"
     using DistributedNext
 else
     using Distributed
