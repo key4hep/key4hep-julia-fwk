@@ -25,6 +25,10 @@ function parse_args(args)
         help = "Do not include comparison with linear scaling for throughput"
         action = :store_true
 
+        "--no-gctime"
+        help = "Do not include GC time plot"
+        action = :store_true
+
         "--median"
         help = "Use median instead of minimum for throughput"
         action = :store_true
@@ -39,9 +43,13 @@ function (@main)(args)
     @info "Using metric: $(metric)"
 
     df = vcat(map(file -> DataFrame(CSV.File(file)), parsed_args["input"])...)
-    df.gctime_percent = 100 * df.gctime ./ df.time
+    cols = [:time, :throughput]
+
+    if !parsed_args["no-gctime"]
+        df.gctime_percent = 100 * df.gctime ./ df.time
+        push!(cols, :gctime_percent)
+    end
     gdf = groupby(df, [:threads, :event_count, :max_concurrent])
-    cols = [:time, :throughput, :gctime_percent]
     df = combine(gdf, cols .=> metric .=> (col -> Symbol(col, "_metric")))
     df = sort(df, [:threads, :event_count, :max_concurrent])
     println("DataFrame: ", df)
@@ -77,12 +85,14 @@ function (@main)(args)
     savefig(output_file)
     @info "Saved plot to $output_file"
 
-    output_file = "gc.png"
-    plot(df.threads, df.gctime_percent_metric, label = "GC time",
-         title = "Garbage collection time", xlabel = "Number of threads",
-         ylabel = "GC time (%)", marker = (:circle, 5), linewidth = 3,
-         xguidefonthalign = :right, yguidefontvalign = :top)
-    savefig(output_file)
-    @info "Saved plot to $output_file"
+    if !parsed_args["no-gctime"]
+        output_file = "gc.png"
+        plot(df.threads, df.gctime_percent_metric, label = "GC time",
+             title = "Garbage collection time", xlabel = "Number of threads",
+             ylabel = "GC time (%)", marker = (:circle, 5), linewidth = 3,
+             xguidefonthalign = :right, yguidefontvalign = :top)
+        savefig(output_file)
+        @info "Saved plot to $output_file"
+    end
     return 0
 end
