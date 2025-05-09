@@ -10,7 +10,7 @@ Demonstrator project for HEP event-processing application framework in Julia and
 
 Set-up the project:
 
-```
+```sh
 git clone <path>
 cd key4hep-julia-fwk
 julia --project -e "import Pkg; Pkg.instantiate()"
@@ -20,7 +20,7 @@ julia --project -e "import Pkg; Pkg.instantiate()"
 
 See options for running with an example data flow graph in `data/`:
 
-```
+```sh
 julia --project bin/schedule.jl --help
 ```
 
@@ -35,7 +35,7 @@ using FrameworkDemo
 The [Preferences](https://juliapackaging.github.io/Preferences.jl/stable/) are used to select whether [DistributedNext](https://github.com/JuliaParallel/DistributedNext.jl) (default) or [Distributed](https://github.com/JuliaLang/Distributed.jl) is used for distributed computing.
 The preferences can be changed with:
 
-```julia
+```sh
 julia --project -e "using FrameworkDemo; FrameworkDemo.set_distributed_package!(\"Distributed\")"
 ```
 
