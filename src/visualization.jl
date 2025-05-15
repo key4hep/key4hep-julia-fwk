@@ -52,7 +52,10 @@ function save_trace(trace, path::String, ::Val{:raw})
     end
 end
 
-function get_execution_plan(df::DataFlowGraph)::MetaDiGraph
+"""
+    get_execution_plan(df::DataFlowGraph) -> MetaDiGraph
+"""
+function get_execution_plan(df::DataFlowGraph)
     g = MetaDiGraph()
     for (i, v) in enumerate(df.algorithm_indices)
         add_vertex!(g)
