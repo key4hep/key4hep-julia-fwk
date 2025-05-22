@@ -11,8 +11,7 @@ using MetaGraphs
 
         @test nv(graph) == 7
         @test ne(graph) == 7
-        has_edge(x::String, y::String) = Graphs.has_edge(graph, graph[x, :label],
-                                                         graph[y, :label])
+        has_edge(x, y) = Graphs.has_edge(graph, graph[x, :label], graph[y, :label])
         @test has_edge("ProducerA", "TransformerAB")
         @test has_edge("ProducerBC", "TransformerAB")
         @test has_edge("ProducerBC", "ConsumerBC")
