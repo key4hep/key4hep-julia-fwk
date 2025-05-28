@@ -5,7 +5,7 @@ AFFINITY=0
 THREADS_SEQ="2 4"
 
 THREADS_PER_SLOT=2
-EVENTS_PER_SLOT=2
+EVENTS_PER_SLOT=20
 
 PROJECT="$(dirname $0)/.."
 EXEC="$(dirname $0)/../bin/schedule.jl"
