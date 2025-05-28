@@ -85,6 +85,10 @@ function parse_args(raw_args)
         help = "Run the pipeline N times"
         arg_type = Int
         default = 1
+
+        "--disable-mempool-gc"
+        help = "Disable MemPool automatic GC. Use to reduce the GC time on systems with low memory (laptop)"
+        action = :store_true
     end
 
     parsed = ArgParse.parse_args(raw_args, s)
@@ -149,6 +153,11 @@ function (@main)(raw_args)
 
     if !isnothing(args["disable-logging"])
         disable_logging(args["disable-logging"])
+    end
+
+    if args["disable-mempool-gc"]
+        Dagger.MemPool.MEM_RESERVED[] = 0
+        @info "Disabled MemPool automatic GC"
     end
 
     tracing_required = any(x -> !isnothing(args["trace-$x"]), trace_formats)
