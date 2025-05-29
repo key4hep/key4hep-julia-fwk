@@ -29,3 +29,11 @@ Full simulation of ALLEGRO detector option 1 version 3
 | std:    | 1.19e-03 s |
 
 ![Algorithm execution duration](img/alg_exec_dist.png)
+
+## Critical path
+
+Number of algorithms in critical path: 5  
+Critical path length: 0.00474 s
+
+![Critical path](img/critical_path.svg)
+
