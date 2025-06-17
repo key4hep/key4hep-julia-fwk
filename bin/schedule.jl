@@ -13,6 +13,8 @@ using Logging
 using DataFrames
 using CSV
 using Printf
+using Profile
+using ProfileCanvas
 
 const trace_formats = ["graph", "chrome", "gantt", "raw"]
 
@@ -94,6 +96,14 @@ function parse_args(raw_args)
         "--disable-mempool-gc"
         help = "Disable MemPool automatic GC. Use to reduce the GC time on systems with low memory (laptop)"
         action = :store_true
+
+        "--profile"
+        help = "Output execution profile. Must be a html file"
+        arg_type = String
+
+        "--profile-view"
+        help = "Open the execution profile in a browser or vscode tab if run in vscode REPL."
+        action = :store_true
     end
 
     parsed = ArgParse.parse_args(raw_args, s)
@@ -117,15 +127,31 @@ end
 function measure_pipeline(data_flow,
                           event_count,
                           max_concurrent,
-                          crunch_coefficients)
+                          crunch_coefficients, profile = False)
     @info "Pipeline: processing $event_count events"
-    stats = @timed FrameworkDemo.run_pipeline(data_flow;
-                                              event_count = event_count,
-                                              max_concurrent = max_concurrent,
-                                              crunch_coefficients = crunch_coefficients)
+    stats = @timed pipeline_harness(data_flow, event_count,
+                                    max_concurrent,
+                                    crunch_coefficients, profile)
     msg = @sprintf("Pipeline (throughput %.2f events/s)", event_count/stats.time)
     print_timing(msg, stats)
     return stats
+end
+
+function pipeline_harness(data_flow,
+                          event_count,
+                          max_concurrent,
+                          crunch_coefficients, profile)
+    if profile
+        @profile FrameworkDemo.run_pipeline(data_flow;
+                                            event_count = event_count,
+                                            max_concurrent = max_concurrent,
+                                            crunch_coefficients = crunch_coefficients)
+    else
+        FrameworkDemo.run_pipeline(data_flow;
+                                   event_count = event_count,
+                                   max_concurrent = max_concurrent,
+                                   crunch_coefficients = crunch_coefficients)
+    end
 end
 
 function print_timing(message, stats)
@@ -179,6 +205,14 @@ function (@main)(raw_args)
     event_count = args["event-count"]
     max_concurrent = args["max-concurrent"]
     fast = args["fast"]
+    profile_file = args["profile"]
+    profile_view = args["profile-view"]
+
+    profiling_required = !isnothing(profile_file) || profile_view
+
+    if !isnothing(profiling_required) && warmup_count <= 0
+        @warn "Profiling will include compilation time. Consider adding a warmup to profile pure execution."
+    end
 
     if !isnothing(args["dump-plan"])
         FrameworkDemo.save_execution_plan(data_flow, args["dump-plan"])
@@ -199,10 +233,11 @@ function (@main)(raw_args)
 
     if warmup_count > 0
         @info "Warm up: processing $warmup_count events"
-        @time "Warm up" FrameworkDemo.run_pipeline(data_flow;
-                                                   event_count = warmup_count,
-                                                   max_concurrent = max_concurrent,
-                                                   crunch_coefficients = crunch_coefficients)
+        @profile @time "Warm up" pipeline_harness(data_flow,
+                                                  warmup_count,
+                                                  max_concurrent,
+                                                  crunch_coefficients,
+                                                  profiling_required)
         if tracing_required
             trace = FrameworkDemo.fetch_trace!()
             for format in trace_formats
@@ -216,9 +251,14 @@ function (@main)(raw_args)
         end
     end
 
+    if profiling_required
+        Profile.clear()
+    end
+
     # Schedule the pipelines
     pipeline_stats = [measure_pipeline(data_flow, event_count,
-                                       max_concurrent, crunch_coefficients)
+                                       max_concurrent, crunch_coefficients,
+                                       profiling_required)
                       for _ in 1:args["trials"]]
 
     if tracing_required
@@ -241,6 +281,21 @@ function (@main)(raw_args)
         path = args["save-timing"]
         CSV.write(path, df)
         @info "Written timing information to $path"
+    end
+
+    if profiling_required
+        if isnothing(profile_file)
+            profile_file = string(tempname(), ".html")
+        end
+        ProfileCanvas.html_file(profile_file, ProfileCanvas.view())
+        @info "Written profile to $profile_file"
+        if profile_view
+            if isdefined(Main, :view_profile)
+                view_profile()
+            else
+                run(`xdg-open $profile_file`)
+            end
+        end
     end
 
     if length(workers()) > 1
