@@ -9,4 +9,5 @@
         "editor.rulers": [92],
         "files.eol": "\n"
     },
+    "julia.NumThreads": "auto"
 }
