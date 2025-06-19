@@ -6,6 +6,7 @@ if Preferences.@load_preference("distributed-package") == "DistributedNext"
 else
     using Distributed
 end
+import NVTX
 
 abstract type AbstractAlgorithm end
 
@@ -23,9 +24,9 @@ struct BoundAlgorithm{T <: AbstractAlgorithm}
     event_number::Int
 end
 
-function (algorithm::BoundAlgorithm)(data...; coefficients::Union{Vector{Float64}, Missing})
+NVTX.@annotate get_name(algorithm) function (algorithm::BoundAlgorithm)(data...; coefficients::Union{Vector{Float64}, Missing})
     return algorithm.alg(data...; event_number = algorithm.event_number,
-                         coefficients = coefficients)
+                        coefficients = coefficients)
 end
 
 function get_name(alg::BoundAlgorithm)
