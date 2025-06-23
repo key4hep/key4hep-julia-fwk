@@ -26,9 +26,10 @@ struct BoundAlgorithm{T <: AbstractAlgorithm}
     event_number::Int
 end
 
-NVTX.@annotate get_name(algorithm) color=nvtx_color[mod1(algorithm.event_number,32)] payload=algorithm.event_number function (algorithm::BoundAlgorithm)(data...;
-                                                                        coefficients::Union{Vector{Float64},
-                                                                                            Missing})
+NVTX.@annotate get_name(algorithm) color=nvtx_color[mod1(algorithm.event_number,
+                                                         length(nvtx_color))] payload=algorithm.event_number function (algorithm::BoundAlgorithm)(data...;
+                                                                                                                                                  coefficients::Union{Vector{Float64},
+                                                                                                                                                                      Missing})
     return algorithm.alg(data...; event_number = algorithm.event_number,
                          coefficients = coefficients)
 end
