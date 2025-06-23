@@ -8,6 +8,8 @@ else
 end
 import NVTX
 
+nvtx_color = Colors.distinguishable_colors(32)
+
 abstract type AbstractAlgorithm end
 
 function (alg::AbstractAlgorithm)(args...; event_number::Int,
@@ -24,7 +26,7 @@ struct BoundAlgorithm{T <: AbstractAlgorithm}
     event_number::Int
 end
 
-NVTX.@annotate get_name(algorithm) function (algorithm::BoundAlgorithm)(data...;
+NVTX.@annotate get_name(algorithm) color=nvtx_color[mod1(algorithm.event_number,32)] payload=algorithm.event_number function (algorithm::BoundAlgorithm)(data...;
                                                                         coefficients::Union{Vector{Float64},
                                                                                             Missing})
     return algorithm.alg(data...; event_number = algorithm.event_number,
