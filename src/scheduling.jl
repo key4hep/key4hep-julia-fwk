@@ -6,6 +6,10 @@ if Preferences.@load_preference("distributed-package") == "DistributedNext"
 else
     using Distributed
 end
+import NVTX
+import Colors
+
+const nvtx_colors = Colors.distinguishable_colors(32)
 
 abstract type AbstractAlgorithm end
 
@@ -23,7 +27,10 @@ struct BoundAlgorithm{T <: AbstractAlgorithm}
     event_number::Int
 end
 
-function (algorithm::BoundAlgorithm)(data...; coefficients::Union{Vector{Float64}, Missing})
+NVTX.@annotate get_name(algorithm) color=nvtx_colors[mod1(algorithm.event_number,
+                                                          length(nvtx_colors))] payload=algorithm.event_number function (algorithm::BoundAlgorithm)(data...;
+                                                                                                                                                    coefficients::Union{Vector{Float64},
+                                                                                                                                                                        Missing})
     return algorithm.alg(data...; event_number = algorithm.event_number,
                          coefficients = coefficients)
 end
