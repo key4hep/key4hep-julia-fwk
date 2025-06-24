@@ -101,14 +101,21 @@ function parse_args(raw_args)
         help = "Output execution profile. Must be a html file"
         arg_type = String
 
+        "--profile-walltime"
+        help = "Use wall-time profiler. Requires julia 1.12 or later"
+        action = :store_true
+
         "--profile-view"
-        help = "Open the execution profile in a browser or vscode tab if run in vscode REPL."
+        help = "Open the execution profile in a browser or vscode tab if run in vscode REPL"
         action = :store_true
     end
 
     parsed = ArgParse.parse_args(raw_args, s)
     if !isempty(parsed["crunch-coefficients"]) && parsed["fast"]
         error("--fast and --crunch-coefficients are mutually exclusive")
+    end
+    if parsed["profile-walltime"] && VERSION < v"1.12-"
+        error("--profile-walltime requires julia 1.12 or later")
     end
     return parsed
 end
@@ -137,21 +144,46 @@ function measure_pipeline(data_flow,
     return stats
 end
 
+function get_profile_mode(args)
+    if args["profile-walltime"]
+        return Val{:profile_walltime}()
+    elseif !isnothing(args["profile"]) || args["profile-view"]
+        return Val{:profile}()
+    else
+        return nothing
+    end
+end
+
 function pipeline_harness(data_flow,
                           event_count,
                           max_concurrent,
-                          crunch_coefficients, profile)
-    if profile
-        @profile FrameworkDemo.run_pipeline(data_flow;
-                                            event_count = event_count,
-                                            max_concurrent = max_concurrent,
-                                            crunch_coefficients = crunch_coefficients)
-    else
-        FrameworkDemo.run_pipeline(data_flow;
-                                   event_count = event_count,
-                                   max_concurrent = max_concurrent,
-                                   crunch_coefficients = crunch_coefficients)
+                          crunch_coefficients, ::Val{:profile})
+    @profile FrameworkDemo.run_pipeline(data_flow;
+                                        event_count = event_count,
+                                        max_concurrent = max_concurrent,
+                                        crunch_coefficients = crunch_coefficients)
+end
+
+@static if VERSION >= v"1.12-"
+    function pipeline_harness(data_flow,
+                              event_count,
+                              max_concurrent,
+                              crunch_coefficients, ::Val{:profile_walltime})
+        @profile_walltime FrameworkDemo.run_pipeline(data_flow;
+                                                     event_count = event_count,
+                                                     max_concurrent = max_concurrent,
+                                                     crunch_coefficients = crunch_coefficients)
     end
+end
+
+function pipeline_harness(data_flow,
+                          event_count,
+                          max_concurrent,
+                          crunch_coefficients, ::Nothing)
+    FrameworkDemo.run_pipeline(data_flow;
+                               event_count = event_count,
+                               max_concurrent = max_concurrent,
+                               crunch_coefficients = crunch_coefficients)
 end
 
 function print_timing(message, stats)
@@ -205,12 +237,10 @@ function (@main)(raw_args)
     event_count = args["event-count"]
     max_concurrent = args["max-concurrent"]
     fast = args["fast"]
-    profile_file = args["profile"]
-    profile_view = args["profile-view"]
 
-    profiling_required = !isnothing(profile_file) || profile_view
+    profile_mode = get_profile_mode(args)
 
-    if !isnothing(profiling_required) && warmup_count <= 0
+    if !isnothing(profile_mode) && warmup_count <= 0
         @warn "Profiling will include compilation time. Consider adding a warmup to profile pure execution."
     end
 
@@ -237,7 +267,7 @@ function (@main)(raw_args)
                                                   warmup_count,
                                                   max_concurrent,
                                                   crunch_coefficients,
-                                                  profiling_required)
+                                                  profile_mode)
         if tracing_required
             trace = FrameworkDemo.fetch_trace!()
             for format in trace_formats
@@ -251,14 +281,14 @@ function (@main)(raw_args)
         end
     end
 
-    if profiling_required
+    if !isnothing(profile_mode)
         Profile.clear()
     end
 
     # Schedule the pipelines
     pipeline_stats = [measure_pipeline(data_flow, event_count,
                                        max_concurrent, crunch_coefficients,
-                                       profiling_required)
+                                       profile_mode)
                       for _ in 1:args["trials"]]
 
     if tracing_required
@@ -283,13 +313,14 @@ function (@main)(raw_args)
         @info "Written timing information to $path"
     end
 
-    if profiling_required
+    if !isnothing(profile_mode)
+        profile_file = args["profile"]
         if isnothing(profile_file)
             profile_file = string(tempname(), ".html")
         end
         ProfileCanvas.html_file(profile_file, ProfileCanvas.view())
         @info "Written profile to $profile_file"
-        if profile_view
+        if args["profile-view"]
             if isdefined(Main, :view_profile)
                 view_profile()
             else
