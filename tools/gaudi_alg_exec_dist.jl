@@ -77,7 +77,7 @@ function (@main)(args)
         durations = durations_from_json(input_file)
     else
         @error "Unsupported file extension: $ext"
-        return
+        return 1
     end
 
     n = length(durations)
@@ -131,4 +131,5 @@ function (@main)(args)
               xguidefonthalign = :right, yguidefontvalign = :top)
     savefig(output_file)
     @info "Histogram saved to $output_file"
+    return
 end

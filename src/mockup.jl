@@ -34,7 +34,10 @@ function get_name(alg::MockupAlgorithm)
     return alg.name
 end
 
-function mockup_dataflow(graph::MetaDiGraph)::DataFlowGraph
+"""
+    mockup_dataflow(graph::MetaDiGraph) -> DataFlowGraph
+"""
+function mockup_dataflow(graph::MetaDiGraph)
     data_flow = DataFlowGraph(graph)
     for i in data_flow.algorithm_indices
         alg = MockupAlgorithm(data_flow, i)

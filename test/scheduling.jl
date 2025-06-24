@@ -62,7 +62,7 @@ end
         return deepcopy(id_map)
     end
 
-    function get_tid(node_id::String)::Int
+    function get_tid(node_id::String)
         task = FrameworkDemo.get_result(event, graph[node_id, :node_id])
         return task_to_tid[task.uid]
     end

@@ -11,7 +11,10 @@ function encode_ids!(g)
     end
 end
 
-function parse_graphml(filename::String)::MetaDiGraph
+"""
+    parse_graphml(filename::String) -> MetaDiGraph
+"""
+function parse_graphml(filename::String)
     g = GraphMLReader.loadgraphml(filename, "G")
     encode_ids!(g)
     return g

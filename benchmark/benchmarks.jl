@@ -2,8 +2,8 @@ using FrameworkDemo
 using BenchmarkTools
 using Plots
 
-SUITE = BenchmarkGroup()
-result_processors = Function[]
+const SUITE = BenchmarkGroup()
+const result_processors = Function[]
 
 include("suite/cpu_crunching.jl")
 

@@ -24,12 +24,6 @@ See options for running with an example data flow graph in `data/`:
 julia --project bin/schedule.jl --help
 ```
 
-or use with REPL:
-
-```julia
-using FrameworkDemo
-```
-
 ## Preferences
 
 The [Preferences](https://juliapackaging.github.io/Preferences.jl/stable/) are used to select whether [DistributedNext](https://github.com/JuliaParallel/DistributedNext.jl) (default) or [Distributed](https://github.com/JuliaLang/Distributed.jl) is used for distributed computing.

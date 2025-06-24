@@ -29,7 +29,10 @@ function benchmark_prime(n::Int)
     return Δt
 end
 
-function calculate_coefficients(min = 1000, max = 200_000)::Vector{Float64}
+"""
+    calculate_coefficients(min, max) -> Vector{Float64}
+"""
+function calculate_coefficients(min = 1000, max = 200_000)
     n_max = [min, max]
     t_average = benchmark_prime.(n_max)
 

@@ -232,4 +232,5 @@ function (@main)(raw_args)
         rmprocs!(Dagger.Sch.eager_context(), workers())
         workers() |> rmprocs |> wait
     end
+    return
 end

@@ -94,5 +94,5 @@ function (@main)(args)
         savefig(output_file)
         @info "Saved plot to $output_file"
     end
-    return 0
+    return
 end

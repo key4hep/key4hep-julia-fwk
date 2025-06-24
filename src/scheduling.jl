@@ -50,7 +50,10 @@ struct DataFlowGraph
     end
 end
 
-function get_algorithm(data_flow::DataFlowGraph, index::Int)::AbstractAlgorithm
+"""
+    get_algorithm(data_flow::DataFlowGraph, index::Int) -> AbstractAlgorithm
+"""
+function get_algorithm(data_flow::DataFlowGraph, index::Int)
     return get_prop(data_flow.graph, index, :algorithm)
 end
 
@@ -63,11 +66,17 @@ struct Event
     end
 end
 
+"""
+    put_result!(event::Event, index::Int, result::Dagger.DTask) -> Dagger.DTask
+"""
 function put_result!(event::Event, index::Int, result::Dagger.DTask)
     return event.store[index] = result
 end
 
-function get_result(event::Event, index::Int)::Dagger.DTask
+"""
+    get_result(event::Event, index::Int) -> Dagger.DTask
+"""
+function get_result(event::Event, index::Int)
     return event.store[index]
 end
 
@@ -117,8 +126,10 @@ function schedule_graph!(event::Event, coefficients::Union{Dagger.Shard, Nothing
     return terminating_results
 end
 
-function calibrate_crunch(min::Int = 1000, max::Int = 200_000;
-                          fast::Bool = false)::Union{Dagger.Shard, Nothing}
+"""
+    calibrate_crunch(min::Int = 1000, max::Int = 200_000; fast::Bool = false) -> Union{Dagger.Shard, Nothing}
+"""
+function calibrate_crunch(min::Int = 1000, max::Int = 200_000; fast::Bool = false)
     return fast ? nothing : Dagger.@shard calculate_coefficients(min, max)
 end
 
