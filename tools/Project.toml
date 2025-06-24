@@ -2,7 +2,10 @@
 ArgParse = "c7e460c6-2fb9-53a9-8c5b-16f535851c63"
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
 GraphMLReader = "8e6830a9-644c-4485-8539-40ee18e3ca8c"
+GraphViz = "f526b714-d49f-11e8-06ff-31ed36ee7ee0"
+Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
 JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
 JuliaFormatter = "98e50ef6-434e-11e9-1051-2b60c6c9e899"
 MetaGraphs = "626554b9-1ddb-594c-aa3c-2596fe9399a5"
@@ -11,13 +14,16 @@ Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 
 [sources]
-GraphMLReader = {rev = "master", url = "https://github.com/SmalRat/GraphMLReader.jl"}
+GraphMLReader = {rev = "master", url = "https://github.com/m-fila/GraphMLReader.jl"}
 
 [compat]
 ArgParse = "1.2"
 CSV = "0.10"
 DataFrames = "1.6"
+FileIO = "1.16"
 GraphMLReader = "0.1"
+Graphs = "1.10"
+GraphViz = "0.2"
 JuliaFormatter = "1"
 MetaGraphs = "0.7"
 Plots = "1.40"
