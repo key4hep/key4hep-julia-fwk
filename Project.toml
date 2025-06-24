@@ -22,7 +22,7 @@ Preferences = "21216c6a-2e73-6563-6e65-726566657250"
 Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 
 [sources]
-GraphMLReader = {rev = "master", url = "https://github.com/SmalRat/GraphMLReader.jl"}
+GraphMLReader = {rev = "master", url = "https://github.com/m-fila/GraphMLReader.jl"}
 
 [compat]
 Aqua = "0.8"
