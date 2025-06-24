@@ -158,7 +158,7 @@ function (@main)(raw_args)
         @info "Enabled tracing"
     end
 
-    graph = FrameworkDemo.parse_graphml(args["data-flow"])
+    graph = FrameworkDemo.parse_graphml(args["data-flow"], 1.0) #Added Float64 to parse_graphml (duration_scale::Float64)
     data_flow = FrameworkDemo.mockup_dataflow(graph)
     warmup_count = args["warmup-count"]
     event_count = args["event-count"]
