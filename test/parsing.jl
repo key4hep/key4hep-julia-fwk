@@ -44,7 +44,7 @@ using MetaGraphs
 end
 
 @testset "Duration scaling" begin
-    const SCALE = 2.5
+    SCALE = 2.5
 
     g1 = FrameworkDemo.parse_graphml(path; duration_scale = 1.0)
     g2 = FrameworkDemo.parse_graphml(path; duration_scale = SCALE)
