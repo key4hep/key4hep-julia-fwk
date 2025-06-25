@@ -41,4 +41,25 @@ using MetaGraphs
     @test has_edge(graph, graph["9", :original_id], graph["3", :original_id])
     @test has_edge(graph, graph["10", :original_id], graph["4", :original_id])
     @test has_edge(graph, graph["11", :original_id], graph["5", :original_id])
+
+end
+
+
+@testset "Duration scaling" begin
+    const SCALE = 2.5
+
+    g1 = FrameworkDemo.parse_graphml(path; duration_scale = 1.0)
+    g2 = FrameworkDemo.parse_graphml(path; duration_scale = SCALE)
+
+    set_indexing_prop!(g1, :original_id)
+    set_indexing_prop!(g2, :original_id)
+
+    algo = filter_vertices(g1, :type, "Algorithm")
+
+    for v in algo
+        rt1 = get_prop(g1, v, :runtime_average_s)
+        rt2 = get_prop(g2, v, :runtime_average_s)
+
+        @test abs(rt2 - rt1 * SCALE) < 1e-12
+    end
 end

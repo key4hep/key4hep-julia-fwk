@@ -15,12 +15,10 @@ function parse_graphml(filename::String, duration_scale::Float64)::MetaDiGraph
     g = GraphMLReader.loadgraphml(filename, "G")
     encode_ids!(g)
 
-    for v in vertices(g)
-        node_type = get_prop(g, v, :type, "")
-        if node_type == "Algorithm"
-            old_rt = get_prop(g, v, :runtime_average_s, 0.0)
-            set_prop!(g, v, :runtime_average_s, old_rt * duration_scale)
-        end
+    algo_vertices = filter_vertices(g, :type, "Algorithm")
+    for v in algo_vertices
+        old_rt = get_prop(g, v, :runtime_average_s, 0.0)
+        set_prop!(g, v, :runtime_average_s, old_rt * duration_scale)
     end
     return g
 end

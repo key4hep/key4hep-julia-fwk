@@ -85,6 +85,11 @@ function parse_args(raw_args)
         help = "Run the pipeline N times"
         arg_type = Int
         default = 1
+
+        "--duration-scale"
+        help = "Scale factor to apply to all algoriths"
+        arg_type = Float64
+        default = 1.0
     end
 
     parsed = ArgParse.parse_args(raw_args, s)
@@ -158,7 +163,7 @@ function (@main)(raw_args)
         @info "Enabled tracing"
     end
 
-    graph = FrameworkDemo.parse_graphml(args["data-flow"], 1.0) #Added Float64 to parse_graphml (duration_scale::Float64)
+    graph = FrameworkDemo.parse_graphml(args["data-flow"], args["duration-scale"])
     data_flow = FrameworkDemo.mockup_dataflow(graph)
     warmup_count = args["warmup-count"]
     event_count = args["event-count"]
