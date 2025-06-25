@@ -87,7 +87,7 @@ function parse_args(raw_args)
         default = 1
 
         "--duration-scale"
-        help = "Scale factor to apply to all algoriths"
+        help = "Scale factor to apply to the duration of each algorithm"
         arg_type = Float64
         default = 1.0
     end
@@ -163,7 +163,8 @@ function (@main)(raw_args)
         @info "Enabled tracing"
     end
 
-    graph = FrameworkDemo.parse_graphml(args["data-flow"], args["duration-scale"])
+    graph = FrameworkDemo.parse_graphml(args["data-flow"],
+                                        duration_scale = args["duration-scale"])
     data_flow = FrameworkDemo.mockup_dataflow(graph)
     warmup_count = args["warmup-count"]
     event_count = args["event-count"]
