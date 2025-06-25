@@ -11,8 +11,13 @@ function encode_ids!(g)
     end
 end
 
-function parse_graphml(filename::String)::MetaDiGraph
+function parse_graphml(filename::String; duration_scale::Float64 = 1.0)::MetaDiGraph
     g = GraphMLReader.loadgraphml(filename, "G")
     encode_ids!(g)
+
+    for v in filter_vertices(g, :type, "Algorithm")
+        old_rt = get_prop(g, v, :runtime_average_s, 0.0)
+        set_prop!(g, v, :runtime_average_s, old_rt * duration_scale)
+    end
     return g
 end

@@ -7,12 +7,7 @@ struct MockupAlgorithm <: AbstractAlgorithm
     function MockupAlgorithm(data_flow::DataFlowGraph, vertex_id::Int)
         graph = data_flow.graph
         name = get_prop(graph, vertex_id, :node_id)
-        if has_prop(graph, vertex_id, :runtime_average_s)
-            runtime = get_prop(graph, vertex_id, :runtime_average_s)
-        else
-            runtime = mockup_alg_default_runtime_s
-            @warn "Runtime not provided for $name algorithm. Using default value $runtime"
-        end
+        runtime = get_prop(graph, vertex_id, :runtime_average_s)
         inputs = length(inneighbors(graph, vertex_id))
         new(name, runtime, inputs)
     end
