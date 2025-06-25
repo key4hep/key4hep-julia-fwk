@@ -41,9 +41,7 @@ using MetaGraphs
     @test has_edge(graph, graph["9", :original_id], graph["3", :original_id])
     @test has_edge(graph, graph["10", :original_id], graph["4", :original_id])
     @test has_edge(graph, graph["11", :original_id], graph["5", :original_id])
-
 end
-
 
 @testset "Duration scaling" begin
     const SCALE = 2.5
