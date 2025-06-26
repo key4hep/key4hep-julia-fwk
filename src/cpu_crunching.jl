@@ -18,7 +18,7 @@ function find_primes(n_max::Int)
         end
     end
 
-    return primes[end]
+    return largest_prime
 end
 
 function benchmark_prime(n::Int)
