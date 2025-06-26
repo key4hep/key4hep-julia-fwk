@@ -1,7 +1,7 @@
 # meant to be consistently inefficient for crunching purposes.
 # just returns the largest prime less than `n_max`
 function find_primes(n_max::Int)
-    primes = [2]
+    largest_prime = 2
 
     for n in 3:n_max
         isPrime = true
@@ -14,7 +14,7 @@ function find_primes(n_max::Int)
         end
 
         if isPrime
-            push!(primes, n)
+            largest_prime = n
         end
     end
 
