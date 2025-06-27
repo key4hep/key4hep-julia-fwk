@@ -13,6 +13,8 @@ using Logging
 using DataFrames
 using CSV
 using Printf
+using Profile
+using ProfileCanvas
 
 const trace_formats = ["graph", "chrome", "gantt", "raw"]
 
@@ -90,11 +92,26 @@ function parse_args(raw_args)
         help = "Scale factor to apply to the duration of each algorithm"
         arg_type = Float64
         default = 1.0
+
+        "--profile"
+        help = "Output execution profile. Must be a html file"
+        arg_type = String
+
+        "--profile-walltime"
+        help = "Use wall-time profiler. Requires julia 1.12 or later"
+        action = :store_true
+
+        "--profile-view"
+        help = "Open the execution profile in a browser or vscode tab if run in vscode REPL"
+        action = :store_true
     end
 
     parsed = ArgParse.parse_args(raw_args, s)
     if !isempty(parsed["crunch-coefficients"]) && parsed["fast"]
         error("--fast and --crunch-coefficients are mutually exclusive")
+    end
+    if parsed["profile-walltime"] && VERSION < v"1.12-"
+        error("--profile-walltime requires julia 1.12 or later")
     end
     return parsed
 end
@@ -113,15 +130,56 @@ end
 function measure_pipeline(data_flow,
                           event_count,
                           max_concurrent,
-                          crunch_coefficients)
+                          crunch_coefficients, profile = False)
     @info "Pipeline: processing $event_count events"
-    stats = @timed FrameworkDemo.run_pipeline(data_flow;
-                                              event_count = event_count,
-                                              max_concurrent = max_concurrent,
-                                              crunch_coefficients = crunch_coefficients)
+    stats = @timed pipeline_harness(data_flow, event_count,
+                                    max_concurrent,
+                                    crunch_coefficients, profile)
     msg = @sprintf("Pipeline (throughput %.2f events/s)", event_count/stats.time)
     print_timing(msg, stats)
     return stats
+end
+
+function get_profile_mode(args)
+    if args["profile-walltime"]
+        return Val{:profile_walltime}()
+    elseif !isnothing(args["profile"]) || args["profile-view"]
+        return Val{:profile}()
+    else
+        return nothing
+    end
+end
+
+function pipeline_harness(data_flow,
+                          event_count,
+                          max_concurrent,
+                          crunch_coefficients, ::Val{:profile})
+    @profile FrameworkDemo.run_pipeline(data_flow;
+                                        event_count = event_count,
+                                        max_concurrent = max_concurrent,
+                                        crunch_coefficients = crunch_coefficients)
+end
+
+@static if VERSION >= v"1.12-"
+    function pipeline_harness(data_flow,
+                              event_count,
+                              max_concurrent,
+                              crunch_coefficients, ::Val{:profile_walltime})
+        @profile_walltime FrameworkDemo.run_pipeline(data_flow;
+                                                     event_count = event_count,
+                                                     max_concurrent = max_concurrent,
+                                                     crunch_coefficients = crunch_coefficients)
+    end
+end
+
+function pipeline_harness(data_flow,
+                          event_count,
+                          max_concurrent,
+                          crunch_coefficients, ::Nothing)
+    FrameworkDemo.run_pipeline(data_flow;
+                               event_count = event_count,
+                               max_concurrent = max_concurrent,
+                               crunch_coefficients = crunch_coefficients)
 end
 
 function print_timing(message, stats)
@@ -171,6 +229,12 @@ function (@main)(raw_args)
     max_concurrent = args["max-concurrent"]
     fast = args["fast"]
 
+    profile_mode = get_profile_mode(args)
+
+    if !isnothing(profile_mode) && warmup_count <= 0
+        @warn "Profiling will include compilation time. Consider adding a warmup to profile pure execution."
+    end
+
     if !isnothing(args["dump-plan"])
         FrameworkDemo.save_execution_plan(data_flow, args["dump-plan"])
     end
@@ -190,10 +254,11 @@ function (@main)(raw_args)
 
     if warmup_count > 0
         @info "Warm up: processing $warmup_count events"
-        @time "Warm up" FrameworkDemo.run_pipeline(data_flow;
-                                                   event_count = warmup_count,
-                                                   max_concurrent = max_concurrent,
-                                                   crunch_coefficients = crunch_coefficients)
+        @profile @time "Warm up" pipeline_harness(data_flow,
+                                                  warmup_count,
+                                                  max_concurrent,
+                                                  crunch_coefficients,
+                                                  profile_mode)
         if tracing_required
             trace = FrameworkDemo.fetch_trace!()
             for format in trace_formats
@@ -207,9 +272,14 @@ function (@main)(raw_args)
         end
     end
 
+    if !isnothing(profile_mode)
+        Profile.clear()
+    end
+
     # Schedule the pipelines
     pipeline_stats = [measure_pipeline(data_flow, event_count,
-                                       max_concurrent, crunch_coefficients)
+                                       max_concurrent, crunch_coefficients,
+                                       profile_mode)
                       for _ in 1:args["trials"]]
 
     if tracing_required
@@ -232,6 +302,22 @@ function (@main)(raw_args)
         path = args["save-timing"]
         CSV.write(path, df)
         @info "Written timing information to $path"
+    end
+
+    if !isnothing(profile_mode)
+        profile_file = args["profile"]
+        if isnothing(profile_file)
+            profile_file = string(tempname(), ".html")
+        end
+        ProfileCanvas.html_file(profile_file, ProfileCanvas.view())
+        @info "Written profile to $profile_file"
+        if args["profile-view"]
+            if isdefined(Main, :view_profile)
+                view_profile()
+            else
+                run(`xdg-open $profile_file`)
+            end
+        end
     end
 
     if length(workers()) > 1
