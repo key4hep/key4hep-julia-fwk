@@ -8,7 +8,8 @@ function enable_tracing!()
                            taskargmoves = true,
                            taskresult = true,
                            taskuidtotid = true,
-                           tasktochunk = true)
+                           tasktochunk = true,
+                           metrics = false)
 end
 
 function disable_tracing!()
