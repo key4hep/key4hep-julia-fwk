@@ -19,6 +19,7 @@ jobs:
       matrix:
         version:
           - '1'
+          - 'nightly'
         os:
           - ubuntu-latest
         arch:
@@ -26,6 +27,9 @@ jobs:
         test_args:
           - 'no-fast'
           - 'all'
+        exclude:
+          - version: 'nightly'
+            test_args: 'all'
     steps:
       - uses: actions/checkout@v4
       - uses: julia-actions/setup-julia@v2
