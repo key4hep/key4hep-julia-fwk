@@ -134,7 +134,7 @@ end
 function measure_pipeline(data_flow,
                           event_count,
                           max_concurrent,
-                          crunch_coefficients, profile = False)
+                          crunch_coefficients, profile = nothing)
     @info "Pipeline: processing $event_count events"
     stats = @timed pipeline_harness(data_flow, event_count,
                                     max_concurrent,
