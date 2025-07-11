@@ -1,8 +1,8 @@
 using MetaGraphs
-using Base.Threads
 import NVTX
-using Colors
+import Colors
 
+const nvtx_colors = Colors.distinguishable_colors(32)
 nvtx_color = Colors.distinguishable_colors(32)
 
 abstract type AbstractAlgorithm end
@@ -21,9 +21,10 @@ struct BoundAlgorithm{T <: AbstractAlgorithm}
     event_number::Int
 end
 
-NVTX.@annotate get_name(algorithm) color=nvtx_color[mod1(algorithm.event_number, 32)] payload=algorithm.event_number function (algorithm::BoundAlgorithm)(data...;
-                                                                                                                                                          coefficients::Union{Vector{Float64},
-                                                                                                                                                                              Missing})
+NVTX.@annotate get_name(algorithm) color=nvtx_colors[mod1(algorithm.event_number,
+                                                          length(nvtx_colors))] payload=algorithm.event_number function (algorithm::BoundAlgorithm)(data...;
+                                                                                                                                                    coefficients::Union{Vector{Float64},
+                                                                                                                                                                        Missing})
     return algorithm.alg(data...; event_number = algorithm.event_number,
                          coefficients = coefficients)
 end
@@ -36,10 +37,10 @@ struct DataFlowGraph
     graph::MetaDiGraph{Int, Float64}
     algorithm_indices::Vector{Int}
     function DataFlowGraph(graph::MetaDiGraph)
-        algo_vertices = MetaGraphs.filter_vertices(graph, :type, "Algorithm")
+        alg_vertices = MetaGraphs.filter_vertices(graph, :type, "Algorithm")
         sorted_vertices = MetaGraphs.topological_sort(graph)
-        sorted_algo_vertices = intersect(sorted_vertices, algo_vertices)
-        new(graph, sorted_algo_vertices)
+        sorted_alg_vertices = intersect(sorted_vertices, alg_vertices)
+        new(graph, sorted_alg_vertices)
     end
 end
 
