@@ -48,7 +48,6 @@ function get_algorithm(data_flow::DataFlowGraph, index::Int)::AbstractAlgorithm
     return get_prop(data_flow.graph, index, :algorithm)
 end
 
-# removed Dagger.DTask
 struct Event
     data_flow::DataFlowGraph
     store::Dict{Int, Any}
@@ -58,7 +57,6 @@ struct Event
     end
 end
 
-# removed Dagger.DTask
 function put_result!(event::Event, index::Int, result::Any)
     return event.store[index] = result
 end
@@ -71,22 +69,12 @@ function get_results(event::Event, vertices::Vector{Int})
     return get_result.(Ref(event), vertices)
 end
 
-function notify_graph_finalization(notifications::Channel{Int}, graph_id::Int, # RemoteChannel to Channel{Int}
-                                   terminating_results...)
-    @info "Graph $graph_id: all tasks in the graph finished!"
-    put!(notifications, graph_id)
-    @info "Graph $graph_id: notified!"
-end
-
 function is_terminating_alg(graph::AbstractGraph, vertex_id::Int)
     successor_dataobjects = outneighbors(graph, vertex_id)
     is_terminating(vertex) = isempty(outneighbors(graph, vertex))
     all(is_terminating, successor_dataobjects)
 end
 
-#---------------- Removing Dagger from Scheduling ----------------#
-
-# modified schedule_algorithm for threading
 function schedule_algorithm(event::Event, vertex_id::Int,
                             coefficients::Union{Any, Nothing},
                             done_channel::Channel{Tuple{Int, Any}})
@@ -169,9 +157,8 @@ function schedule_graph!(event::Event, coefficients::Union{Any, Nothing})
     # channel to receive completion notifications
     done_channel = Channel{Tuple{Int, Any}}(length(algo_vertices))
 
-    # track active tasks and terminating results
+    # track active tasks
     active = 0
-    terminating_results = []
 
     # spawning a vertex
     function spawn_vertex(vertex_id)
@@ -206,11 +193,6 @@ function schedule_graph!(event::Event, coefficients::Union{Any, Nothing})
             end
         end
 
-        # Track terminating algorithms
-        if is_terminating_alg(graph, vertex_id)
-            push!(terminating_results, result)
-        end
-
         # Check algorithm children to see if they're ready
         for child in children[vertex_id]
             parent_count[child] -= 1
@@ -222,12 +204,9 @@ function schedule_graph!(event::Event, coefficients::Union{Any, Nothing})
     end
 
     close(done_channel)
-
-    return terminating_results
+    return nothing
 end
-#----------------------------------------------#
 
-# removed Dagger.Shard by just using Vector
 function calibrate_crunch(min::Int = 1000, max::Int = 200_000;
                           fast::Bool = false)::Union{Vector{Float64}, Nothing}
     return fast ? nothing : calculate_coefficients(min, max)
@@ -241,34 +220,19 @@ function run_pipeline(data_flow::DataFlowGraph;
     # Create semaphore with max_concurrent permits
     semaphore = Base.Semaphore(max_concurrent)
 
-    # Store all tasks to wait for completion
-    all_tasks = Task[]
-
-    # run graph in a thread with semaphore control
-    function run_graph_with_semaphore(idx::Int)
-        # Acquire semaphore (blocks if all permits taken)
-        Base.acquire(semaphore)
-
-        try
-            @info dispatch_begin_msg(idx)
-            event = Event(data_flow, idx)
-            terminating_results = schedule_graph!(event, crunch_coefficients)
-            @info dispatch_end_msg(idx)
-            return terminating_results
-        finally
-            # Always release semaphore, even if task fails
-            Base.release(semaphore)
+    # Launch ALL events immediately
+    @sync for idx in 1:event_count
+        task = Threads.@spawn begin
+            Base.acquire(semaphore)
+            try
+                @info dispatch_begin_msg(idx)
+                event = Event(data_flow, idx)
+                schedule_graph!(event, crunch_coefficients)
+                @info dispatch_end_msg(idx)
+            finally
+                # Always release semaphore, even if task fails
+                Base.release(semaphore)
+            end
         end
-    end
-
-    # Launch ALL events immediately - semaphore controls concurrency
-    for idx in 1:event_count
-        task = Threads.@spawn run_graph_with_semaphore(idx)
-        push!(all_tasks, task)
-    end
-
-    # Wait for all tasks to complete
-    for task in all_tasks
-        wait(task)
     end
 end
