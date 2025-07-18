@@ -148,7 +148,7 @@ function print_timing(message, stats)
                     stats.recompile_time * 1e9, true; msg = message)
 end
 
-function timings_to_df(stats, event_count, max_concurrent, coefs_shard)
+function timings_to_df(stats, event_count, max_concurrent, coeffs)
     df = DataFrame(stats)
     transform!(df, :gcstats => ByRow(x -> x.allocd) => :gc_allocd)
     transform!(df, :gcstats => ByRow(x -> x.total_time) => :gc_total_time)
@@ -158,10 +158,9 @@ function timings_to_df(stats, event_count, max_concurrent, coefs_shard)
     df.threads .= Threads.nthreads()
     df.event_count .= event_count
     df.max_concurrent .= max_concurrent
-    df.coefs .= [coefs_shard for _ in 1:nrow(df)]
+    df.coefs .= [coeffs for _ in 1:nrow(df)]
     return df
 end
-
 
 function (@main)(raw_args)
     args = parse_args(raw_args)
