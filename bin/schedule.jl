@@ -1,5 +1,3 @@
-#!/usr/bin/env julia
-
 using ArgParse
 using FrameworkDemo
 using Logging
@@ -264,4 +262,10 @@ function (@main)(raw_args)
         end
     end
     return 0
+end
+
+# Entrypoint for juliac
+Base.@ccallable function main(argc::Cint, argv::Ptr{Ptr{UInt8}})::Cint
+    args = [unsafe_string(unsafe_load(argv, i)) for i in 2:argc]
+    return main(args)
 end

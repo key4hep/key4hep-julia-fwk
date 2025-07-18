@@ -29,3 +29,17 @@ or use with REPL:
 ```julia
 using FrameworkDemo
 ```
+
+## Compilation
+
+The runner can be statically compiled with Julia 1.12 and later:
+
+```
+julia make.jl
+```
+
+and then run:
+
+```
+JULIA_NUM_THREADS=<threads> ./frameworkdemo_schedule <options>
+```
