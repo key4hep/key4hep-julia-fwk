@@ -1,5 +1,3 @@
-#!/usr/bin/env julia
-
 import Preferences
 if Preferences.load_preference("FrameworkDemo", "distributed-package") == "DistributedNext"
     using DistributedNext
@@ -333,4 +331,12 @@ function (@main)(raw_args)
         rmprocs!(Dagger.Sch.eager_context(), workers())
         workers() |> rmprocs |> wait
     end
+
+    return 0
+end
+
+# Entrypoint for juliac
+Base.@ccallable function main(argc::Cint, argv::Ptr{Ptr{UInt8}})::Cint
+    args = [unsafe_string(unsafe_load(argv, i)) for i in 2:argc]
+    return main(args)
 end

@@ -30,6 +30,20 @@ or use with REPL:
 using FrameworkDemo
 ```
 
+## Compilation
+
+The runner can be statically compiled with Julia 1.12 and later:
+
+```
+julia make.jl
+```
+
+and then run:
+
+```
+JULIA_NUM_THREADS=<threads> ./bin/frameworkdemo_schedule <options>
+```
+
 ## Preferences
 
 The [Preferences](https://juliapackaging.github.io/Preferences.jl/stable/) are used to select whether [DistributedNext](https://github.com/JuliaParallel/DistributedNext.jl) (default) or [Distributed](https://github.com/JuliaLang/Distributed.jl) is used for distributed computing.
