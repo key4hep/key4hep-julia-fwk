@@ -91,6 +91,21 @@ function parse_args(raw_args)
         arg_type = Float64
         default = 1.0
 
+        "--disable-mempool-gc"
+        help = "Disable MemPool automatic GC. Use to reduce the GC time on systems with low memory (laptop)"
+        action = :store_true
+
+        "--profile"
+        help = "Output execution profile. Must be a html file"
+        arg_type = String
+
+        "--profile-walltime"
+        help = "Use wall-time profiler. Requires julia 1.12 or later"
+        action = :store_true
+
+        "--profile-view"
+        help = "Open the execution profile in a browser or vscode tab if run in vscode REPL"
+        action = :store_true
     end
 
     parsed = ArgParse.parse_args(raw_args, s)
