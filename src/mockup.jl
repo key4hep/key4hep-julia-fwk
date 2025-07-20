@@ -3,26 +3,27 @@ using MetaGraphs
 struct MockupAlgorithm <: AbstractAlgorithm
     name::String
     runtime::Float64
-    input_length::UInt
+    output_length::UInt
+    id::Int
     function MockupAlgorithm(data_flow::DataFlowGraph, vertex_id::Int)
         graph = data_flow.graph
         name = get_prop(graph, vertex_id, :node_id)
         runtime = get_prop(graph, vertex_id, :runtime_average_s)
-        inputs = length(inneighbors(graph, vertex_id))
-        new(name, runtime, inputs)
+        outputs = length(outneighbors(graph, vertex_id))
+        new(name, runtime, outputs, vertex_id)
     end
 end
 
 const mockup_alg_default_runtime_s = 0
 
 function (alg::MockupAlgorithm)(args...; event_number::Int,
-                                coefficients::Union{Vector{Float64}, Missing})
+                                coefficients::Union{Vector{Float64}, Nothing})
     @info "Executing $(alg.name) event $event_number"
     if coefficients isa Vector{Float64}
         crunch_for_seconds(alg.runtime, coefficients)
     end
 
-    return alg.name
+    return fill(alg.id, alg.output_length)
 end
 
 function get_name(alg::MockupAlgorithm)
