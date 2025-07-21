@@ -3,7 +3,6 @@ import NVTX
 import Colors
 
 const nvtx_colors = Colors.distinguishable_colors(32)
-nvtx_color = Colors.distinguishable_colors(32)
 
 abstract type AbstractAlgorithm end
 
@@ -222,7 +221,7 @@ function run_pipeline(data_flow::DataFlowGraph;
 
     # Launch ALL events immediately
     @sync for idx in 1:event_count
-        task = Threads.@spawn begin
+        Threads.@spawn begin
             Base.acquire(semaphore)
             try
                 @info dispatch_begin_msg(idx)
