@@ -3,7 +3,7 @@ using Test
 using Dagger
 using Logging
 
-function run_demo(name::String, coefficients::Union{Dagger.Shard, Nothing})
+function run_demo(name::String, coefficients::Union{Vector{Float64}, Nothing})
     @testset "$name" begin
         println("Running $(name) workflow demo")
         path = joinpath(pkgdir(FrameworkDemo), "data/demo/$(name)/df.graphml")
