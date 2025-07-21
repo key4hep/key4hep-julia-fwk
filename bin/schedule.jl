@@ -135,6 +135,7 @@ function measure_pipeline(data_flow,
                           event_count,
                           max_concurrent,
                           crunch_coefficients, profile = nothing)
+    GC.gc() # clean up previous garbage so it's not cleaned up during pipeline
     @info "Pipeline: processing $event_count events"
     stats = @timed pipeline_harness(data_flow, event_count,
                                     max_concurrent,
