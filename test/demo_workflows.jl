@@ -3,15 +3,15 @@ using Test
 using Dagger
 using Logging
 
-function run_demo(name::String, coefficients::Union{Dagger.Shard, Nothing})
+function run_demo(name::String, coefficients::Union{Vector{Float64}, Nothing})
     @testset "$name" begin
         println("Running $(name) workflow demo")
         path = joinpath(pkgdir(FrameworkDemo), "data/demo/$(name)/df.graphml")
         graph = FrameworkDemo.parse_graphml(path)
         df = FrameworkDemo.mockup_dataflow(graph)
         event = FrameworkDemo.Event(df)
-        @test_logs min_level=Logging.Warn wait.(FrameworkDemo.schedule_graph!(event,
-                                                                              coefficients))
+        @test_logs min_level=Logging.Warn FrameworkDemo.schedule_graph!(event,
+                                                                        coefficients)
     end
 end
 

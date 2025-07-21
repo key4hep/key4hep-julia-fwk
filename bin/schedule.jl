@@ -195,7 +195,7 @@ function print_timing(message, stats)
                     stats.recompile_time * 1e9, true; msg = message)
 end
 
-function timings_to_df(stats, event_count, max_concurrent, coefs_shard)
+function timings_to_df(stats, event_count, max_concurrent, coeffs)
     df = DataFrame(stats)
     transform!(df, :gcstats => ByRow(x -> x.allocd) => :gc_allocd)
     transform!(df, :gcstats => ByRow(x -> x.total_time) => :gc_total_time)
@@ -205,10 +205,7 @@ function timings_to_df(stats, event_count, max_concurrent, coefs_shard)
     df.threads .= Threads.nthreads()
     df.event_count .= event_count
     df.max_concurrent .= max_concurrent
-    coefs_task = Dagger.@spawn identity(coefs_shard)
-    coefs = fetch(coefs_task)
-    coefs = something(coefs, missing)
-    df.coefs .= [coefs for _ in 1:nrow(df)]
+    df.coefs .= [coeffs for _ in 1:nrow(df)]
     return df
 end
 
@@ -255,9 +252,8 @@ function (@main)(raw_args)
     end
 
     if !isempty(args["crunch-coefficients"])
-        coefs = args["crunch-coefficients"]
+        crunch_coefficients = args["crunch-coefficients"]
         @info "Using provided CPU-crunching coefficients: $coefs"
-        crunch_coefficients = Dagger.@shard coefs
     else
         crunch_coefficients = FrameworkDemo.calibrate_crunch(; fast = fast)
     end
