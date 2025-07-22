@@ -116,23 +116,19 @@ function schedule_algorithm(event::Event, vertex_id::Int,
 end
 
 function schedule_graph!(event::Event, coefficients::Union{Any, Nothing})
-    deps = Dict{Int, Int}()
     algo_vertices = event.data_flow.algorithm_indices
+    done_channel = Channel{Tuple{Int, Any}}(length(algo_vertices))  # channel to receive completion notifications
+    algs_in_flight = 0 # number of algorithms currently running
+    deps = Dict{Int, Int}() # map of algorithm vertices to number of dependencies
+
+    # copy number of dependencies or immediately schedule algorithms without dependencies
     for v in algo_vertices
-        deps[v] = get_prop(event.data_flow.graph, v, :deps)
-    end
-
-    # channel to receive completion notifications
-    done_channel = Channel{Tuple{Int, Any}}(length(algo_vertices))
-
-    # track active tasks
-    algs_in_flight = 0
-
-    # spawn all vertices without parents
-    for v in algo_vertices
-        if deps[v] == 0
+        deps_number = get_prop(event.data_flow.graph, v, :deps)
+        if deps_number == 0
             schedule_algorithm(event, v, coefficients, done_channel)
             algs_in_flight += 1
+        else
+            deps[v] = deps_number
         end
     end
 
