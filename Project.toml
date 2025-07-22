@@ -1,6 +1,6 @@
 name = "FrameworkDemo"
 uuid = "cfbf7e84-66d2-421e-b147-9edb7a8672d2"
-authors = ["SmalRat <30555080+SmalRat@users.noreply.github.com>", "Mateusz Jakub Fila <mateusz.jakub.fila@cern.ch>", "hegner <benedikt.hegner@cern.ch>", "Josh Ott <joshott16@gmail.com>"]
+authors = ["SmalRat <30555080+SmalRat@users.noreply.github.com>", "Mateusz Jakub Fila <mateusz.jakub.fila@cern.ch>", "hegner <benedikt.hegner@cern.ch>", "Josh Ott <joshott16@gmail.com>", "Justin <131375482+justinformatik@users.noreply.github.com>"]
 version = "0.1.0"
 
 [deps]
