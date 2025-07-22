@@ -39,6 +39,7 @@ struct DataFlowGraph
         alg_vertices = MetaGraphs.filter_vertices(graph, :type, "Algorithm")
         sorted_vertices = MetaGraphs.topological_sort(graph)
         sorted_alg_vertices = intersect(sorted_vertices, alg_vertices)
+
         # cache number of algorithm dependencies for each algorithms
         # and indices of dependant algorithms
         for v in sorted_alg_vertices
@@ -49,12 +50,13 @@ struct DataFlowGraph
             for data_successor in outneighbors(graph, v)
                 successors = outneighbors(graph, data_successor)
                 append!(successor_algs, successors)
-                for alg in successors
-                    deps = get_prop(graph, alg, :deps)
-                    set_prop!(graph, alg, :deps, deps + 1)
-                end
             end
+            unique!(successor_algs) # remove duplicates - algorithms consuming multiple objects produced by the the same algorithms
             set_prop!(graph, v, :successor_algs, successor_algs)
+            for alg in successor_algs
+                deps = get_prop(graph, alg, :deps)
+                set_prop!(graph, alg, :deps, deps + 1)
+            end
         end
         new(graph, sorted_alg_vertices)
     end
