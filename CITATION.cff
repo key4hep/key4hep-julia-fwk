@@ -32,5 +32,5 @@ authors:
 repository-code: 'https://github.com/key4hep/key4hep-julia-fwk'
 abstract: >-
   Demonstrator project for HEP event-processing application
-  framework in Julia and using Dagger.jl
+  framework in Julia
 license: Apache-2.0
