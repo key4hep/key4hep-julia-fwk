@@ -29,6 +29,7 @@ authors:
   - given-names: Justin
     family-names: Kowalski
     affiliation: ETH Zurich
+    orcid: 'https://orcid.org/0009-0000-9600-365X'
 repository-code: 'https://github.com/key4hep/key4hep-julia-fwk'
 abstract: >-
   Demonstrator project for HEP event-processing application
