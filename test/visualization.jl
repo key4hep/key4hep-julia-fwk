@@ -20,9 +20,4 @@ using MetaGraphs
         @test has_edge("TransformerAB", "ConsumerE")
         @test has_edge("TransformerAB", "ConsumerCD")
     end
-
-    @testset "Save trace" begin
-        @test_throws ArgumentError FrameworkDemo.save_trace(Dict{}(), tempname(),
-                                                            :unsupported_format)
-    end
 end

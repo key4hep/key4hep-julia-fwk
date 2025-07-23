@@ -1,6 +1,5 @@
 using FrameworkDemo
 using Test
-using Dagger
 using Logging
 
 function run_demo(name::String, coefficients::Union{Vector{Float64}, Nothing})
@@ -16,7 +15,7 @@ function run_demo(name::String, coefficients::Union{Vector{Float64}, Nothing})
 end
 
 @testset "Demo workflows" begin
-    FrameworkDemo.disable_tracing!()
+    #FrameworkDemo.disable_tracing!()
     is_fast = "no-fast" ∉ ARGS
     coefficients = FrameworkDemo.calibrate_crunch(; fast = is_fast)
     run(name) = run_demo(name, coefficients)
