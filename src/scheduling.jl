@@ -7,7 +7,7 @@ const nvtx_colors = Colors.distinguishable_colors(32)
 abstract type AbstractAlgorithm end
 
 function (alg::AbstractAlgorithm)(args...; event_number::Int,
-                                  coefficients::Union{Vector{Float64}, Missing})
+                                  coefficients::Union{Vector{Float64}, Nothing})
     error("Subtypes of AbstractAlgorithm must implement function call")
 end
 
@@ -23,7 +23,7 @@ end
 NVTX.@annotate get_name(algorithm) color=nvtx_colors[mod1(algorithm.event_number,
                                                           length(nvtx_colors))] payload=algorithm.event_number function (algorithm::BoundAlgorithm)(data...;
                                                                                                                                                     coefficients::Union{Vector{Float64},
-                                                                                                                                                                        Missing})
+                                                                                                                                                                        Nothing})
     return algorithm.alg(data...; event_number = algorithm.event_number,
                          coefficients = coefficients)
 end
@@ -39,6 +39,25 @@ struct DataFlowGraph
         alg_vertices = MetaGraphs.filter_vertices(graph, :type, "Algorithm")
         sorted_vertices = MetaGraphs.topological_sort(graph)
         sorted_alg_vertices = intersect(sorted_vertices, alg_vertices)
+
+        # cache number of algorithm dependencies for each algorithms
+        # and indices of dependant algorithms
+        for v in sorted_alg_vertices
+            set_prop!(graph, v, :deps, 0)
+        end
+        for v in sorted_alg_vertices
+            successor_algs = Vector{Int}()
+            for data_successor in outneighbors(graph, v)
+                successors = outneighbors(graph, data_successor)
+                append!(successor_algs, successors)
+            end
+            unique!(successor_algs) # remove duplicates - algorithms consuming multiple objects produced by the the same algorithms
+            set_prop!(graph, v, :successor_algs, successor_algs)
+            for alg in successor_algs
+                deps = get_prop(graph, alg, :deps)
+                set_prop!(graph, alg, :deps, deps + 1)
+            end
+        end
         new(graph, sorted_alg_vertices)
     end
 end
@@ -60,6 +79,12 @@ function put_result!(event::Event, index::Int, result::Any)
     return event.store[index] = result
 end
 
+function put_results!(event::Event, indices, results)
+    for (k, v) in zip(indices, results)
+        put_result!(event, k, v)
+    end
+end
+
 function get_result(event::Event, index::Int)::Any
     return event.store[index]
 end
@@ -79,125 +104,45 @@ function schedule_algorithm(event::Event, vertex_id::Int,
                             done_channel::Channel{Tuple{Int, Any}})
     # get the incoming vertices for this algorithm
     incoming_vertices = inneighbors(event.data_flow.graph, vertex_id)
-
-    # debug: Check if all incoming data is available
-    for v in incoming_vertices
-        if !haskey(event.store, v)
-            @error "Missing data for vertex $v required by algorithm vertex $vertex_id"
-            @error "Available vertices in store: $(keys(event.store))"
-            @error "Algorithm vertices: $(event.data_flow.algorithm_indices)"
-        end
-    end
-
     incoming_data = get_results(event, incoming_vertices)
+
     algorithm = BoundAlgorithm(get_algorithm(event.data_flow, vertex_id),
                                event.event_number)
 
-    # Use the provided coefficients or missing
-    coeff_to_use = isnothing(coefficients) ? missing : coefficients
-
-    # Spawn the task on a thread
     Threads.@spawn begin
-        alg_name = get_name(algorithm)
-        @debug "Executing $alg_name (vertex $vertex_id) on thread $(threadid())"
-
-        result = algorithm(incoming_data...; coefficients = coeff_to_use)
-        put!(done_channel, (vertex_id, result))
+        results = algorithm(incoming_data...; coefficients = coefficients)
+        put!(done_channel, (vertex_id, results))
     end
 end
 
 function schedule_graph!(event::Event, coefficients::Union{Any, Nothing})
-    graph = event.data_flow.graph
-    all_vertices = vertices(graph)
     algo_vertices = event.data_flow.algorithm_indices
+    done_channel = Channel{Tuple{Int, Any}}(length(algo_vertices))  # channel to receive completion notifications
+    algs_in_flight = 0 # number of algorithms currently running
+    deps = Dict{Int, Int}() # map of algorithm vertices to number of dependencies
 
-    @debug "Running with $(Threads.nthreads()) threads"
-
-    # data vertices (non algo)
-    data_vertices = setdiff(all_vertices, algo_vertices)
-
-    # Initialize all data vertices
-    for v in data_vertices
-        put_result!(event, v, Float64[])
-    end
-
-    # dependency tracking
-    algorithm_dependencies = Dict{Int, Set{Int}}()
-    parent_count = Dict{Int, Int}()
-    children = Dict{Int, Vector{Int}}()
-
+    # copy number of dependencies or immediately schedule algorithms without dependencies
     for v in algo_vertices
-        deps = Set{Int}()
-
-        # find all data vertices this algorithm needs
-        data_inputs = filter(d -> d in data_vertices, inneighbors(graph, v))
-
-        # for each data input find which algorithm produces it
-        for data_v in data_inputs
-            # find the algorithm that produces this data
-            producers = filter(p -> p in algo_vertices, inneighbors(graph, data_v))
-            for producer in producers
-                push!(deps, producer)
-            end
-        end
-
-        algorithm_dependencies[v] = deps
-        parent_count[v] = length(deps)
-        children[v] = Int[]
-    end
-
-    # build children relationships
-    for v in algo_vertices
-        for dep in algorithm_dependencies[v]
-            push!(children[dep], v)
+        deps_number = get_prop(event.data_flow.graph, v, :deps)
+        if deps_number == 0
+            schedule_algorithm(event, v, coefficients, done_channel)
+            algs_in_flight += 1
+        else
+            deps[v] = deps_number
         end
     end
 
-    # channel to receive completion notifications
-    done_channel = Channel{Tuple{Int, Any}}(length(algo_vertices))
-
-    # track active tasks
-    active = 0
-
-    # spawning a vertex
-    function spawn_vertex(vertex_id)
-        alg_name = get_name(get_algorithm(event.data_flow, vertex_id))
-        @debug "Spawning algorithm $alg_name (vertex $vertex_id) on thread $(threadid())"
-
-        schedule_algorithm(event, vertex_id, coefficients, done_channel)
-    end
-
-    # spawn all vertices without parents
-    for v in algo_vertices
-        if parent_count[v] == 0
-            spawn_vertex(v)
-            active += 1
-        end
-    end
-
-    while active > 0
-        (vertex_id, result) = take!(done_channel)
-        active -= 1
-
-        alg_name = get_name(get_algorithm(event.data_flow, vertex_id))
-        @debug "Completed algorithm $alg_name (vertex $vertex_id) on thread $(threadid())"
-
-        # Store the result in the algorithm vertex
-        put_result!(event, vertex_id, result)
-
-        # Also store in all connected data vertices (algorithm outputs)
-        for data_vertex in outneighbors(graph, vertex_id)
-            if !(data_vertex in algo_vertices)
-                put_result!(event, data_vertex, result)
-            end
-        end
-
+    while algs_in_flight > 0
+        vertex_id, results = take!(done_channel)
+        result_vertices = outneighbors(event.data_flow.graph, vertex_id)
+        put_results!(event, result_vertices, results)
+        algs_in_flight -= 1
         # Check algorithm children to see if they're ready
-        for child in children[vertex_id]
-            parent_count[child] -= 1
-            if parent_count[child] == 0
-                spawn_vertex(child)
-                active += 1
+        for child in get_prop(event.data_flow.graph, vertex_id, :successor_algs)
+            count = deps[child] -= 1
+            if count == 0
+                schedule_algorithm(event, child, coefficients, done_channel)
+                algs_in_flight += 1
             end
         end
     end
