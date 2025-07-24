@@ -5,5 +5,5 @@ using Aqua
 @testset "Aqua.jl" begin
     Aqua.test_all(FrameworkDemo;
                   ambiguities = false,
-                  stale_deps = (; ignore = [:ArgParse, :CSV, :ProfileCanvas]),) # bin/
+                  stale_deps = (; ignore = [:ArgParse, :CSV, :ProfileCanvas, :Profile]),) # bin/
 end

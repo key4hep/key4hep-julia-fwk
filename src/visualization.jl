@@ -1,8 +1,6 @@
 import GraphViz
 import FileIO
 import DataFrames
-import Plots
-import JSON3
 
 function get_execution_plan(df::DataFlowGraph)::MetaDiGraph
     g = MetaDiGraph()
