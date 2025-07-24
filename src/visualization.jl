@@ -1,6 +1,5 @@
 import GraphViz
 import FileIO
-import DataFrames
 
 function get_execution_plan(df::DataFlowGraph)::MetaDiGraph
     g = MetaDiGraph()
