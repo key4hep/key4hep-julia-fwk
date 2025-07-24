@@ -1,12 +1,5 @@
 #!/usr/bin/env julia
 
-import Preferences
-if Preferences.load_preference("FrameworkDemo", "distributed-package") == "DistributedNext"
-    using DistributedNext
-else
-    using Distributed
-end
-using Dagger
 using ArgParse
 using FrameworkDemo
 using Logging
@@ -15,8 +8,6 @@ using CSV
 using Printf
 using Profile
 using ProfileCanvas
-
-const trace_formats = ["graph", "chrome", "gantt", "raw"]
 
 function parse_args(raw_args)
     s = ArgParseSettings()
@@ -41,22 +32,6 @@ function parse_args(raw_args)
         help = "Number of slots for graphs to be scheduled concurrently"
         arg_type = Int
         default = 1
-
-        "--trace-graph"
-        help = "Output the execution trace as a graph. Either dot or graphics file format like png, svg, pdf"
-        arg_type = String
-
-        "--trace-chrome"
-        help = "Output the execution trace as a chrome trace. Must be a json file"
-        arg_type = String
-
-        "--trace-gantt"
-        help = "Output the execution trace as a Gantt chart. Must be a graphics file format like png, svg, pdf"
-        arg_type = String
-
-        "--trace-raw"
-        help = "Output the execution trace as text. The file will be formatted as json if json extension is given"
-        arg_type = String
 
         "--dump-plan"
         help = "Output the execution plan as a graph. Either dot or graphics file format like png, svg, pdf"
@@ -92,10 +67,6 @@ function parse_args(raw_args)
         help = "Scale factor to apply to the duration of each algorithm"
         arg_type = Float64
         default = 1.0
-
-        "--disable-mempool-gc"
-        help = "Disable MemPool automatic GC. Use to reduce the GC time on systems with low memory (laptop)"
-        action = :store_true
 
         "--profile"
         help = "Output execution profile. Must be a html file"
@@ -216,18 +187,6 @@ function (@main)(raw_args)
         disable_logging(args["disable-logging"])
     end
 
-    if args["disable-mempool-gc"]
-        Dagger.MemPool.MEM_RESERVED[] = 0
-        @info "Disabled MemPool automatic GC"
-    end
-
-    tracing_required = any(x -> !isnothing(args["trace-$x"]), trace_formats)
-
-    if tracing_required
-        FrameworkDemo.enable_tracing!()
-        @info "Enabled tracing"
-    end
-
     graph = FrameworkDemo.parse_graphml(args["data-flow"],
                                         duration_scale = args["duration-scale"])
     data_flow = FrameworkDemo.mockup_dataflow(graph)
@@ -247,8 +206,8 @@ function (@main)(raw_args)
     end
 
     if args["dry-run"]
-        @info "Dry run: not executing workflow, not writing traces"
-        return
+        @info "Dry run: not executing workflow"
+        return 0
     end
 
     if !isempty(args["crunch-coefficients"])
@@ -265,17 +224,6 @@ function (@main)(raw_args)
                                                   max_concurrent,
                                                   crunch_coefficients,
                                                   profile_mode)
-        if tracing_required
-            trace = FrameworkDemo.fetch_trace!()
-            for format in trace_formats
-                path = args["trace-$format"]
-                if !isnothing(path)
-                    base, ext = splitext(path)
-                    warmup_path = base * "_warmup" * ext
-                    FrameworkDemo.save_trace(trace, warmup_path, Symbol(format))
-                end
-            end
-        end
     end
 
     if !isnothing(profile_mode)
@@ -287,16 +235,6 @@ function (@main)(raw_args)
                                        max_concurrent, crunch_coefficients,
                                        profile_mode)
                       for _ in 1:args["trials"]]
-
-    if tracing_required
-        trace = FrameworkDemo.fetch_trace!()
-        for format in trace_formats
-            path = args["trace-$format"]
-            if !isnothing(path)
-                FrameworkDemo.save_trace(trace, path, Symbol(format))
-            end
-        end
-    end
 
     df = timings_to_df(pipeline_stats, event_count, max_concurrent, crunch_coefficients)
 
@@ -325,9 +263,5 @@ function (@main)(raw_args)
             end
         end
     end
-
-    if length(workers()) > 1
-        rmprocs!(Dagger.Sch.eager_context(), workers())
-        workers() |> rmprocs |> wait
-    end
+    return 0
 end

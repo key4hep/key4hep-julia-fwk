@@ -1,56 +1,5 @@
 import GraphViz
 import FileIO
-import DataFrames
-import Plots
-import JSON3
-
-function save_trace(trace, ::String, ::Val{T}) where {T}
-    throw(ArgumentError("Unsupported visualization mode: `$T`"))
-end
-
-function save_trace(trace, path::String, mode::Symbol)
-    return save_trace(trace, path, Val{mode}())
-end
-
-function save_trace(trace, path::String, ::Val{:graph})
-    if splitext(path)[2] == ".dot"
-        open(path, "w") do io
-            Dagger.show_logs(io, trace, :graphviz; color_by = :proc)
-            @info "Written trace dot graph to $path"
-        end
-    else
-        graphviz = Dagger.render_logs(trace, :graphviz; color_by = :proc)
-        FileIO.save(path, graphviz)
-        @info "Written trace graph to $path"
-    end
-end
-
-function save_trace(trace, path::String, ::Val{:chrome})
-    open(path, "w") do io
-        Dagger.show_logs(io, trace, :chrome_trace)
-        @info "Written chrome trace to $path"
-    end
-end
-
-function save_trace(trace, path::String, ::Val{:gantt})
-    plot = Dagger.render_logs(trace, :plots_gantt)
-    Plots.savefig(plot, path)
-    @info "Written trace gantt chart to $path"
-end
-
-function save_trace(trace, path::String, ::Val{:raw})
-    if splitext(path)[2] == ".json"
-        open(path, "w") do io
-            JSON3.write(io, trace)
-            @info "Written raw json trace to $path"
-        end
-    else
-        open(path, "w") do io
-            println(io, trace)
-            @info "Written raw trace to $path"
-        end
-    end
-end
 
 function get_execution_plan(df::DataFlowGraph)::MetaDiGraph
     g = MetaDiGraph()

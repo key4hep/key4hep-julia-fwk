@@ -32,6 +32,3 @@ Manifest.toml
 # Data/results/output files
 results/
 *.nsys-rep
-
-# Local Julia preferences
-LocalPreferences.toml
