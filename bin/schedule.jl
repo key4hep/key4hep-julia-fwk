@@ -68,10 +68,6 @@ function parse_args(raw_args)
         arg_type = Float64
         default = 1.0
 
-        "--disable-mempool-gc"
-        help = "Disable MemPool automatic GC. Use to reduce the GC time on systems with low memory (laptop)"
-        action = :store_true
-
         "--profile"
         help = "Output execution profile. Must be a html file"
         arg_type = String
@@ -211,7 +207,7 @@ function (@main)(raw_args)
 
     if args["dry-run"]
         @info "Dry run: not executing workflow"
-        return
+        return 0
     end
 
     if !isempty(args["crunch-coefficients"])
@@ -267,4 +263,5 @@ function (@main)(raw_args)
             end
         end
     end
+    return 0
 end

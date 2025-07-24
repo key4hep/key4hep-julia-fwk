@@ -8,9 +8,7 @@ using Aqua
                   stale_deps = (;
                                 ignore = [:ArgParse,
                                     :CSV,
-                                    :ProfileCanvas,
+                                    :DataFrames,
                                     :Profile,
-                                    :JSON3,
-                                    :Plots,
-                                    :DataFrames]),) # bin/
+                                    :ProfileCanvas]),) # bin/
 end
