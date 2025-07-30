@@ -161,9 +161,6 @@ function run_pipeline(data_flow::DataFlowGraph;
                       event_count::Int,
                       max_concurrent::Int,
                       crunch_coefficients::Union{Vector{Float64}, Nothing} = nothing)
-
-
-    # Launch ALL events immediately
     @tasks for idx in 1:event_count
         @set begin
             ntasks = max_concurrent
