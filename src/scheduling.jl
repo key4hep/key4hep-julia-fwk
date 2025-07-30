@@ -1,5 +1,5 @@
 using MetaGraphs
-using OhMyThreads: @tasks, @set
+using OhMyThreads: @tasks, @set, @spawn
 import NVTX
 import Colors
 
@@ -110,7 +110,7 @@ function schedule_algorithm(event::Event, vertex_id::Int,
     algorithm = BoundAlgorithm(get_algorithm(event.data_flow, vertex_id),
                                event.event_number)
 
-    Threads.@spawn begin
+    @spawn begin
         results = algorithm(incoming_data...; coefficients = coefficients)
         put!(done_channel, (vertex_id, results))
     end
