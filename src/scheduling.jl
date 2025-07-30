@@ -162,17 +162,15 @@ function run_pipeline(data_flow::DataFlowGraph;
                       max_concurrent::Int,
                       crunch_coefficients::Union{Vector{Float64}, Nothing} = nothing)
 
-    # Create semaphore with max_concurrent permits
-    semaphore = Base.Semaphore(max_concurrent)
 
     # Launch ALL events immediately
     @tasks for idx in 1:event_count
         @set begin
-            ntasks=max_concurrent
+            ntasks = max_concurrent
         end
-        # @info dispatch_begin_msg(idx)
+        @info dispatch_begin_msg(idx)
         event = Event(data_flow, idx)
         schedule_graph!(event, crunch_coefficients)
-        # @info dispatch_end_msg(idx)
+        @info dispatch_end_msg(idx)
     end
 end
