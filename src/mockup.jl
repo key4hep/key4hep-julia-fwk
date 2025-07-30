@@ -18,7 +18,7 @@ const mockup_alg_default_runtime_s = 0
 
 function (alg::MockupAlgorithm)(args...; event_number::Int,
                                 coefficients::Union{Vector{Float64}, Nothing})
-    @info "Executing $(alg.name) event $event_number"
+    # @info "Executing $(alg.name) event $event_number"
     if coefficients isa Vector{Float64}
         crunch_for_seconds(alg.runtime, coefficients)
     end
