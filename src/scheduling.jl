@@ -1,4 +1,5 @@
 using MetaGraphs
+using OhMyThreads: @tasks, @set, @spawn
 import NVTX
 import Colors
 
@@ -109,7 +110,7 @@ function schedule_algorithm(event::Event, vertex_id::Int,
     algorithm = BoundAlgorithm(get_algorithm(event.data_flow, vertex_id),
                                event.event_number)
 
-    Threads.@spawn begin
+    @spawn begin
         results = algorithm(incoming_data...; coefficients = coefficients)
         put!(done_channel, (vertex_id, results))
     end
@@ -160,23 +161,13 @@ function run_pipeline(data_flow::DataFlowGraph;
                       event_count::Int,
                       max_concurrent::Int,
                       crunch_coefficients::Union{Vector{Float64}, Nothing} = nothing)
-
-    # Create semaphore with max_concurrent permits
-    semaphore = Base.Semaphore(max_concurrent)
-
-    # Launch ALL events immediately
-    @sync for idx in 1:event_count
-        Threads.@spawn begin
-            Base.acquire(semaphore)
-            try
-                @info dispatch_begin_msg(idx)
-                event = Event(data_flow, idx)
-                schedule_graph!(event, crunch_coefficients)
-                @info dispatch_end_msg(idx)
-            finally
-                # Always release semaphore, even if task fails
-                Base.release(semaphore)
-            end
+    @tasks for idx in 1:event_count
+        @set begin
+            ntasks = max_concurrent
         end
+        @info dispatch_begin_msg(idx)
+        event = Event(data_flow, idx)
+        schedule_graph!(event, crunch_coefficients)
+        @info dispatch_end_msg(idx)
     end
 end
