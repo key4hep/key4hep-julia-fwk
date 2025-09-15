@@ -263,9 +263,3 @@ function (@main)(raw_args)
     end
     return 0
 end
-
-# Entrypoint for juliac
-Base.@ccallable function main(argc::Cint, argv::Ptr{Ptr{Cchar}})::Cint
-    args = [unsafe_string(unsafe_load(argv, i)) for i in 2:argc]
-    return main(args)
-end
