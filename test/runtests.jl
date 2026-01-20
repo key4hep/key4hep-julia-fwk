@@ -1,15 +1,5 @@
 using Test
 
-if abspath(PROGRAM_FILE) == @__FILE__
-    import Pkg
-    try
-        Pkg.test(; test_args = ARGS)
-        exit(0)
-    catch
-        exit(1)
-    end
-end
-
 @info("Execution environment details",
       julia_version=VERSION,
       n_threads=Threads.nthreads(),
