@@ -32,10 +32,10 @@ using FrameworkDemo
 
 ## Compilation
 
-The runner can be statically compiled with Julia 1.12 and later:
+Install [JuliaC.jl app](https://github.com/JuliaLang/JuliaC.jl), then compile with:
 
 ```
-julia make.jl
+juliac --project="bin" bin/schedule.jl --output-exe frameworkdemo_schedule
 ```
 
 and then run:
