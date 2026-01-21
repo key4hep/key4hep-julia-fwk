@@ -1,0 +1,14 @@
+[deps]
+Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"
+Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
+MetaGraphs = "626554b9-1ddb-594c-aa3c-2596fe9399a5"
+FrameworkDemo = "cfbf7e84-66d2-421e-b147-9edb7a8672d2"
+
+[compat]
+Aqua = "0.8"
+Test = "1.11"
+Logging = "1.11"
+Graphs = "1.10"
+MetaGraphs = "0.8"

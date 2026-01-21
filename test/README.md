@@ -17,7 +17,9 @@ Run the tests with:
   ```
 - Manually:
   ```
-  julia --project test/runtests.jl <list of args>
+  julia --project=test test/runtests.jl <list of args>
+  # or run only specific set of tests
+  julia --project=test test/parsing.jl <list of args>
   ```
 - REPL:
   ```julia

@@ -13,9 +13,6 @@ Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 
-[sources]
-GraphMLReader = {rev = "master", url = "https://github.com/m-fila/GraphMLReader.jl"}
-
 [compat]
 ArgParse = "1.2"
 CSV = "0.10"
@@ -25,8 +22,7 @@ GraphMLReader = "0.1"
 Graphs = "1.10"
 GraphViz = "0.2"
 JuliaFormatter = "1"
-MetaGraphs = "0.7"
+MetaGraphs = "0.8"
 Plots = "1.40"
 Printf = "1.11"
 Statistics = "1.11"
-julia = "1.11"
