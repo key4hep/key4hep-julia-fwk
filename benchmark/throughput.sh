@@ -7,8 +7,8 @@ THREADS_SEQ="2 4"
 THREADS_PER_SLOT=2
 EVENTS_PER_SLOT=2
 
-PROJECT="$(dirname $0)/.."
-EXEC="$(dirname $0)/../bin/schedule.jl"
+PROJECT="$(dirname $(dirname $0))/bin/"
+EXEC="$(dirname $(dirname $0))/bin/schedule.jl"
 
 for threads in ${THREADS_SEQ}; do
     concurrent=$((threads/THREADS_PER_SLOT))
