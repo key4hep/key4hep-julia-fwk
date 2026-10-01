@@ -10,7 +10,7 @@ ProfileCanvas = "efd6af41-a80b-495e-886c-e51b0c7d77a3"
 
 [compat]
 ArgParse = "1.2"
-CSV = "0.10"
+CSV = "0.10, 1.1"
 DataFrames = "1.6"
 Logging = "1.11"
 Printf = "1.11"
